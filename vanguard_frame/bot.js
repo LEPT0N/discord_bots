@@ -16,7 +16,7 @@ bot.on('ready', function (evt)
     console.log('');
 
 	// easy testing
-	// run_command(get_emblems, 0, ['LEPT0N']);
+	// run_command(get_triumph_score, 0, ['LEPT0N']);
 });
 
 async function echo(channel_id, arguments)
@@ -52,6 +52,21 @@ async function get_emblems(channel_id, arguments)
 			message: emblem
 		});
 	}
+}
+
+async function get_triumph_score(channel_id, arguments)
+{
+	var displayName = arguments[0];
+
+    var player = await bungie.search_destiny_player(displayName);
+
+	var triumph_score = await bungie.get_triumph_score(player);
+
+	bot.sendMessage(
+	{
+		to: channel_id,
+		message: 'Triumph score = ' + triumph_score
+	});
 }
 
 async function run_command(command, channel_id, arguments)
@@ -94,6 +109,7 @@ bot.on('message', function (user, userID, channel_id, message, evt)
 		{
             case 'echo': run_command(echo, channel_id, arguments); break;
 			case 'get_emblems': run_command(get_emblems, channel_id, arguments); break;
+			case 'get_triumph_score': run_command(get_triumph_score, channel_id, arguments); break;
          }
      }
 });

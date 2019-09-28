@@ -57,7 +57,7 @@ methods.search_destiny_player = async function(displayName)
 
 methods.get_character_ids = async function (player)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=100';
+    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
 
     var character_ids = (await get_request('get_character_ids', url)).Response.profile.data.characterIds;
 
@@ -73,13 +73,24 @@ methods.get_character_ids = async function (player)
 
 methods.get_character = async function (player, character_id)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=200';
+    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
 	
     var character = (await get_request('get_character', url)).Response.character.data;
 
 	console.log(character);
 
     return character;
+}
+
+methods.get_triumph_score = async function (player)
+{
+    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
+
+    var score = (await get_request('get_triumph_score', url)).Response.profileRecords.data.score;
+
+	console.log(score);
+    
+    return score;
 }
 
 module.exports = methods;
