@@ -27,23 +27,35 @@ async function echo(channel_id, arguments)
     console.log('echoed <' + arguments[0] + '>');
 }
 
-async function get_last_played(channel_id, arguments)
+async function get_emblems(channel_id, arguments)
 {
 	var displayName = arguments[0];
 
-    var membershipId = await bungie.get_membership_id(displayName);
+    console.log('searching for player ' + displayName);
 
-    console.log('membership ID for ' + displayName + ' is ' + membershipId);
+    var player = await bungie.search_destiny_player(displayName);
 
-    var dateLastPlayed = await bungie.get_date_last_played(membershipId);
-    
-    console.log('last played on ' + dateLastPlayed);
+    console.log('membershipId = ' + player.membershipId);
+    console.log('displayName = ' + player.displayName);
 
-    bot.sendMessage(
+	var character_ids = await bungie.get_character_ids(player);
+
+	for (var index = 0; index < character_ids.length; index++)
 	{
-        to: channel_id,
-        message: displayName + ' last played on ' + dateLastPlayed
-    });
+		console.log('character id = ' + character_ids[index]);
+
+		var character = await bungie.get_character(player, character_ids[index]);
+
+		var emblem = 'https://www.bungie.net' + character.emblemPath;
+
+		console.log('emblem = ' + emblem);
+
+		bot.sendMessage(
+		{
+			to: channel_id,
+			message: emblem
+		});
+	}
 }
 
 async function run_command(command, channel_id, arguments)
@@ -85,7 +97,7 @@ bot.on('message', function (user, userID, channel_id, message, evt)
         switch(command_string)
 		{
             case 'echo': run_command(echo, channel_id, arguments); break;
-			case 'get_last_played': run_command(get_last_played, channel_id, arguments); break;
+			case 'get_emblems': run_command(get_emblems, channel_id, arguments); break;
          }
      }
 });
