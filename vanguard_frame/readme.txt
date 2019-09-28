@@ -1,4 +1,6 @@
 
+https://github.com/LEPT0N/discord_bots
+
 useful links:
 
 https://www.digitaltrends.com/gaming/how-to-make-a-discord-bot/
