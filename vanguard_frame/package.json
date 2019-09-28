@@ -1,0 +1,12 @@
+{
+    "name": "vanguard_frame",
+    "version": "0.1.0",
+    "description": "Bot for Mainframe Guardians Discord channel",
+    "main": "bot.js",
+    "author": "LEPT0N",
+    "dependencies": {
+        "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+        "node-fetch": "^2.6.0",
+        "winston": "^3.2.1"
+    }
+}
