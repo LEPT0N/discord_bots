@@ -14,6 +14,9 @@ bot.on('ready', function (evt)
     console.log('Connected');
     console.log('Logged in as: ' + bot.username + ' - (' + bot.id + ')');
     console.log('');
+
+	// easy testing
+	// run_command(get_emblems, 0, ['LEPT0N']);
 });
 
 async function echo(channel_id, arguments)
@@ -31,19 +34,12 @@ async function get_emblems(channel_id, arguments)
 {
 	var displayName = arguments[0];
 
-    console.log('searching for player ' + displayName);
-
     var player = await bungie.search_destiny_player(displayName);
-
-    console.log('membershipId = ' + player.membershipId);
-    console.log('displayName = ' + player.displayName);
 
 	var character_ids = await bungie.get_character_ids(player);
 
 	for (var index = 0; index < character_ids.length; index++)
 	{
-		console.log('character id = ' + character_ids[index]);
-
 		var character = await bungie.get_character(player, character_ids[index]);
 
 		var emblem = 'https://www.bungie.net' + character.emblemPath;

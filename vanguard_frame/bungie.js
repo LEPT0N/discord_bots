@@ -4,9 +4,15 @@ var auth = require('./auth.json');
 
 var methods = {};
 
-async function get_request(url)
+async function get_request(name, url)
 {
-    var response = await fetch('https://www.bungie.net/Platform/' + url,
+	url = 'https://www.bungie.net/Platform/' + url;
+
+	console.log('');
+	console.log(name);
+	console.log(url);
+
+    var response = await fetch(url,
 	{
         method: 'get',
         headers:
@@ -17,6 +23,8 @@ async function get_request(url)
 
     if (response.ErrorCode != 1)
     {
+		console.log(response);
+
 		throw new Error(JSON.stringify(response));
     }
 
@@ -27,7 +35,9 @@ methods.search_destiny_player = async function(displayName)
 {
     var url = 'Destiny2/SearchDestinyPlayer/-1/' + displayName + '/';
 
-	var players = (await get_request(url)).Response;
+	var players = (await get_request('search_destiny_player', url)).Response;
+
+	console.log(players);
 
 	if (players.length != 1)
 	{
@@ -49,7 +59,9 @@ methods.get_character_ids = async function (player)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=100';
 
-    var character_ids = (await get_request(url)).Response.profile.data.characterIds;
+    var character_ids = (await get_request('get_character_ids', url)).Response.profile.data.characterIds;
+
+	console.log(character_ids);
 
 	if (character_ids.length == 0)
 	{
@@ -63,7 +75,9 @@ methods.get_character = async function (player, character_id)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=200';
 	
-    var character = (await get_request(url)).Response.character.data;
+    var character = (await get_request('get_character', url)).Response.character.data;
+
+	console.log(character);
 
     return character;
 }
