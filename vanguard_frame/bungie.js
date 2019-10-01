@@ -28,14 +28,14 @@ async function get_request(name, url)
 		throw new Error(JSON.stringify(response));
     }
 
-    return response;
+    return response.Response;
 }
 
 methods.search_destiny_player = async function(displayName)
 {
     var url = 'Destiny2/SearchDestinyPlayer/-1/' + displayName + '/';
 
-	var players = (await get_request('search_destiny_player', url)).Response;
+	var players = (await get_request('search_destiny_player', url));
 
 	console.log(players);
 
@@ -59,7 +59,7 @@ methods.get_character_ids = async function (player)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
 
-    var character_ids = (await get_request('get_character_ids', url)).Response.profile.data.characterIds;
+    var character_ids = (await get_request('get_character_ids', url)).profile.data.characterIds;
 
 	console.log(character_ids);
 
@@ -75,7 +75,7 @@ methods.get_character = async function (player, character_id)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
 	
-    var character = (await get_request('get_character', url)).Response.character.data;
+    var character = (await get_request('get_character', url)).character.data;
 
 	console.log(character);
 
@@ -86,7 +86,7 @@ methods.get_triumph_score = async function (player)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
-    var score = (await get_request('get_triumph_score', url)).Response.profileRecords.data.score;
+    var score = (await get_request('get_triumph_score', url)).profileRecords.data.score;
 
 	console.log(score);
     

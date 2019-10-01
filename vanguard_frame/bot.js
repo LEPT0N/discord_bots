@@ -1,9 +1,10 @@
 
-var Discord = require('discord.io');
+var discord = require('discord.io');
 var auth = require('./auth.json');
 var bungie = require('./bungie.js');
+var util = require('./util.js');
 
-var bot = new Discord.Client(
+var bot = new discord.Client(
 {
    token: auth.discord_key,
    autorun: true

@@ -25,3 +25,6 @@ https://bungie-net.github.io/multi/index.html
 
 https://www.npmjs.com/package/node-fetch#simple-post
 
+https://www.w3schools.com/nodejs/
+
+https://nodejs.org/api/fs.html
