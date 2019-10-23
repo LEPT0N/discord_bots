@@ -167,4 +167,16 @@ public.parse_arguments = function(arguments_string)
     return result;
 }
 
+public.try_get_element = function(array, index)
+{
+    if (index < array.length)
+    {
+        return array[index];
+    }
+    else
+    {
+        return null;
+    }
+}
+
 module.exports = public;

@@ -1,6 +1,7 @@
 
 var fetch = require('node-fetch');
 var auth = require('./auth.json');
+var util = require('./util.js');
 
 var public = {};
 
@@ -31,8 +32,12 @@ async function get_request(name, url)
     return response.Response;
 }
 
-public.search_destiny_player = async function(displayName, platform)
+public.search_destiny_player = async function(arguments)
 {
+	var displayName = arguments[0];
+	var platform = arguments[1];
+    var requested_index = util.try_get_element(arguments, 2);
+
     var url = 'Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
 
 	var players = (await get_request('search_destiny_player', url));
@@ -49,20 +54,32 @@ public.search_destiny_player = async function(displayName, platform)
         }
 	}
 
-	if (matching_players.length != 1)
-	{
-		var matching_players_names = [];
-		for (var index = 0; index < matching_players.length; index++)
-		{
-			matching_players_names.push(matching_players[index].displayName);
-		}
+    if (requested_index != null)
+    {
+        if (requested_index >= matching_players.length)
+        {
+            throw new Error('requested index ' + requested_index + ' is invalid (only retrieved ' + matching_players.length + ' results)');
+        }
 
-		matching_players_names = '[' + matching_players_names.join(',') + ']';
+        return matching_players[requested_index];
+    }
+    else
+    {
+	    if (matching_players.length != 1)
+	    {
+		    var matching_players_names = [];
+		    for (var index = 0; index < matching_players.length; index++)
+		    {
+			    matching_players_names.push(matching_players[index].displayName);
+		    }
 
-		throw new Error('found ' + matching_players.length + ' players for ' + displayName + ' (' + platform + ') ' + matching_players_names);
-	}
+		    matching_players_names = '[' + matching_players_names.join(',') + ']';
 
-	return matching_players[0];
+		    throw new Error('found ' + matching_players.length + ' players for ' + displayName + ' (' + platform + ') ' + matching_players_names);
+	    }
+
+	    return matching_players[0];
+    }
 }
 
 public.get_character_ids = async function (player)

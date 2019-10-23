@@ -36,10 +36,7 @@ async function echo(channel_id, arguments)
 
 async function get_emblems(channel_id, arguments)
 {
-	var displayName = arguments[0];
-	var platform = arguments[1];
-
-    var player = await bungie.search_destiny_player(displayName, platform);
+    var player = await bungie.search_destiny_player(arguments);
 
 	var character_ids = await bungie.get_character_ids(player);
 
@@ -59,10 +56,7 @@ async function get_emblems(channel_id, arguments)
 
 async function get_triumph_score(channel_id, arguments)
 {
-	var displayName = arguments[0];
-	var platform = arguments[1];
-
-    var player = await bungie.search_destiny_player(displayName, platform);
+    var player = await bungie.search_destiny_player(arguments);
 
 	var triumph_score = await bungie.get_triumph_score(player);
 
@@ -77,10 +71,7 @@ async function get_test(channel_id, arguments)
 {
     // example showing how to get triumph data
 
-	var displayName = arguments[0];
-	var platform = arguments[1];
-	
-    var player = await bungie.search_destiny_player(displayName, platform);
+    var player = await bungie.search_destiny_player(arguments);
 	
 	var triumphs = await bungie.get_triumphs(player);
 
@@ -100,9 +91,8 @@ async function get_test(channel_id, arguments)
 async function add_player_to_roster(channel_id, arguments)
 {
 	var displayName = arguments[0];
-	var platform = arguments[1];
 	
-    var player = await bungie.search_destiny_player(displayName, platform);
+    var player = await bungie.search_destiny_player(arguments);
 
     roster.add_player(player);
     
@@ -116,9 +106,8 @@ async function add_player_to_roster(channel_id, arguments)
 async function remove_player_from_roster(channel_id, arguments)
 {
 	var displayName = arguments[0];
-	var platform = arguments[1];
 	
-    var player = await bungie.search_destiny_player(displayName, platform);
+    var player = await bungie.search_destiny_player(arguments);
 
     roster.remove_player(player);
     
