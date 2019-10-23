@@ -21,6 +21,7 @@ bot.on('ready', function (evt)
 	// easy testing
 	// run_command(get_triumph_score, 0, ['CoachMcGuirk S8', 'xbl']);
 	// run_command(print_leaderboard, 0, ['triumph_score']);
+    run_command(print_leaderboard, 0, ['individual_triumph', 'crucible_kills']);
 });
 
 async function echo(channel_id, arguments)
@@ -75,6 +76,7 @@ async function get_test(channel_id, arguments)
 	
 	var triumphs = await bungie.get_triumphs(player);
 
+    /*
     var count = 0;
     for (var hashIdentifier in triumphs)
     {
@@ -86,6 +88,11 @@ async function get_test(channel_id, arguments)
             break;
         }
     }
+    */
+    
+    console.log(triumphs[3015941901]);
+
+    await bungie.print_triumph(3015941901, triumphs[3015941901]);
 }
 
 async function add_player_to_roster(channel_id, arguments)
@@ -142,8 +149,9 @@ async function print_roster(channel_id, arguments)
 async function print_leaderboard(channel_id, arguments)
 {
     var leaderboard_name = arguments[0];
+    var leaderboard_parameter = util.try_get_element(arguments, 1);
 
-    var leaderboard_data = await leaderboard.get(leaderboard_name);
+    var leaderboard_data = await leaderboard.get(leaderboard_name, leaderboard_parameter);
 
 	bot.sendMessage(
 	{

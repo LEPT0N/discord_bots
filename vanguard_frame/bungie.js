@@ -129,14 +129,15 @@ public.get_triumphs = async function (player)
 
     var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
 
-	console.log(triumphs);
-    console.log('');
+    // This is too huge to print
+	// console.log(triumphs);
+    // console.log('');
     
     return triumphs;
 }
 
 // NOTE: the documentation says not to do this for huge lists (use the manifest instead)
-public.get_triumph_name = async function (hashIdentifier)
+public.get_triumph_display_properties = async function (hashIdentifier)
 {
     var url = 'Destiny2/Manifest/DestinyRecordDefinition/' + hashIdentifier + '/';
 
@@ -145,7 +146,7 @@ public.get_triumph_name = async function (hashIdentifier)
 	console.log(triumph_display_properties);
     console.log('');
     
-    return triumph_display_properties.name;
+    return triumph_display_properties;
 }
 
 public.triumph_state =
@@ -176,7 +177,7 @@ public.get_triumph_state = function (triumph)
 
 public.print_triumph = async function (hashIdentifier, triumph)
 {
-    var name = (await public.get_triumph_name(hashIdentifier));
+    var name = (await public.get_triumph_display_properties(hashIdentifier)).name;
 
     console.log('name = ' + name);
     console.log('state = ' + public.get_triumph_state(triumph));
