@@ -4,6 +4,7 @@ var auth = require('./auth.json');
 var bungie = require('./bungie.js');
 var util = require('./util.js');
 var roster = require('./roster.js');
+var leaderboard = require('./leaderboard.js');
 
 var bot = new discord.Client(
 {
@@ -19,6 +20,7 @@ bot.on('ready', function (evt)
 
 	// easy testing
 	// run_command(add_player_to_roster, 0, ['LEPT0N', 'xbl']);
+	// run_command(print_leaderboard, 0, ['triumph_score']);
 });
 
 async function echo(channel_id, arguments)
@@ -148,6 +150,19 @@ async function print_roster(channel_id, arguments)
 	});
 }
 
+async function print_leaderboard(channel_id, arguments)
+{
+    var leaderboard_name = arguments[0];
+
+    var leaderboard_data = await leaderboard.get(leaderboard_name);
+
+	bot.sendMessage(
+	{
+		to: channel_id,
+		message: leaderboard_data
+	});
+}
+
 async function run_command(command, channel_id, arguments)
 {
 	console.log('');
@@ -190,9 +205,12 @@ bot.on('message', function (user, userID, channel_id, message, evt)
             case 'echo': run_command(echo, channel_id, arguments); break;
 			case 'get_emblems': run_command(get_emblems, channel_id, arguments); break;
 			case 'get_triumph_score': run_command(get_triumph_score, channel_id, arguments); break;
+
 			case 'add_player_to_roster': run_command(add_player_to_roster, channel_id, arguments); break;
 			case 'remove_player_from_roster': run_command(remove_player_from_roster, channel_id, arguments); break;
 			case 'print_roster': run_command(print_roster, channel_id, arguments); break;
+
+			case 'print_leaderboard': run_command(print_leaderboard, channel_id, arguments); break;
          }
      }
 });
