@@ -33,11 +33,12 @@ async function get_request(name, url)
 
 public.search_destiny_player = async function(displayName, platform)
 {
-    var url = 'Destiny2/SearchDestinyPlayer/-1/' + displayName + '/';
+    var url = 'Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
 
 	var players = (await get_request('search_destiny_player', url));
 
 	console.log(players);
+    console.log('');
 
     var matching_players = [];
 	for (var index = 0; index < players.length; index++)
@@ -71,6 +72,7 @@ public.get_character_ids = async function (player)
     var character_ids = (await get_request('get_character_ids', url)).profile.data.characterIds;
 
 	console.log(character_ids);
+    console.log('');
 
 	if (character_ids.length == 0)
 	{
@@ -87,6 +89,7 @@ public.get_character = async function (player, character_id)
     var character = (await get_request('get_character', url)).character.data;
 
 	console.log(character);
+    console.log('');
 
     return character;
 }
@@ -98,6 +101,7 @@ public.get_triumph_score = async function (player)
     var score = (await get_request('get_triumph_score', url)).profileRecords.data.score;
 
 	console.log(score);
+    console.log('');
     
     return score;
 }
@@ -109,6 +113,7 @@ public.get_triumphs = async function (player)
     var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
 
 	console.log(triumphs);
+    console.log('');
     
     return triumphs;
 }
@@ -121,6 +126,7 @@ public.get_triumph_name = async function (hashIdentifier)
     var triumph_display_properties = (await get_request('get_triumphs', url)).displayProperties;
 
 	console.log(triumph_display_properties);
+    console.log('');
     
     return triumph_display_properties.name;
 }

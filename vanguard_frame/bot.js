@@ -3,6 +3,7 @@ var discord = require('discord.io');
 var auth = require('./auth.json');
 var bungie = require('./bungie.js');
 var util = require('./util.js');
+var roster = require('./roster.js');
 
 var bot = new discord.Client(
 {
@@ -17,7 +18,7 @@ bot.on('ready', function (evt)
     console.log('');
 
 	// easy testing
-	// run_command(get_test, 0, ['LEPT0N', 'xbl']);
+	// run_command(add_player_to_roster, 0, ['LEPT0N', 'xbl']);
 });
 
 async function echo(channel_id, arguments)
@@ -94,6 +95,59 @@ async function get_test(channel_id, arguments)
     }
 }
 
+async function add_player_to_roster(channel_id, arguments)
+{
+	var displayName = arguments[0];
+	var platform = arguments[1];
+	
+    var player = await bungie.search_destiny_player(displayName, platform);
+
+    roster.add_player(player);
+    
+	bot.sendMessage(
+	{
+		to: channel_id,
+		message: 'Successfully added "' + player.displayName + '" to roster'
+	});
+}
+
+async function remove_player_from_roster(channel_id, arguments)
+{
+	var displayName = arguments[0];
+	var platform = arguments[1];
+	
+    var player = await bungie.search_destiny_player(displayName, platform);
+
+    roster.remove_player(player);
+    
+	bot.sendMessage(
+	{
+		to: channel_id,
+		message: 'Successfully removed "' + player.displayName + '" from roster'
+	});
+}
+
+async function print_roster(channel_id, arguments)
+{
+	var player_roster = roster.get_roster();
+
+    var roster_output_array = player_roster.players.map(function(value, index, array)
+    {
+        return value.displayName;
+    });
+
+    var roster_output = 'Current roster: \r\n' + roster_output_array.join('\r\n');
+
+    console.log(roster_output);
+    console.log('');
+    
+	bot.sendMessage(
+	{
+		to: channel_id,
+		message: roster_output
+	});
+}
+
 async function run_command(command, channel_id, arguments)
 {
 	console.log('');
@@ -136,6 +190,9 @@ bot.on('message', function (user, userID, channel_id, message, evt)
             case 'echo': run_command(echo, channel_id, arguments); break;
 			case 'get_emblems': run_command(get_emblems, channel_id, arguments); break;
 			case 'get_triumph_score': run_command(get_triumph_score, channel_id, arguments); break;
+			case 'add_player_to_roster': run_command(add_player_to_roster, channel_id, arguments); break;
+			case 'remove_player_from_roster': run_command(remove_player_from_roster, channel_id, arguments); break;
+			case 'print_roster': run_command(print_roster, channel_id, arguments); break;
          }
      }
 });

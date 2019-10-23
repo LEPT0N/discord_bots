@@ -6,6 +6,13 @@ var root_folder = './.data';
 
 var public = {};
 
+public.file_exists = function(file_name)
+{
+	var file_path = root_folder + '/' + file_name;
+
+    return fs.existsSync(file_path);
+}
+
 public.write_file = function(file_name, contents)
 {
 	var file_path = root_folder + '/' + file_name;
@@ -13,6 +20,7 @@ public.write_file = function(file_name, contents)
 	console.log('writing to file ' + file_path);
 	console.log('contents:');
 	console.log(contents);
+    console.log('');
 
 	fs.mkdirSync(root_folder, {recursive: true});
 
@@ -63,6 +71,7 @@ public.download_file = async function(url, file_name)
             else
             {
                 console.log('download complete to ' + file_path);
+                console.log('');
 
                 resolve(file_path);
             }
@@ -75,6 +84,7 @@ public.upload_file = async function(bot, channel_id, url, file_name)
     var file_path = await public.download_file(url, file_name);
 
     console.log('uploading ' + file_path);
+    console.log('');
 
     bot.uploadFile(
     {
