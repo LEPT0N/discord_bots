@@ -101,6 +101,16 @@ public.parse_arguments = function(arguments_string)
     console.log(arguments_string);
 
     var arguments_raw = arguments_string.split(' ');
+
+    if (arguments_raw.length < 1 || arguments_raw[0].length < 1)
+    {
+        throw new Error('Must provide a command');
+    }
+    
+    var result = { command: arguments_raw[0] };
+
+    arguments_raw = arguments_raw.splice(1);
+
     var arguments = [];
 
     // Loop through each argument
@@ -149,10 +159,12 @@ public.parse_arguments = function(arguments_string)
         arguments.push(value);
     }
 
-    console.log('parsed arguments:');
-    console.log(arguments);
+    result.arguments = arguments;
 
-    return arguments;
+    console.log('parsed arguments:');
+    console.log(result);
+
+    return result;
 }
 
 module.exports = public;

@@ -165,14 +165,36 @@ async function print_leaderboard(channel_id, arguments)
 
 async function run_command(command, channel_id, arguments)
 {
-	console.log('');
-	console.log('start command');
 	console.log(command);
 
-	try
-	{
-		await command(channel_id, arguments);
-	}
+	await command(channel_id, arguments);
+}
+
+async function parse_message(channel_id, message)
+{
+	console.log('start command');
+
+    try
+    {
+        var input = util.parse_arguments(message);
+
+        switch(input.command)
+        {
+            case 'echo': await run_command(echo, channel_id, input.arguments); break;
+            case 'get_emblems': await run_command(get_emblems, channel_id, input.arguments); break;
+            case 'get_triumph_score': await run_command(get_triumph_score, channel_id, input.arguments); break;
+
+            case 'add_player_to_roster': await run_command(add_player_to_roster, channel_id, input.arguments); break;
+            case 'remove_player_from_roster': await run_command(remove_player_from_roster, channel_id, input.arguments); break;
+            case 'print_roster': await run_command(print_roster, channel_id, input.arguments); break;
+
+            case 'print_leaderboard': await run_command(print_leaderboard, channel_id, input.arguments); break;
+
+            default:
+                throw new Error('Unrecognized command "' + input.command + '"');
+                break;
+        }
+    }
 	catch (error)
 	{
 		var error_details = error.name + " : " + error.message;
@@ -185,32 +207,19 @@ async function run_command(command, channel_id, arguments)
 			message: error_details
 		});
 	}
-	
+
 	console.log('end command');
 	console.log('');
 }
 
 bot.on('message', function (user, userID, channel_id, message, evt)
 {
-	var wake_command = '!frame.'
+    var wake_command = '!frame.'
 
     if (message.substring(0, wake_command.length) == wake_command)
-	{
-        var arguments = util.parse_arguments(message.substring(wake_command.length));
-        var command_string = arguments[0];
-        arguments = arguments.splice(1);
+    {
+        var message = message.substring(wake_command.length);
 
-        switch(command_string)
-		{
-            case 'echo': run_command(echo, channel_id, arguments); break;
-			case 'get_emblems': run_command(get_emblems, channel_id, arguments); break;
-			case 'get_triumph_score': run_command(get_triumph_score, channel_id, arguments); break;
-
-			case 'add_player_to_roster': run_command(add_player_to_roster, channel_id, arguments); break;
-			case 'remove_player_from_roster': run_command(remove_player_from_roster, channel_id, arguments); break;
-			case 'print_roster': run_command(print_roster, channel_id, arguments); break;
-
-			case 'print_leaderboard': run_command(print_leaderboard, channel_id, arguments); break;
-         }
-     }
+	    parse_message(channel_id, message);
+    }
 });
