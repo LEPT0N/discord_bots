@@ -3,9 +3,9 @@ var fs = require('fs');
 
 var root_folder = './.data';
 
-var methods = {};
+var public = {};
 
-methods.write_file = function(file_name, contents)
+public.write_file = function(file_name, contents)
 {
 	var file_path = root_folder + '/' + file_name;
 
@@ -27,7 +27,7 @@ methods.write_file = function(file_name, contents)
 	});
 }
 
-methods.read_file = function(file_name)
+public.read_file = function(file_name)
 {
 	var file_path = root_folder + '/' + file_name;
 
@@ -44,4 +44,4 @@ methods.read_file = function(file_name)
 	return contents_deserialized;
 }
 
-module.exports = methods;
+module.exports = public;

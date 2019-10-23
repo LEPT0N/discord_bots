@@ -17,7 +17,7 @@ bot.on('ready', function (evt)
     console.log('');
 
 	// easy testing
-	// run_command(get_triumph_score, 0, ['LEPT0N']);
+	// run_command(get_test, 0, ['LEPT0N', 'xbl']);
 });
 
 async function echo(channel_id, arguments)
@@ -58,8 +58,9 @@ async function get_emblems(channel_id, arguments)
 async function get_triumph_score(channel_id, arguments)
 {
 	var displayName = arguments[0];
+	var platform = arguments[1];
 
-    var player = await bungie.search_destiny_player(displayName);
+    var player = await bungie.search_destiny_player(displayName, platform);
 
 	var triumph_score = await bungie.get_triumph_score(player);
 
@@ -70,8 +71,33 @@ async function get_triumph_score(channel_id, arguments)
 	});
 }
 
+async function get_test(channel_id, arguments)
+{
+    // example showing how to get triumph data
+
+	var displayName = arguments[0];
+	var platform = arguments[1];
+	
+    var player = await bungie.search_destiny_player(displayName, platform);
+	
+	var triumphs = await bungie.get_triumphs(player);
+
+    var count = 0;
+    for (var hashIdentifier in triumphs)
+    {
+        await bungie.print_triumph(hashIdentifier, triumphs[hashIdentifier]);
+        
+        count++;
+        if (count > 5)
+        {
+            break;
+        }
+    }
+}
+
 async function run_command(command, channel_id, arguments)
 {
+	console.log('');
 	console.log('start command');
 	console.log(command);
 

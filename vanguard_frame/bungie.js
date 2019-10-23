@@ -2,7 +2,7 @@
 var fetch = require('node-fetch');
 var auth = require('./auth.json');
 
-var methods = {};
+var public = {};
 
 async function get_request(name, url)
 {
@@ -31,7 +31,7 @@ async function get_request(name, url)
     return response.Response;
 }
 
-methods.search_destiny_player = async function(displayName)
+public.search_destiny_player = async function(displayName, platform)
 {
     var url = 'Destiny2/SearchDestinyPlayer/-1/' + displayName + '/';
 
@@ -39,23 +39,32 @@ methods.search_destiny_player = async function(displayName)
 
 	console.log(players);
 
-	if (players.length != 1)
+    var matching_players = [];
+	for (var index = 0; index < players.length; index++)
 	{
-		var players_found = [];
-		for (var index = 0; index < players.length; index++)
+        if (players[index].iconPath == '/img/theme/destiny/icons/icon_' + platform + '.png')
 		{
-			players_found.push(players[index].displayName);
-		}
-
-		players_found = '[' + players_found.join(',') + ']'
-
-		throw new Error('found ' + players.length + ' players for ' + displayName + ' ' + players_found);
+            matching_players.push(players[index]);
+        }
 	}
 
-	return players[0];
+	if (matching_players.length != 1)
+	{
+		var matching_players_names = [];
+		for (var index = 0; index < matching_players.length; index++)
+		{
+			matching_players_names.push(matching_players[index].displayName);
+		}
+
+		matching_players_names = '[' + matching_players_names.join(',') + ']';
+
+		throw new Error('found ' + matching_players.length + ' players for ' + displayName + ' (' + platform + ') ' + matching_players_names);
+	}
+
+	return matching_players[0];
 }
 
-methods.get_character_ids = async function (player)
+public.get_character_ids = async function (player)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
 
@@ -71,7 +80,7 @@ methods.get_character_ids = async function (player)
     return character_ids;
 }
 
-methods.get_character = async function (player, character_id)
+public.get_character = async function (player, character_id)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
 	
@@ -82,7 +91,7 @@ methods.get_character = async function (player, character_id)
     return character;
 }
 
-methods.get_triumph_score = async function (player)
+public.get_triumph_score = async function (player)
 {
     var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
@@ -93,4 +102,61 @@ methods.get_triumph_score = async function (player)
     return score;
 }
 
-module.exports = methods;
+public.get_triumphs = async function (player)
+{
+    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
+
+    var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
+
+	console.log(triumphs);
+    
+    return triumphs;
+}
+
+// NOTE: the documentation says not to do this for huge lists (use the manifest instead)
+public.get_triumph_name = async function (hashIdentifier)
+{
+    var url = 'Destiny2/Manifest/DestinyRecordDefinition/' + hashIdentifier + '/';
+
+    var triumph_display_properties = (await get_request('get_triumphs', url)).displayProperties;
+
+	console.log(triumph_display_properties);
+    
+    return triumph_display_properties.name;
+}
+
+public.triumph_state =
+[
+    { value: 1, name: 'RecordRedeemed' },
+    { value: 2, name: 'RewardUnavailable' },
+    { value: 4, name: 'ObjectiveNotCompleted' },
+    { value: 8, name: 'Obscured' },
+    { value: 16, name: 'Invisible' },
+    { value: 32, name: 'EntitlementUnowned' },
+    { value: 64, name: 'CanEquipTitle' },
+];
+
+public.get_triumph_state = function (triumph)
+{
+    var combined_triumph_state = [];
+
+	for (var index = 0; index < public.triumph_state.length; index++)
+	{
+        if (triumph.state & public.triumph_state[index].value)
+        {
+		    combined_triumph_state.push(public.triumph_state[index].name);
+        }
+	}
+
+	return '[' + combined_triumph_state.join(' ') + ']';
+}
+
+public.print_triumph = async function (hashIdentifier, triumph)
+{
+    var name = (await public.get_triumph_name(hashIdentifier));
+
+    console.log('name = ' + name);
+    console.log('state = ' + public.get_triumph_state(triumph));
+}
+
+module.exports = public;
