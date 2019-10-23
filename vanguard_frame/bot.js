@@ -34,8 +34,9 @@ async function echo(channel_id, arguments)
 async function get_emblems(channel_id, arguments)
 {
 	var displayName = arguments[0];
+	var platform = arguments[1];
 
-    var player = await bungie.search_destiny_player(displayName);
+    var player = await bungie.search_destiny_player(displayName, platform);
 
 	var character_ids = await bungie.get_character_ids(player);
 
@@ -43,15 +44,13 @@ async function get_emblems(channel_id, arguments)
 	{
 		var character = await bungie.get_character(player, character_ids[index]);
 
-		var emblem = 'https://www.bungie.net' + character.emblemPath;
+		var emblem_url = 'https://www.bungie.net' + character.emblemPath;
 
-		console.log('emblem = ' + emblem);
+		console.log('emblem = ' + emblem_url);
 
-		bot.sendMessage(
-		{
-			to: channel_id,
-			message: emblem
-		});
+        var emblem_file_name = character_ids[index] + '_emblem.jpg';
+
+        util.upload_file(bot, channel_id, emblem_url, emblem_file_name);
 	}
 }
 

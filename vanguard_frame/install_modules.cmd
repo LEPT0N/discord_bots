@@ -15,4 +15,10 @@ npm install node-fetch
 
 npm install fs
 
+npm install http
+
+npm install -g node-gyp
+
+npm install http-request
+
 popd
