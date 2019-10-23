@@ -19,7 +19,7 @@ bot.on('ready', function (evt)
     console.log('');
 
 	// easy testing
-	// run_command(add_player_to_roster, 0, ['LEPT0N', 'xbl']);
+	// run_command(get_triumph_score, 0, ['CoachMcGuirk S8', 'xbl']);
 	// run_command(print_leaderboard, 0, ['triumph_score']);
 });
 
@@ -196,7 +196,7 @@ bot.on('message', function (user, userID, channel_id, message, evt)
 
     if (message.substring(0, wake_command.length) == wake_command)
 	{
-        var arguments = message.substring(wake_command.length).split(' ');
+        var arguments = util.parse_arguments(message.substring(wake_command.length));
         var command_string = arguments[0];
         arguments = arguments.splice(1);
 

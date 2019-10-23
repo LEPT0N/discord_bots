@@ -95,4 +95,64 @@ public.upload_file = async function(bot, channel_id, url, file_name)
     fs.unlinkSync(file_path);
 }
 
+public.parse_arguments = function(arguments_string)
+{
+    console.log('parsing arguments:');
+    console.log(arguments_string);
+
+    var arguments_raw = arguments_string.split(' ');
+    var arguments = [];
+
+    // Loop through each argument
+    for (var index = 0; index < arguments_raw.length; index++)
+    {
+        var raw_value = arguments_raw[index];
+
+        var value = raw_value;
+
+        // Look for one that starts with a quote
+        if (value.slice(0, 1) == '"')
+        {
+            // Remove the quote
+            value = value.slice(1);
+            
+            var found_end = false;
+
+            // Loop through the rest of the arguments
+            for (index++; !found_end && index < arguments_raw.length; index++)
+            {
+                var added_value = arguments_raw[index];
+                
+                // Look for one that ends with a quote
+                if (added_value.slice(-1) == '"')
+                {
+                    // Remove the quote
+                    added_value = added_value.slice(0, -1);
+
+                    found_end = true;
+                }
+
+                // Append the current argument to all that we've found since the opening quote
+                value = value + ' ' + added_value;
+            }
+
+            // HACK: go back one so that the outer loop's index++ won't skip an argument
+            index--;
+
+            if (!found_end)
+            {
+                throw new Error('Unable to find closing quote for argument "' + raw_value + '"');
+            }
+        }
+
+        // Add the argument to the list
+        arguments.push(value);
+    }
+
+    console.log('parsed arguments:');
+    console.log(arguments);
+
+    return arguments;
+}
+
 module.exports = public;
