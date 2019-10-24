@@ -32,6 +32,14 @@ var known_triumphs =
     // Crucible // Lifetime // Combat Record // Fierce Competitor
     // https://www.light.gg/db/legend/triumphs/3015941901/fierce-competitor/
     'crucible_kills': 3015941901,
+    
+    // Account // Clan // Clan // Major Contributor
+    // https://www.light.gg/db/legend/triumphs/1738299320/major-contributor/
+    'clan_xp': 1738299320,
+    
+    // Vanguard // Strikes // Nightfall: The Ordeal
+    // https://www.light.gg/db/legend/triumphs/4020709858/lightbearer/
+    'nightfall_ordeal_high_score': 4020709858,
 }
 
 async function individual_triumph(player_roster, parameter)
@@ -51,7 +59,12 @@ async function individual_triumph(player_roster, parameter)
 
         var triumph_data = (await bungie.get_triumphs(value))[hashIdentifier];
 
-        var progress = triumph_data.intervalObjectives[0].progress;
+        // console.log(triumph_data);
+        // console.log('');
+
+        var objectives = triumph_data.intervalObjectives;
+
+        var progress = objectives[objectives.length - 1].progress;
 
         return { name: player_name, progress: progress };
     }));
