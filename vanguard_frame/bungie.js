@@ -130,7 +130,7 @@ public.get_triumphs = async function (player)
     var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
 
     // This is too huge to print
-	// console.log(triumphs);
+    // console.log(triumphs);
     // console.log('');
     
     return triumphs;
@@ -147,6 +147,19 @@ public.get_triumph_display_properties = async function (hashIdentifier)
     console.log('');
     
     return triumph_display_properties;
+}
+
+public.get_character_stats = async function (player)
+{
+    var url = 'Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
+
+    var stats = (await get_request('get_character_stats', url));
+
+    // This is too huge to print
+    // console.log(stats);
+    // console.log('');
+
+    return stats;
 }
 
 public.triumph_state =

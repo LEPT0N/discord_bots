@@ -41,7 +41,7 @@ async function individual_triumph(player_roster, parameter)
 	    throw new Error('Triumph "' + parameter + '" is not in my list');
     }
 
-    hashIdentifier = known_triumphs[parameter];
+    var hashIdentifier = known_triumphs[parameter];
     
     var display_properties = await bungie.get_triumph_display_properties(hashIdentifier);
 
@@ -71,10 +71,61 @@ async function individual_triumph(player_roster, parameter)
         output_array.join('\r\n');
 }
 
+// Look at the output from get_character_stats to see what's available
+var known_stats =
+{
+    'light_level': 'mergedAllCharacters results allPvE allTime highestLightLevel basic displayValue',
+}
+
+async function individual_stat(player_roster, parameter)
+{
+    if (!(parameter in known_stats))
+    {
+	    throw new Error('Stat "' + parameter + '" is not in my list');
+    }
+
+    var property_tree = known_stats[parameter].split(' ');
+
+    var result_array = await Promise.all(player_roster.players.map(async function(value)
+    {
+        var player_name = value.displayName;
+
+        var stats = await bungie.get_character_stats(value);
+
+        var node = stats;
+        for (var index = 0; index < property_tree.length; index++)
+        {
+            //console.log('--------------------------');
+            //console.log(node);
+            //console.log('tree value');
+            //console.log(property_tree[index]);
+
+            node = node[property_tree[index]];
+        }
+        
+        //console.log(node);
+
+        return { name: player_name, light_level: node };
+    }));
+
+    result_array.sort(function(a, b)
+    {
+        return b.light_level - a.light_level;
+    });
+
+    var output_array = result_array.map(function(value)
+    {
+        return value.light_level + '\t : ' + value.name
+    });
+
+    return output_array.join('\r\n');
+}
+
 var leaderboards =
 {
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
+    individual_stat: individual_stat,
 };
 
 public.get = async function(name, parameter)
