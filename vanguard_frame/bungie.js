@@ -48,7 +48,7 @@ public.search_destiny_player = async function(arguments)
     var matching_players = [];
 	for (var index = 0; index < players.length; index++)
 	{
-        if (players[index].iconPath == '/img/theme/destiny/icons/icon_' + platform + '.png')
+        if (players[index].iconPath == '/img/theme/bungienet/icons/' + platform + 'Logo.png')
 		{
             matching_players.push(players[index]);
         }
@@ -141,7 +141,7 @@ public.get_triumph_display_properties = async function (hashIdentifier)
 {
     var url = 'Destiny2/Manifest/DestinyRecordDefinition/' + hashIdentifier + '/';
 
-    var triumph_display_properties = (await get_request('get_triumphs', url)).displayProperties;
+    var triumph_display_properties = (await get_request('get_triumph_display_properties', url)).displayProperties;
 
 	console.log(triumph_display_properties);
     console.log('');
@@ -160,6 +160,32 @@ public.get_character_stats = async function (player)
     // console.log('');
 
     return stats;
+}
+
+public.get_collectibles = async function (player)
+{
+    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
+
+    var collectibles = (await get_request('get_collectibles', url)).profileCollectibles.data.collectibles;
+
+    // This is too huge to print
+    // console.log(collectibles);
+    // console.log('');
+    
+    return collectibles;
+}
+
+// NOTE: the documentation says not to do this for huge lists (use the manifest instead)
+public.get_collectible_display_properties = async function (hashIdentifier)
+{
+    var url = 'Destiny2/Manifest/DestinyCollectibleDefinition/' + hashIdentifier + '/';
+
+    var collectible_display_properties = (await get_request('get_collectible_display_properties', url)).displayProperties;
+
+	console.log(collectible_display_properties);
+    console.log('');
+    
+    return collectible_display_properties;
 }
 
 public.triumph_state =
