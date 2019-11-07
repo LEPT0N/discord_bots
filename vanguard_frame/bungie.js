@@ -5,9 +5,9 @@ var util = require('./util.js');
 
 var public = {};
 
-async function get_request(name, url)
+async function get_request(name, url, raw)
 {
-	url = 'https://www.bungie.net/Platform/' + url;
+	url = 'https://www.bungie.net/' + url;
 
 	console.log('');
 	console.log(name);
@@ -22,14 +22,81 @@ async function get_request(name, url)
         }
     }).then(response => response.json());
 
+    if (raw)
+    {
+        return response;
+    }
+
     if (response.ErrorCode != 1)
     {
 		console.log(response);
 
-		throw new Error(JSON.stringify(response));
+        throw new Error(JSON.stringify(response));
     }
 
     return response.Response;
+}
+
+async function download_manifest_directory()
+{
+    var url = 'Platform/Destiny2/Manifest';
+
+    var manifest_directory = (await get_request('download_manifest_directory', url));
+
+    return {
+        version: manifest_directory.version,
+        url: manifest_directory.jsonWorldContentPaths.en
+    };
+}
+
+async function download_manifest(manifest_directory)
+{
+    var manifest_data = (await get_request(
+        'download_manifest',
+        manifest_directory.url,
+        true));
+
+    return {
+        version: manifest_directory.version,
+        date: util.get_date(),
+        data: manifest_data
+    };
+}
+
+var cached_manifest = null;
+
+public.get_manifest = async function ()
+{
+    var today = util.get_date();
+
+    var manifest_file_name = 'manifest.json';
+
+    if (!cached_manifest)
+    {
+        cached_manifest = util.try_read_file(manifest_file_name, true);
+    }
+
+    if (cached_manifest && cached_manifest.date == today)
+    {
+        return cached_manifest;
+    }
+
+    var manifest_directory = await download_manifest_directory();
+
+    if (cached_manifest && cached_manifest.version == manifest_directory.version)
+    {
+        cached_manifest.date = today;
+
+        util.write_file(manifest_file_name, cached_manifest, true);
+
+        return cached_manifest;
+    }
+
+    cached_manifest = await download_manifest(manifest_directory);
+
+    util.write_file(manifest_file_name, cached_manifest, true);
+
+    return cached_manifest;
 }
 
 public.search_destiny_player = async function(arguments)
@@ -38,7 +105,7 @@ public.search_destiny_player = async function(arguments)
 	var platform = arguments[1];
     var requested_index = util.try_get_element(arguments, 2);
 
-    var url = 'Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
+    var url = 'Platform/Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
 
 	var players = (await get_request('search_destiny_player', url));
 
@@ -84,7 +151,7 @@ public.search_destiny_player = async function(arguments)
 
 public.get_character_ids = async function (player)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
+    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
 
     var character_ids = (await get_request('get_character_ids', url)).profile.data.characterIds;
 
@@ -101,7 +168,7 @@ public.get_character_ids = async function (player)
 
 public.get_character = async function (player, character_id)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
+    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
 	
     var character = (await get_request('get_character', url)).character.data;
 
@@ -113,7 +180,7 @@ public.get_character = async function (player, character_id)
 
 public.get_triumph_score = async function (player)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
+    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
     var score = (await get_request('get_triumph_score', url)).profileRecords.data.score;
 
@@ -125,7 +192,7 @@ public.get_triumph_score = async function (player)
 
 public.get_triumphs = async function (player)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
+    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
     var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
 
@@ -139,7 +206,7 @@ public.get_triumphs = async function (player)
 // NOTE: the documentation says not to do this for huge lists (use the manifest instead)
 public.get_triumph_display_properties = async function (hashIdentifier)
 {
-    var url = 'Destiny2/Manifest/DestinyRecordDefinition/' + hashIdentifier + '/';
+    var url = 'Platform/Destiny2/Manifest/DestinyRecordDefinition/' + hashIdentifier + '/';
 
     var triumph_display_properties = (await get_request('get_triumph_display_properties', url)).displayProperties;
 
@@ -151,7 +218,7 @@ public.get_triumph_display_properties = async function (hashIdentifier)
 
 public.get_character_stats = async function (player)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
+    var url = 'Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
 
     var stats = (await get_request('get_character_stats', url));
 
@@ -164,7 +231,7 @@ public.get_character_stats = async function (player)
 
 public.get_collectibles = async function (player)
 {
-    var url = 'Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
+    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
 
     var collectibles = (await get_request('get_collectibles', url)).profileCollectibles.data.collectibles;
 
@@ -178,7 +245,7 @@ public.get_collectibles = async function (player)
 // NOTE: the documentation says not to do this for huge lists (use the manifest instead)
 public.get_collectible_display_properties = async function (hashIdentifier)
 {
-    var url = 'Destiny2/Manifest/DestinyCollectibleDefinition/' + hashIdentifier + '/';
+    var url = 'Platform/Destiny2/Manifest/DestinyCollectibleDefinition/' + hashIdentifier + '/';
 
     var collectible_display_properties = (await get_request('get_collectible_display_properties', url)).displayProperties;
 

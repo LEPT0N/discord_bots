@@ -13,13 +13,16 @@ public.file_exists = function(file_name)
     return fs.existsSync(file_path);
 }
 
-public.write_file = function(file_name, contents)
+public.write_file = function(file_name, contents, suppress_contents_log)
 {
 	var file_path = root_folder + '/' + file_name;
 
-	console.log('writing to file ' + file_path);
-	console.log('contents:');
-	console.log(contents);
+    console.log('writing to file ' + file_path);
+    if (!suppress_contents_log)
+    {
+        console.log('contents:');
+        console.log(contents);
+    }
     console.log('');
 
 	fs.mkdirSync(root_folder, {recursive: true});
@@ -35,7 +38,7 @@ public.write_file = function(file_name, contents)
 	});
 }
 
-public.read_file = function(file_name)
+public.read_file = function (file_name, suppress_contents_log)
 {
 	var file_path = root_folder + '/' + file_name;
 
@@ -45,11 +48,26 @@ public.read_file = function(file_name)
 
 	var contents_deserialized = JSON.parse(contents);
 
-	console.log('contents:');
-	console.log(contents_deserialized);
+    if (!suppress_contents_log)
+    {
+        console.log('contents:');
+        console.log(contents_deserialized);
+    }
 	console.log('');
 
 	return contents_deserialized;
+}
+
+public.try_read_file = function (file_name, suppress_contents_log)
+{
+    if (public.file_exists(file_name))
+    {
+        return public.read_file(file_name, suppress_contents_log);
+    }
+    else
+    {
+        return null;
+    }
 }
 
 public.download_file = async function(url, file_name)
@@ -177,6 +195,11 @@ public.try_get_element = function(array, index)
     {
         return null;
     }
+}
+
+public.get_date = function ()
+{
+    return new Date().toJSON().slice(0, 10);
 }
 
 module.exports = public;
