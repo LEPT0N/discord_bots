@@ -78,7 +78,7 @@ public.get_manifest = async function ()
 
     if (cached_manifest && cached_manifest.date == today)
     {
-        return cached_manifest;
+        return cached_manifest.data;
     }
 
     var manifest_directory = await download_manifest_directory();
@@ -89,7 +89,7 @@ public.get_manifest = async function ()
 
         util.write_file(manifest_file_name, cached_manifest, true);
 
-        return cached_manifest;
+        return cached_manifest.data;
     }
 
     cached_manifest = await download_manifest(manifest_directory);
