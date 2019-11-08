@@ -123,17 +123,17 @@ async function individual_stat(player_roster, parameter)
         
         //console.log(node);
 
-        return { name: player_name, light_level: node };
+        return { name: player_name, stat: node };
     }));
 
     result_array.sort(function(a, b)
     {
-        return b.light_level - a.light_level;
+        return b.stat - a.stat;
     });
 
     var output_array = result_array.map(function(value)
     {
-        return value.light_level + '\t : ' + value.name
+        return value.stat + '\t : ' + value.name
     });
 
     return output_array.join('\r\n');

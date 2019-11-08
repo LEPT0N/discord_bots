@@ -96,7 +96,7 @@ public.get_manifest = async function ()
 
     util.write_file(manifest_file_name, cached_manifest, true);
 
-    return cached_manifest;
+    return cached_manifest.data;
 }
 
 public.search_destiny_player = async function(arguments)
