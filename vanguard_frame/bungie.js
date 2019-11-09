@@ -296,4 +296,26 @@ public.get_triumph_state = function (triumph)
 	return '[' + combined_triumph_state.join(' ') + ']';
 }
 
+public.search_manifest = async function (category, search_query)
+{
+    var manifest = (await public.get_manifest())[category];
+
+    var results = [];
+
+    Object.keys(manifest).forEach(function (key)
+    {
+        var item_name = manifest[key].displayProperties.name;
+
+        if (item_name.includes(search_query))
+        {
+            results.push({
+                key: key,
+                name: item_name
+            });
+        }
+    });
+
+    return results;
+}
+
 module.exports = public;

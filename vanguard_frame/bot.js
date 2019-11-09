@@ -25,6 +25,7 @@ bot.on('ready', function (evt)
     // run_command(save_collectibles, 0, ['LEPT0N', 'xboxLive']);
     // run_command(inspect_collectible, 0, []);
     // run_command(test_manifest, 0, []);
+    // run_command(search_manifest, 0, ['collectibles', 'Breakneck']);
 });
 
 async function echo(channel_id, arguments)
@@ -217,6 +218,41 @@ async function print_leaderboard(channel_id, arguments)
 	});
 }
 
+async function search_manifest(channel_id, arguments)
+{
+    var category = arguments[0];
+    var search_query = arguments[1];
+
+    var search_categories =
+    {
+        collectibles: 'DestinyCollectibleDefinition',
+        triumphs: 'DestinyRecordDefinition',
+    };
+
+    if (!(category in search_categories))
+    {
+        throw new Error('category "' + category + '" does not exist');
+    }
+
+    var results = (await bungie.search_manifest(
+        search_categories[category],
+        search_query));
+
+    console.log(results);
+    console.log('');
+
+    var string_results = results.map(function (value)
+    {
+        return value.key + ' = ' + value.name;
+    }).join('\r\n');
+
+    bot.sendMessage(
+    {
+        to: channel_id,
+        message: string_results
+    });
+}
+
 async function run_command(command, channel_id, arguments)
 {
 	console.log(command);
@@ -244,6 +280,7 @@ async function parse_message(channel_id, message)
 
             case 'print_leaderboard': await run_command(print_leaderboard, channel_id, input.arguments); break;
 
+            case 'search_manifest': await run_command(search_manifest, channel_id, input.arguments); break;
             default:
                 throw new Error('Unrecognized command "' + input.command + '"');
                 break;
