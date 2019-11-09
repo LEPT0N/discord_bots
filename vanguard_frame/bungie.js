@@ -239,6 +239,18 @@ public.get_character_stats = async function (player)
     return stats;
 }
 
+// Destiny.DestinyCollectibleState
+public.collectible_state =
+{
+    NotAcquired: 1,
+    Obscured: 2,
+    Invisible: 4,
+    CannotAffordMaterialRequirements: 8,
+    InventorySpaceUnavailable: 16,
+    UniquenessViolation: 32,
+    PurchaseDisabled: 64,
+};
+
 public.get_collectibles = async function (player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';

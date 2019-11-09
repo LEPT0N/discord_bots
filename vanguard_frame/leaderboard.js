@@ -157,11 +157,101 @@ async function individual_stat(player_roster, parameter)
     };
 }
 
+var collectible_sets =
+{
+    'pinnacle_weapons': [
+        { id: 3260604718, name: 'Luna\'s Howl' },
+        { id: 3260604717, name: 'Not Forgotten' },
+        { id: 4274523516, name: 'Redrix\'s Claymore' },
+        { id: 1111219481, name: 'Redrix\'s Broadsword' },
+
+        { id: 1666039008, name: 'Breakneck' },
+        { id: 3810740723, name: 'Loaded Question' },
+        { id: 4047371119, name: 'The Mountaintop' },
+
+        { id: 543982652, name: 'Oxygen SR3' },
+        { id: 1639266456, name: '21% Delirium' },
+        { id: 2335550020, name: 'The Recluse' },
+
+        { id: 3830703103, name: 'Wendigo GL3' },
+        { id: 1670904512, name: 'Hush' },
+        { id: 3066162258, name: 'Revoker' },
+
+        { id: 853534062, name: 'Edgewise' },
+        { id: 1510655351, name: 'Exit Strategy' },
+        { id: 1303705556, name: 'Randy\'s Throwing Knife' },
+    ]
+}
+
+async function collectibles(player_roster, parameter)
+{
+    if (!(parameter in collectible_sets))
+    {
+	    throw new Error('Stat "' + parameter + '" is not in my list');
+    }
+
+    var collectible_set = collectible_sets[parameter];
+
+    var result_array = await Promise.all(player_roster.players.map(async function(player)
+    {
+        var player_collectibles = await bungie.get_collectibles(player);
+
+        var count = 0;
+        var player_result_details = [];
+
+        collectible_set.forEach(function(collectible_set_item)
+        {
+            var state = player_collectibles[collectible_set_item.id].state;
+
+            var unlocked = !(state & bungie.collectible_state.NotAcquired);
+
+            if (unlocked)
+            {
+                count++;
+            }
+
+            player_result_details.push(
+            {
+                name: collectible_set_item.name,
+                state: state,
+                unlocked: unlocked
+            });
+        });
+
+        return { count: count, player_name: player.displayName, details: player_result_details };
+    }));
+
+    result_array.sort(function(a, b)
+    {
+        return b.count - a.count;
+    });
+
+    var output_array = result_array.map(function(value)
+    {
+        var player_collectible_list = value.details.filter(detail => detail.unlocked);
+
+        player_collectible_list = player_collectible_list.map(function(detail)
+        {
+            return detail.name;
+        });
+
+        player_collectible_list = player_collectible_list.join(', ');
+
+        return value.count + '\t : ' + value.player_name + ' (' + player_collectible_list + ')';
+    });
+
+    return {
+        message: output_array.join('\r\n'),
+        url: null
+    };
+}
+
 var leaderboards =
 {
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
     individual_stat: individual_stat,
+    collectibles: collectibles,
 };
 
 public.get = async function(name, parameter)

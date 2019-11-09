@@ -26,6 +26,7 @@ bot.on('ready', function (evt)
     // run_command(inspect_collectible, 0, []);
     // run_command(test_manifest, 0, []);
     // run_command(search_manifest, 0, ['collectibles', 'Breakneck']);
+    // run_command(print_leaderboard, 0, ['collectibles', 'pinnacle_weapons']);
 });
 
 async function echo(channel_id, arguments)
