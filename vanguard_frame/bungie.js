@@ -5,9 +5,11 @@ var util = require('./util.js');
 
 var public = {};
 
+public.root_url = 'https://www.bungie.net';
+
 async function get_request(name, url, raw)
 {
-	url = 'https://www.bungie.net/' + url;
+	url = public.root_url + url;
 
 	console.log('');
 	console.log(name);
@@ -39,9 +41,12 @@ async function get_request(name, url, raw)
 
 async function download_manifest_directory()
 {
-    var url = 'Platform/Destiny2/Manifest';
+    var url = '/Platform/Destiny2/Manifest';
 
     var manifest_directory = (await get_request('download_manifest_directory', url));
+
+    console.log(manifest_directory);
+    console.log('');
 
     return {
         version: manifest_directory.version,
@@ -105,7 +110,7 @@ public.search_destiny_player = async function(arguments)
 	var platform = arguments[1];
     var requested_index = util.try_get_element(arguments, 2);
 
-    var url = 'Platform/Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
+    var url = '/Platform/Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
 
 	var players = (await get_request('search_destiny_player', url));
 
@@ -151,7 +156,7 @@ public.search_destiny_player = async function(arguments)
 
 public.get_character_ids = async function (player)
 {
-    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
 
     var character_ids = (await get_request('get_character_ids', url)).profile.data.characterIds;
 
@@ -168,7 +173,7 @@ public.get_character_ids = async function (player)
 
 public.get_character = async function (player, character_id)
 {
-    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
 	
     var character = (await get_request('get_character', url)).character.data;
 
@@ -180,7 +185,7 @@ public.get_character = async function (player, character_id)
 
 public.get_triumph_score = async function (player)
 {
-    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
     var score = (await get_request('get_triumph_score', url)).profileRecords.data.score;
 
@@ -192,7 +197,7 @@ public.get_triumph_score = async function (player)
 
 public.get_triumphs = async function (player)
 {
-    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
     var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
 
@@ -203,22 +208,27 @@ public.get_triumphs = async function (player)
     return triumphs;
 }
 
-// NOTE: the documentation says not to do this for huge lists (use the manifest instead)
 public.get_triumph_display_properties = async function (hashIdentifier)
 {
-    var url = 'Platform/Destiny2/Manifest/DestinyRecordDefinition/' + hashIdentifier + '/';
+    var manifest = (await public.get_manifest()).DestinyRecordDefinition;
 
-    var triumph_display_properties = (await get_request('get_triumph_display_properties', url)).displayProperties;
+    if (!hashIdentifier in manifest)
+    {
+        throw new Error('Triumph "' + hashIdentifier + '" is not in the manifest');
+    }
 
-	console.log(triumph_display_properties);
+    var display_properties = manifest[hashIdentifier].displayProperties;
+
+    console.log('get_triumph_display_properties');
+    console.log(display_properties);
     console.log('');
-    
-    return triumph_display_properties;
+
+    return display_properties;
 }
 
 public.get_character_stats = async function (player)
 {
-    var url = 'Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
 
     var stats = (await get_request('get_character_stats', url));
 
@@ -231,7 +241,7 @@ public.get_character_stats = async function (player)
 
 public.get_collectibles = async function (player)
 {
-    var url = 'Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
 
     var collectibles = (await get_request('get_collectibles', url)).profileCollectibles.data.collectibles;
 
@@ -242,17 +252,22 @@ public.get_collectibles = async function (player)
     return collectibles;
 }
 
-// NOTE: the documentation says not to do this for huge lists (use the manifest instead)
 public.get_collectible_display_properties = async function (hashIdentifier)
 {
-    var url = 'Platform/Destiny2/Manifest/DestinyCollectibleDefinition/' + hashIdentifier + '/';
+    var manifest = (await public.get_manifest()).DestinyCollectibleDefinition;
 
-    var collectible_display_properties = (await get_request('get_collectible_display_properties', url)).displayProperties;
+    if (!hashIdentifier in manifest)
+    {
+        throw new Error('Collectible "' + hashIdentifier + '" is not in the manifest');
+    }
 
-	console.log(collectible_display_properties);
+    var display_properties = manifest[hashIdentifier].displayProperties;
+
+    console.log('get_collectible_display_properties');
+    console.log(display_properties);
     console.log('');
-    
-    return collectible_display_properties;
+
+    return display_properties;
 }
 
 public.triumph_state =
@@ -279,14 +294,6 @@ public.get_triumph_state = function (triumph)
 	}
 
 	return '[' + combined_triumph_state.join(' ') + ']';
-}
-
-public.print_triumph = async function (hashIdentifier, triumph)
-{
-    var name = (await public.get_triumph_display_properties(hashIdentifier)).name;
-
-    console.log('name = ' + name);
-    console.log('state = ' + public.get_triumph_state(triumph));
 }
 
 module.exports = public;

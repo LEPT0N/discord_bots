@@ -24,7 +24,10 @@ async function triumph_score(player_roster, parameter)
         return value.score + '\t : ' + value.name
     });
     
-    return output_array.join('\r\n');
+    return {
+        message: output_array.join('\r\n'),
+        url: null
+    };
 }
 
 var known_triumphs =
@@ -79,9 +82,21 @@ async function individual_triumph(player_roster, parameter)
         return value.progress + '\t : ' + value.name
     });
 
-    return display_properties.name + "\r\n" +
+    var message = display_properties.name + "\r\n" +
         display_properties.description + "\r\n" +
         output_array.join('\r\n');
+
+    var url = null;
+
+    if (display_properties.hasIcon)
+    {
+        url = bungie.root_url + display_properties.icon;
+    }
+
+    return {
+        message: message,
+        url: url
+    };
 }
 
 // Look at the output from get_character_stats to see what's available
@@ -136,7 +151,10 @@ async function individual_stat(player_roster, parameter)
         return value.stat + '\t : ' + value.name
     });
 
-    return output_array.join('\r\n');
+    return {
+        message: output_array.join('\r\n'),
+        url: null
+    };
 }
 
 var leaderboards =

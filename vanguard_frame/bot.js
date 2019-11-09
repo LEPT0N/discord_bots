@@ -19,9 +19,12 @@ bot.on('ready', function (evt)
     console.log('');
 
 	// easy testing
-	// run_command(get_triumph_score, 0, ['CoachMcGuirk S8', 'xbl']);
+	// run_command(get_triumph_score, 0, ['CoachMcGuirk S8', 'xboxLive']);
 	// run_command(print_leaderboard, 0, ['triumph_score']);
-    run_command(print_leaderboard, 0, ['individual_triumph', 'crucible_kills']);
+    // run_command(print_leaderboard, 0, ['individual_triumph', 'crucible_kills']);
+    // run_command(save_collectibles, 0, ['LEPT0N', 'xboxLive']);
+    // run_command(inspect_collectible, 0, []);
+    // run_command(test_manifest, 0, []);
 });
 
 async function echo(channel_id, arguments)
@@ -45,7 +48,7 @@ async function get_emblems(channel_id, arguments)
 	{
 		var character = await bungie.get_character(player, character_ids[index]);
 
-		var emblem_url = 'https://www.bungie.net' + character.emblemPath;
+        var emblem_url = bungie.root_url + character.emblemPath;
 
 		console.log('emblem = ' + emblem_url);
 
@@ -68,13 +71,56 @@ async function get_triumph_score(channel_id, arguments)
 	});
 }
 
+async function test_manifest(channel_id, arguments)
+{
+    var manifest = await bungie.get_manifest();
+
+    console.log('manifest!');
+
+    var manifest = await bungie.get_manifest();
+
+    console.log('manifest!');
+}
+
+async function save_collectibles(channel_id, arguments)
+{
+    var player = await bungie.search_destiny_player(arguments);
+    var collectibles = await bungie.get_collectibles(player);
+
+    util.write_file('collectibles.json', collectibles);
+}
+
+async function inspect_collectible(channel_id, arguments)
+{
+    // var collectibles = util.read_file('collectibles.json');
+
+    bungie.get_collectible_display_properties('24595238');
+}
+
 async function get_test(channel_id, arguments)
 {
     // example showing how to get triumph data
 
-    var player = await bungie.search_destiny_player(arguments);
-	
-	var triumphs = await bungie.get_triumphs(player);
+    // var player = await bungie.search_destiny_player(arguments);
+    // var triumphs = await bungie.get_triumphs(player);
+    var triumphs = util.read_file('triumphs.json');
+
+    // util.write_file('triumphs.json', triumphs);
+
+    for (var flag = 1; flag < 513; flag = flag * 2)
+    {
+        var count = 0;
+
+        for (var key in triumphs)
+        {
+            if (triumphs[key].state & flag)
+            {
+                count = count + 1;
+            }
+        }
+
+        console.log('flag = ' + flag + ' count = ' + count);
+    }
 
     /*
     var count = 0;
@@ -90,9 +136,15 @@ async function get_test(channel_id, arguments)
     }
     */
     
-    console.log(triumphs[3015941901]);
+    // console.log(triumphs[3015941901]);
 
-    await bungie.print_triumph(3015941901, triumphs[3015941901]);
+    // await bungie.print_triumph(3015941901, triumphs[3015941901]);
+}
+
+async function get_test_2(channel_id, arguments) {
+    // example showing how to get triumph data
+
+    var triumph = await bungie.get_triumph_display_properties('11996340');
 }
 
 async function add_player_to_roster(channel_id, arguments)
@@ -153,10 +205,15 @@ async function print_leaderboard(channel_id, arguments)
 
     var leaderboard_data = await leaderboard.get(leaderboard_name, leaderboard_parameter);
 
+    if (leaderboard_data.url)
+    {
+        util.upload_file(bot, channel_id, leaderboard_data.url, 'leaderboard_icon.jpg');
+    }
+
 	bot.sendMessage(
 	{
 		to: channel_id,
-		message: leaderboard_data
+		message: leaderboard_data.message
 	});
 }
 
