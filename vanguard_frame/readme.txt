@@ -29,3 +29,8 @@ https://www.w3schools.com/nodejs/
 https://www.w3schools.com/jsref/
 
 https://nodejs.org/api/fs.html
+
+https://discordjs.guide/popular-topics/reactions.html#unicode-emojis
+https://javacord.org/wiki/basic-tutorials/emojis-and-reactions/
+https://github.com/vdurmont/emoji-java
+

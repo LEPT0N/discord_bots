@@ -113,19 +113,19 @@ public.upload_file = async function(bot, channel_id, url, file_name)
     fs.unlinkSync(file_path);
 }
 
-public.parse_arguments = function(arguments_string)
+public.parse_arguments = function(input)
 {
     console.log('parsing arguments:');
-    console.log(arguments_string);
+    console.log(input.raw_message);
 
-    var arguments_raw = arguments_string.split(' ');
+    var arguments_raw = input.raw_message.split(' ');
 
     if (arguments_raw.length < 1 || arguments_raw[0].length < 1)
     {
         throw new Error('Must provide a command');
     }
-    
-    var result = { command: arguments_raw[0] };
+
+    input.command = arguments_raw[0];
 
     arguments_raw = arguments_raw.splice(1);
 
@@ -177,12 +177,12 @@ public.parse_arguments = function(arguments_string)
         arguments.push(value);
     }
 
-    result.arguments = arguments;
+    input.arguments = arguments;
 
     console.log('parsed arguments:');
-    console.log(result);
+    console.log(input);
 
-    return result;
+    return input;
 }
 
 public.try_get_element = function(array, index)
@@ -200,6 +200,11 @@ public.try_get_element = function(array, index)
 public.get_date = function ()
 {
     return new Date().toJSON().slice(0, 10);
+}
+
+public.sleep = async function sleep(milliseconds)
+{
+    return new Promise(x => setTimeout(x, milliseconds));
 }
 
 module.exports = public;

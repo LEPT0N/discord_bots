@@ -29,20 +29,20 @@ bot.on('ready', function (evt)
     // run_command(print_leaderboard, 0, ['collectibles', 'pinnacle_weapons']);
 });
 
-async function echo(channel_id, arguments)
+async function echo(input)
 {
     bot.sendMessage(
 	{
-        to: channel_id,
-        message: '<' + arguments[0] + '>'
+        to: input.channel_id,
+        message: '<' + input.arguments[0] + '>'
     });
 
-    console.log('echoed <' + arguments[0] + '>');
+    console.log('echoed <' + input.arguments[0] + '>');
 }
 
-async function get_emblems(channel_id, arguments)
+async function get_emblems(input)
 {
-    var player = await bungie.search_destiny_player(arguments);
+    var player = await bungie.search_destiny_player(input.arguments);
 
 	var character_ids = await bungie.get_character_ids(player);
 
@@ -56,24 +56,24 @@ async function get_emblems(channel_id, arguments)
 
         var emblem_file_name = character_ids[index] + '_emblem.jpg';
 
-        util.upload_file(bot, channel_id, emblem_url, emblem_file_name);
+        util.upload_file(bot, input.channel_id, emblem_url, emblem_file_name);
 	}
 }
 
-async function get_triumph_score(channel_id, arguments)
+async function get_triumph_score(input)
 {
-    var player = await bungie.search_destiny_player(arguments);
+    var player = await bungie.search_destiny_player(input.arguments);
 
 	var triumph_score = await bungie.get_triumph_score(player);
 
 	bot.sendMessage(
 	{
-		to: channel_id,
+		to: input.channel_id,
 		message: 'Triumph score = ' + triumph_score
 	});
 }
 
-async function test_manifest(channel_id, arguments)
+async function test_manifest(input)
 {
     var manifest = await bungie.get_manifest();
 
@@ -84,26 +84,26 @@ async function test_manifest(channel_id, arguments)
     console.log('manifest!');
 }
 
-async function save_collectibles(channel_id, arguments)
+async function save_collectibles(input)
 {
-    var player = await bungie.search_destiny_player(arguments);
+    var player = await bungie.search_destiny_player(input.arguments);
     var collectibles = await bungie.get_collectibles(player);
 
     util.write_file('collectibles.json', collectibles);
 }
 
-async function inspect_collectible(channel_id, arguments)
+async function inspect_collectible(input)
 {
     // var collectibles = util.read_file('collectibles.json');
 
     bungie.get_collectible_display_properties('24595238');
 }
 
-async function get_test(channel_id, arguments)
+async function get_test(input)
 {
     // example showing how to get triumph data
 
-    // var player = await bungie.search_destiny_player(arguments);
+    // var player = await bungie.search_destiny_player(input.arguments);
     // var triumphs = await bungie.get_triumphs(player);
     var triumphs = util.read_file('triumphs.json');
 
@@ -143,47 +143,43 @@ async function get_test(channel_id, arguments)
     // await bungie.print_triumph(3015941901, triumphs[3015941901]);
 }
 
-async function get_test_2(channel_id, arguments) {
+async function get_test_2(input) {
     // example showing how to get triumph data
 
     var triumph = await bungie.get_triumph_display_properties('11996340');
 }
 
-async function add_player_to_roster(channel_id, arguments)
+async function add_player_to_roster(input)
 {
-	var displayName = arguments[0];
-	
-    var player = await bungie.search_destiny_player(arguments);
+    var player = await bungie.search_destiny_player(input.arguments);
 
     roster.add_player(player);
     
 	bot.sendMessage(
 	{
-		to: channel_id,
+        to: input.channel_id,
 		message: 'Successfully added "' + player.displayName + '" to roster'
 	});
 }
 
-async function remove_player_from_roster(channel_id, arguments)
+async function remove_player_from_roster(input)
 {
-	var displayName = arguments[0];
-	
-    var player = await bungie.search_destiny_player(arguments);
+    var player = await bungie.search_destiny_player(input.arguments);
 
     roster.remove_player(player);
     
 	bot.sendMessage(
 	{
-		to: channel_id,
+        to: input.channel_id,
 		message: 'Successfully removed "' + player.displayName + '" from roster'
 	});
 }
 
-async function print_roster(channel_id, arguments)
+async function print_roster(input)
 {
 	var player_roster = roster.get_roster();
 
-    var roster_output_array = player_roster.players.map(function(value, index, array)
+    var roster_output_array = player_roster.players.map(function(value)
     {
         return value.displayName;
     });
@@ -195,34 +191,34 @@ async function print_roster(channel_id, arguments)
     
 	bot.sendMessage(
 	{
-		to: channel_id,
+		to: input.channel_id,
 		message: roster_output
 	});
 }
 
-async function print_leaderboard(channel_id, arguments)
+async function print_leaderboard(input)
 {
-    var leaderboard_name = arguments[0];
-    var leaderboard_parameter = util.try_get_element(arguments, 1);
+    var leaderboard_name = input.arguments[0];
+    var leaderboard_parameter = util.try_get_element(input.arguments, 1);
 
     var leaderboard_data = await leaderboard.get(leaderboard_name, leaderboard_parameter);
 
     if (leaderboard_data.url)
     {
-        util.upload_file(bot, channel_id, leaderboard_data.url, 'leaderboard_icon.jpg');
+        util.upload_file(bot, input.channel_id, leaderboard_data.url, 'leaderboard_icon.jpg');
     }
 
 	bot.sendMessage(
 	{
-		to: channel_id,
+		to: input.channel_id,
 		message: leaderboard_data.message
 	});
 }
 
-async function search_manifest(channel_id, arguments)
+async function search_manifest(input)
 {
-    var category = arguments[0];
-    var search_query = arguments[1];
+    var category = input.arguments[0];
+    var search_query = input.arguments[1];
 
     var search_categories =
     {
@@ -249,43 +245,77 @@ async function search_manifest(channel_id, arguments)
 
     bot.sendMessage(
     {
-        to: channel_id,
+        to: input.channel_id,
         message: string_results
     });
 }
 
-async function run_command(command, channel_id, arguments)
+async function mirror_reactions(input)
 {
-	console.log(command);
+    for (var i = 0; i < input.raw_message.length; i++)
+    {
+        if (input.raw_message.charCodeAt(i) >= 0x1000)
+        {
+            var emoji_characters = [];
 
-	await command(channel_id, arguments);
+            while (input.raw_message.charCodeAt(i) >= 0x1000)
+            {
+                emoji_characters.push(input.raw_message[i]);
+                i++;
+            }
+            i--;
+
+            var emoji = emoji_characters.join('');
+
+            console.log('emoji found: "' + emoji + '"');
+
+            bot.addReaction(
+            {
+                channelID: input.channel_id,
+                messageID: input.message_id,
+                reaction: emoji
+            });
+
+            await util.sleep(1000);
+        }
+    }
 }
 
-async function parse_message(channel_id, message)
+async function process_message(input)
 {
 	console.log('start command');
 
     try
     {
-        var input = util.parse_arguments(message);
-
-        switch(input.command)
+        var commands =
         {
-            case 'echo': await run_command(echo, channel_id, input.arguments); break;
-            case 'get_emblems': await run_command(get_emblems, channel_id, input.arguments); break;
-            case 'get_triumph_score': await run_command(get_triumph_score, channel_id, input.arguments); break;
+            echo: echo,
 
-            case 'add_player_to_roster': await run_command(add_player_to_roster, channel_id, input.arguments); break;
-            case 'remove_player_from_roster': await run_command(remove_player_from_roster, channel_id, input.arguments); break;
-            case 'print_roster': await run_command(print_roster, channel_id, input.arguments); break;
+            get_emblems: get_emblems,
 
-            case 'print_leaderboard': await run_command(print_leaderboard, channel_id, input.arguments); break;
+            get_triumph_score: get_triumph_score,
 
-            case 'search_manifest': await run_command(search_manifest, channel_id, input.arguments); break;
-            default:
-                throw new Error('Unrecognized command "' + input.command + '"');
-                break;
+            add_player_to_roster: add_player_to_roster,
+            remove_player_from_roster: remove_player_from_roster,
+            print_roster: print_roster,
+
+            print_leaderboard: print_leaderboard,
+
+            search_manifest: search_manifest,
+
+            mirror_reactions: mirror_reactions,
+        };
+
+        input = util.parse_arguments(input);
+
+        if (!(input.command in commands))
+        {
+            throw new Error('Unrecognized command "' + input.command + '"');
         }
+
+        console.log(input.command);
+
+        await commands[input.command](input);
     }
 	catch (error)
 	{
@@ -295,7 +325,7 @@ async function parse_message(channel_id, message)
 		
 		bot.sendMessage(
 		{
-			to: channel_id,
+			to: input.channel_id,
 			message: error_details
 		});
 	}
@@ -304,14 +334,20 @@ async function parse_message(channel_id, message)
 	console.log('');
 }
 
-bot.on('message', function (user, userID, channel_id, message, evt)
+bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
 {
     var wake_command = '!frame.'
 
-    if (message.substring(0, wake_command.length) == wake_command)
+    if (raw_message.substring(0, wake_command.length) == wake_command)
     {
-        var message = message.substring(wake_command.length);
+        var raw_message = raw_message.substring(wake_command.length);
 
-	    parse_message(channel_id, message);
+        process_message({
+            user_name: user_name,
+            user_id: user_id,
+            channel_id: channel_id,
+            message_id: data.d.id,
+            raw_message: raw_message,
+        });
     }
 });
