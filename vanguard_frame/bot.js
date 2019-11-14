@@ -25,7 +25,7 @@ bot.on('ready', function (evt)
     // run_command(save_collectibles, 0, ['LEPT0N', 'xboxLive']);
     // run_command(inspect_collectible, 0, []);
     // run_command(test_manifest, 0, []);
-    // run_command(search_manifest, 0, ['collectibles', 'Breakneck']);
+    // search_manifest({ arguments: ['all', 'Shadow Rises']});
     // run_command(print_leaderboard, 0, ['collectibles', 'pinnacle_weapons']);
 });
 
@@ -226,14 +226,29 @@ async function search_manifest(input)
         triumphs: 'DestinyRecordDefinition',
     };
 
-    if (!(category in search_categories))
-    {
-        throw new Error('category "' + category + '" does not exist');
-    }
+    var results = [];
 
-    var results = (await bungie.search_manifest(
-        search_categories[category],
-        search_query));
+    if (category == 'all')
+    {
+        var manifest = await bungie.get_manifest();
+
+        await Promise.all(Object.keys(manifest).map(async function (key)
+        {
+            (await bungie.search_manifest(key, search_query)).forEach(
+                value => results.push(value));
+        }));
+    }
+    else
+    {
+        if (!(category in search_categories))
+        {
+            throw new Error('category "' + category + '" does not exist');
+        }
+
+        results = (await bungie.search_manifest(
+            search_categories[category],
+            search_query));
+    }
 
     console.log(results);
     console.log('');

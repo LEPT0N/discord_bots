@@ -316,14 +316,20 @@ public.search_manifest = async function (category, search_query)
 
     Object.keys(manifest).forEach(function (key)
     {
-        var item_name = manifest[key].displayProperties.name;
-
-        if (item_name.includes(search_query))
+        if (manifest[key] &&
+            manifest[key].displayProperties &&
+            manifest[key].displayProperties.name)
         {
-            results.push({
-                key: key,
-                name: item_name
-            });
+            var item_name = manifest[key].displayProperties.name;
+
+            if (item_name.includes(search_query))
+            {
+                results.push({
+                    category: category,
+                    key: key,
+                    name: item_name
+                });
+            }
         }
     });
 
