@@ -187,7 +187,7 @@ async function collectibles(player_roster, parameter)
 {
     if (!(parameter in collectible_sets))
     {
-	    throw new Error('Stat "' + parameter + '" is not in my list');
+	    throw new Error('Set "' + parameter + '" is not in my list');
     }
 
     var collectible_set = collectible_sets[parameter];
@@ -246,12 +246,96 @@ async function collectibles(player_roster, parameter)
     };
 }
 
+var triumph_sets =
+{
+    // https://www.light.gg/db/legend/1652422747/seals/
+    'seals': [
+        { id: 2707428411, name: 'Undying' },
+        { id: 3387213440, name: 'Enlightened' },
+        { id: 3793754396, name: 'Harbinger' },
+        { id: 2254764897, name: 'MMXIX' },
+        { id: 1883929036, name: 'Shadow' },
+        { id: 1313291220, name: 'Reckoner' },
+        { id: 2053985130, name: 'Blacksmith' },
+        { id: 2757681677, name: 'Wayfarer' },
+        { id: 3798931976, name: 'Dredgen' },
+        { id: 3369119720, name: 'Unbroken' },
+        { id: 1754983323, name: 'Chronicler' },
+        { id: 1693645129, name: 'Cursebreaker' },
+        { id: 2182090828, name: 'Rivensbane' },
+    ]
+}
+
+async function triumphs(player_roster, parameter)
+{
+    if (!(parameter in triumph_sets))
+    {
+        throw new Error('Set "' + parameter + '" is not in my list');
+    }
+
+    var triumph_set = triumph_sets[parameter];
+
+    var result_array = await Promise.all(player_roster.players.map(async function (player)
+    {
+        var player_triumphs = await bungie.get_triumphs(player);
+
+        var count = 0;
+        var player_result_details = [];
+
+        triumph_set.forEach(function (triumph_set_item)
+        {
+            var state = player_triumphs[triumph_set_item.id].state;
+
+            var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
+
+            if (unlocked)
+            {
+                count++;
+            }
+
+            player_result_details.push(
+                {
+                    name: triumph_set_item.name,
+                    state: state,
+                    unlocked: unlocked
+                });
+        });
+
+        return { count: count, player_name: player.displayName, details: player_result_details };
+    }));
+
+    result_array.sort(function (a, b)
+    {
+        return b.count - a.count;
+    });
+
+    var output_array = result_array.map(function (value)
+    {
+        var player_triumph_list = value.details.filter(detail => detail.unlocked);
+
+        player_triumph_list = player_triumph_list.map(function (detail)
+        {
+            return detail.name;
+        });
+
+        player_triumph_list = player_triumph_list.join(', ');
+
+        return value.count + '\t : ' + value.player_name + ' (' + player_triumph_list + ')';
+    });
+
+    return {
+        message: output_array.join('\r\n'),
+        url: null
+    };
+}
+
 var leaderboards =
 {
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
     individual_stat: individual_stat,
     collectibles: collectibles,
+    triumphs: triumphs,
 };
 
 public.get = async function(name, parameter)

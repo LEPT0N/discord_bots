@@ -195,6 +195,18 @@ public.get_triumph_score = async function (player)
     return score;
 }
 
+// Destiny.DestinyCollectibleState
+public.triumph_state =
+{
+    RecordRedeemed: 1,
+    RewardUnavailable: 2,
+    ObjectiveNotCompleted: 4,
+    Obscured: 8,
+    Invisible: 16,
+    EntitlementUnowned: 32,
+    CanEquipTitle: 64,
+};
+
 async function download_triumphs(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
@@ -358,32 +370,6 @@ public.get_collectible_display_properties = async function (hashIdentifier)
     console.log('');
 
     return display_properties;
-}
-
-public.triumph_state =
-[
-    { value: 1, name: 'RecordRedeemed' },
-    { value: 2, name: 'RewardUnavailable' },
-    { value: 4, name: 'ObjectiveNotCompleted' },
-    { value: 8, name: 'Obscured' },
-    { value: 16, name: 'Invisible' },
-    { value: 32, name: 'EntitlementUnowned' },
-    { value: 64, name: 'CanEquipTitle' },
-];
-
-public.get_triumph_state = function (triumph)
-{
-    var combined_triumph_state = [];
-
-	for (var index = 0; index < public.triumph_state.length; index++)
-	{
-        if (triumph.state & public.triumph_state[index].value)
-        {
-		    combined_triumph_state.push(public.triumph_state[index].name);
-        }
-	}
-
-	return '[' + combined_triumph_state.join(' ') + ']';
 }
 
 public.search_manifest = async function (category, search_query)
