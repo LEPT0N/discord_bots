@@ -6,8 +6,15 @@ var public = {};
 var player_not_found = -1;
 var roster_file_name = 'roster.json';
 
+var cached_roster = null;
+
 function load_roster()
 {
+    if (cached_roster)
+    {
+        return cached_roster;
+    }
+
     var roster = {};
 
     if (util.file_exists(roster_file_name))
@@ -23,11 +30,15 @@ function load_roster()
         console.log('');
     }
 
+    cached_roster = roster;
+
     return roster;
 }
 
 function save_roster(roster)
 {
+    cached_roster = roster;
+
     util.write_file(roster_file_name, roster);
 }
 

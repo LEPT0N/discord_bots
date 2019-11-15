@@ -25,7 +25,9 @@ public.write_file = function(file_name, contents, suppress_contents_log)
     }
     console.log('');
 
-	fs.mkdirSync(root_folder, {recursive: true});
+    fs.mkdirSync(
+        file_path.substring(0, file_path.lastIndexOf('/')),
+        { recursive: true });
 
 	var contents_serialized = JSON.stringify(contents);
 

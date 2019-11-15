@@ -195,17 +195,43 @@ public.get_triumph_score = async function (player)
     return score;
 }
 
-public.get_triumphs = async function (player)
+async function download_triumphs(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
-    var triumphs = (await get_request('get_triumphs', url)).profileRecords.data.records;
-
-    // This is too huge to print
-    // console.log(triumphs);
-    // console.log('');
+    var triumphs = (await get_request('download_triumphs', url)).profileRecords.data.records;
     
     return triumphs;
+}
+
+var cached_triumphs = {};
+
+public.get_triumphs = async function (player)
+{
+    var today = util.get_date();
+
+    var triumphs_file_name = 'player_data_cache/' + player.membershipId + '_triumphs.json';
+
+    if (!(player.membershipId in cached_triumphs))
+    {
+        cached_triumphs[player.membershipId] = util.try_read_file(triumphs_file_name, true);
+    }
+
+    if (cached_triumphs[player.membershipId] && cached_triumphs[player.membershipId].date == today)
+    {
+        return cached_triumphs[player.membershipId].data;
+    }
+
+    var downloaded_triumphs = await download_triumphs(player);
+
+    cached_triumphs[player.membershipId] = {
+        date: today,
+        data: downloaded_triumphs
+    };
+
+    util.write_file(triumphs_file_name, cached_triumphs[player.membershipId], true);
+
+    return cached_triumphs[player.membershipId].data;
 }
 
 public.get_triumph_display_properties = async function (hashIdentifier)
@@ -226,17 +252,43 @@ public.get_triumph_display_properties = async function (hashIdentifier)
     return display_properties;
 }
 
-public.get_character_stats = async function (player)
+async function download_character_stats(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
 
-    var stats = (await get_request('get_character_stats', url));
-
-    // This is too huge to print
-    // console.log(stats);
-    // console.log('');
+    var stats = (await get_request('download_character_stats', url));
 
     return stats;
+}
+
+var cached_character_stats = {};
+
+public.get_character_stats = async function (player)
+{
+    var today = util.get_date();
+
+    var character_stats_file_name = 'player_data_cache/' + player.membershipId + '_character_stats.json';
+
+    if (!(player.membershipId in cached_character_stats))
+    {
+        cached_character_stats[player.membershipId] = util.try_read_file(character_stats_file_name, true);
+    }
+
+    if (cached_character_stats[player.membershipId] && cached_character_stats[player.membershipId].date == today)
+    {
+        return cached_character_stats[player.membershipId].data;
+    }
+
+    var downloaded_character_stats = await download_character_stats(player);
+
+    cached_character_stats[player.membershipId] = {
+        date: today,
+        data: downloaded_character_stats
+    };
+
+    util.write_file(character_stats_file_name, cached_character_stats[player.membershipId], true);
+
+    return cached_character_stats[player.membershipId].data;
 }
 
 // Destiny.DestinyCollectibleState
@@ -251,17 +303,43 @@ public.collectible_state =
     PurchaseDisabled: 64,
 };
 
-public.get_collectibles = async function (player)
+async function download_collectibles(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
 
-    var collectibles = (await get_request('get_collectibles', url)).profileCollectibles.data.collectibles;
-
-    // This is too huge to print
-    // console.log(collectibles);
-    // console.log('');
+    var collectibles = (await get_request('download_collectibles', url)).profileCollectibles.data.collectibles;
     
     return collectibles;
+}
+
+var cached_collectibles = {};
+
+public.get_collectibles = async function (player)
+{
+    var today = util.get_date();
+
+    var collectibles_file_name = 'player_data_cache/' + player.membershipId + '_collectibles.json';
+
+    if (!(player.membershipId in cached_collectibles))
+    {
+        cached_collectibles[player.membershipId] = util.try_read_file(collectibles_file_name, true);
+    }
+
+    if (cached_collectibles[player.membershipId] && cached_collectibles[player.membershipId].date == today)
+    {
+        return cached_collectibles[player.membershipId].data;
+    }
+
+    var downloaded_collectibles = await download_collectibles(player);
+
+    cached_collectibles[player.membershipId] = {
+        date: today,
+        data: downloaded_collectibles
+    };
+
+    util.write_file(collectibles_file_name, cached_collectibles[player.membershipId], true);
+
+    return cached_collectibles[player.membershipId].data;
 }
 
 public.get_collectible_display_properties = async function (hashIdentifier)
