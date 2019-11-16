@@ -26,7 +26,7 @@ bot.on('ready', function (evt)
     // run_command(inspect_collectible, 0, []);
     // run_command(test_manifest, 0, []);
     // search_manifest({ arguments: ['all', 'Shadow Rises']});
-    // run_command(print_leaderboard, 0, ['collectibles', 'pinnacle_weapons']);
+    // print_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
 });
 
 async function echo(input)

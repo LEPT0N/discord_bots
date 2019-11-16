@@ -99,6 +99,79 @@ async function individual_triumph(player_roster, parameter)
     };
 }
 
+var known_triumph_trees =
+{
+    // Legend // Triumphs // Account // Exotic Catalysts
+    // https://www.light.gg/db/legend/1024788583/triumphs/4230728762/account/1111248994/exotic-catalysts/
+    'exotic_catalysts': 1111248994,
+}
+
+async function triumph_tree(player_roster, parameter)
+{
+    if (!(parameter in known_triumph_trees))
+    {
+        throw new Error('Triumph tree "' + parameter + '" is not in my list');
+    }
+
+    var triumph_tree_id = known_triumph_trees[parameter];
+
+    var child_triumph_ids = await bungie.get_all_child_triumphs(triumph_tree_id);
+
+    var child_triumphs = await Promise.all(
+        child_triumph_ids.map(async function (item)
+    {
+        return await bungie.get_triumph_display_properties(item);
+        }));
+
+    var result_array = await Promise.all(player_roster.players.map(async function (player)
+    {
+        var player_triumphs = await bungie.get_triumphs(player);
+
+        var count = 0;
+        var player_result_details = [];
+
+        child_triumphs.forEach(function (child_triumph)
+        {
+            var state = player_triumphs[child_triumph.id].state;
+
+            var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
+
+            if (unlocked)
+            {
+                count++;
+            }
+
+            player_result_details.push(
+            {
+                name: child_triumph.name,
+                state: state,
+                unlocked: unlocked
+            });
+        });
+
+        return {
+            count: count,
+            player_name: player.displayName,
+            details: player_result_details
+        };
+    }));
+
+    result_array.sort(function (a, b)
+    {
+        return b.count - a.count;
+    });
+
+    var output_array = result_array.map(function (value)
+    {
+        return value.count + '\t : ' + value.player_name;
+    });
+
+    return {
+        message: output_array.join('\r\n'),
+        url: null
+    };
+}
+
 // Look at the output from get_character_stats to see what's available
 var known_stats =
 {
@@ -246,6 +319,15 @@ async function collectibles(player_roster, parameter)
     };
 }
 
+// NOTE: scan the set of children in 'Seals' (1652422747)
+// https://www.light.gg/db/legend/1652422747/seals/
+// which takes you here:
+// https://www.light.gg/db/legend/1652422747/seals/1002334440/moments-of-triumph-mmxix/
+// And then 'completionRecordHash' should take you to the list below.
+//
+// should probably just be wrapped in 'bungie.get_seals'
+//
+// So remove 'seals' from this list (comment it out) but leave the leaderboard for later use
 var triumph_sets =
 {
     // https://www.light.gg/db/legend/1652422747/seals/
@@ -333,6 +415,7 @@ var leaderboards =
 {
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
+    triumph_tree: triumph_tree,
     individual_stat: individual_stat,
     collectibles: collectibles,
     triumphs: triumphs,

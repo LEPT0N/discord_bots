@@ -257,6 +257,8 @@ public.get_triumph_display_properties = async function (hashIdentifier)
 
     var display_properties = manifest[hashIdentifier].displayProperties;
 
+    display_properties.id = hashIdentifier;
+
     console.log('get_triumph_display_properties');
     console.log(display_properties);
     console.log('');
@@ -393,9 +395,39 @@ public.search_manifest = async function (category, search_query)
                     key: key,
                     name: item_name
                 });
+
+                console.log(manifest[key]);
             }
         }
     });
+
+    return results;
+}
+
+public.get_all_child_triumphs = async function (hashIdentifier)
+{
+    var manifest = (await public.get_manifest()).DestinyPresentationNodeDefinition;
+
+    if (!hashIdentifier in manifest)
+    {
+        throw new Error('Presentation Node "' + hashIdentifier + '" is not in the manifest');
+    }
+
+    var results = [];
+
+    var child_nodes = manifest[hashIdentifier].children.presentationNodes;
+
+    var child_node_results = await Promise.all(child_nodes.map(
+        async function (child)
+    {
+        return await public.get_all_child_triumphs(child.presentationNodeHash);
+    }));
+
+    child_node_results.forEach(child => results = results.concat(child));
+
+    var child_triumphs = manifest[hashIdentifier].children.records;
+
+    results = results.concat(child_triumphs.map(item => item.recordHash));
 
     return results;
 }
