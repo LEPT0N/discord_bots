@@ -5,6 +5,7 @@ var bungie = require('./bungie.js');
 var util = require('./util.js');
 var roster = require('./roster.js');
 var leaderboard = require('./leaderboard.js');
+var test = require('./test.js');
 
 var bot = new discord.Client(
 {
@@ -12,21 +13,11 @@ var bot = new discord.Client(
    autorun: true
 });
 
-bot.on('ready', function (evt)
+bot.on('ready', async function (evt)
 {
-    console.log('Connected');
-    console.log('Logged in as: ' + bot.username + ' - (' + bot.id + ')');
-    console.log('');
-
-	// easy testing
-	// run_command(get_triumph_score, 0, ['CoachMcGuirk S8', 'xboxLive']);
-	// run_command(print_leaderboard, 0, ['triumph_score']);
-    // run_command(print_leaderboard, 0, ['individual_triumph', 'crucible_kills']);
-    // run_command(save_collectibles, 0, ['LEPT0N', 'xboxLive']);
-    // run_command(inspect_collectible, 0, []);
-    // run_command(test_manifest, 0, []);
-    // search_manifest({ arguments: ['all', 'Shadow Rises']});
-    // print_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
+    util.log('Connected', 'Logged in as: ' + bot.username + ' - (' + bot.id + ')');
+    
+    await test.run();
 });
 
 async function echo(input)
@@ -37,7 +28,7 @@ async function echo(input)
         message: '<' + input.arguments[0] + '>'
     });
 
-    console.log('echoed <' + input.arguments[0] + '>');
+    util.log('echoed <' + input.arguments[0] + '>');
 }
 
 async function get_emblems(input)
@@ -52,7 +43,7 @@ async function get_emblems(input)
 
         var emblem_url = bungie.root_url + character.emblemPath;
 
-		console.log('emblem = ' + emblem_url);
+		util.log('emblem = ' + emblem_url);
 
         var emblem_file_name = character_ids[index] + '_emblem.jpg';
 
@@ -71,82 +62,6 @@ async function get_triumph_score(input)
 		to: input.channel_id,
 		message: 'Triumph score = ' + triumph_score
 	});
-}
-
-async function test_manifest(input)
-{
-    var manifest = await bungie.get_manifest();
-
-    console.log('manifest!');
-
-    var manifest = await bungie.get_manifest();
-
-    console.log('manifest!');
-}
-
-async function save_collectibles(input)
-{
-    var player = await bungie.search_destiny_player(input.arguments);
-    var collectibles = await bungie.get_collectibles(player);
-
-    util.write_file('collectibles.json', collectibles);
-}
-
-async function inspect_collectible(input)
-{
-    // var collectibles = util.read_file('collectibles.json');
-
-    bungie.get_collectible_display_properties('24595238');
-}
-
-async function get_test(input)
-{
-    // example showing how to get triumph data
-
-    // var player = await bungie.search_destiny_player(input.arguments);
-    // var triumphs = await bungie.get_triumphs(player);
-    var triumphs = util.read_file('triumphs.json');
-
-    // util.write_file('triumphs.json', triumphs);
-
-    for (var flag = 1; flag < 513; flag = flag * 2)
-    {
-        var count = 0;
-
-        for (var key in triumphs)
-        {
-            if (triumphs[key].state & flag)
-            {
-                count = count + 1;
-            }
-        }
-
-        console.log('flag = ' + flag + ' count = ' + count);
-    }
-
-    /*
-    var count = 0;
-    for (var hashIdentifier in triumphs)
-    {
-        await bungie.print_triumph(hashIdentifier, triumphs[hashIdentifier]);
-        
-        count++;
-        if (count > 5)
-        {
-            break;
-        }
-    }
-    */
-    
-    // console.log(triumphs[3015941901]);
-
-    // await bungie.print_triumph(3015941901, triumphs[3015941901]);
-}
-
-async function get_test_2(input) {
-    // example showing how to get triumph data
-
-    var triumph = await bungie.get_triumph_display_properties('11996340');
 }
 
 async function add_player_to_roster(input)
@@ -186,8 +101,7 @@ async function print_roster(input)
 
     var roster_output = 'Current roster: \r\n' + roster_output_array.join('\r\n');
 
-    console.log(roster_output);
-    console.log('');
+    util.log(roster_output);
     
 	bot.sendMessage(
 	{
@@ -250,8 +164,7 @@ async function search_manifest(input)
             search_query));
     }
 
-    console.log(results);
-    console.log('');
+    util.log(results);
 
     var string_results = results.map(function (value)
     {
@@ -282,7 +195,7 @@ async function mirror_reactions(input)
 
             var emoji = emoji_characters.join('');
 
-            console.log('emoji found: "' + emoji + '"');
+            util.log('emoji found: "' + emoji + '"');
 
             bot.addReaction(
             {
@@ -298,7 +211,7 @@ async function mirror_reactions(input)
 
 async function process_message(input)
 {
-	console.log('start command');
+	util.log('start command');
 
     try
     {
@@ -328,7 +241,7 @@ async function process_message(input)
             throw new Error('Unrecognized command "' + input.command + '"');
         }
 
-        console.log(input.command);
+        util.log(commands[input.command]);
 
         await commands[input.command](input);
     }
@@ -336,7 +249,7 @@ async function process_message(input)
 	{
 		var error_details = error.name + " : " + error.message;
 
-		console.log(error_details);
+		util.log(error_details);
 		
 		bot.sendMessage(
 		{
@@ -345,8 +258,7 @@ async function process_message(input)
 		});
 	}
 
-	console.log('end command');
-	console.log('');
+	util.log('end command');
 }
 
 bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)

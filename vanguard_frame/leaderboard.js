@@ -1,4 +1,5 @@
 
+var util = require('./util.js');
 var bungie = require('./bungie.js');
 var roster = require('./roster.js');
 
@@ -62,8 +63,7 @@ async function individual_triumph(player_roster, parameter)
 
         var triumph_data = (await bungie.get_triumphs(value))[hashIdentifier];
 
-        // console.log(triumph_data);
-        // console.log('');
+        // util.log(triumph_data);
 
         var objectives = triumph_data.intervalObjectives;
 
@@ -201,15 +201,15 @@ async function individual_stat(player_roster, parameter)
         var node = stats;
         for (var index = 0; index < property_tree.length; index++)
         {
-            //console.log('--------------------------');
-            //console.log(node);
-            //console.log('tree value');
-            //console.log(property_tree[index]);
+            // util.log('--------------------------');
+            // util.log(node);
+            // util.log('tree value');
+            // util.log(property_tree[index]);
 
             node = node[property_tree[index]];
         }
         
-        //console.log(node);
+        // util.log(node);
 
         return { name: player_name, stat: node };
     }));
@@ -432,8 +432,7 @@ public.get = async function(name, parameter)
 
     var leaderboard_data = await leaderboards[name](player_roster, parameter);
 
-    console.log(leaderboard_data);
-    console.log('');
+    util.log(leaderboard_data);
 
     return leaderboard_data;
 }

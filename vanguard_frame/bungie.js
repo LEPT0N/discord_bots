@@ -11,9 +11,7 @@ async function get_request(name, url, raw)
 {
 	url = public.root_url + url;
 
-	console.log('');
-	console.log(name);
-	console.log(url);
+	util.log(name, url);
 
     var response = await fetch(url,
 	{
@@ -31,7 +29,7 @@ async function get_request(name, url, raw)
 
     if (response.ErrorCode != 1)
     {
-		console.log(response);
+		util.log(response);
 
         throw new Error(JSON.stringify(response));
     }
@@ -45,8 +43,7 @@ async function download_manifest_directory()
 
     var manifest_directory = (await get_request('download_manifest_directory', url));
 
-    console.log(manifest_directory);
-    console.log('');
+    util.log(manifest_directory);
 
     return {
         version: manifest_directory.version,
@@ -114,8 +111,7 @@ public.search_destiny_player = async function(arguments)
 
 	var players = (await get_request('search_destiny_player', url));
 
-	console.log(players);
-    console.log('');
+	util.log(players);
 
     var matching_players = [];
 	for (var index = 0; index < players.length; index++)
@@ -160,8 +156,7 @@ public.get_character_ids = async function (player)
 
     var character_ids = (await get_request('get_character_ids', url)).profile.data.characterIds;
 
-	console.log(character_ids);
-    console.log('');
+	util.log(character_ids);
 
 	if (character_ids.length == 0)
 	{
@@ -177,8 +172,7 @@ public.get_character = async function (player, character_id)
 	
     var character = (await get_request('get_character', url)).character.data;
 
-	console.log(character);
-    console.log('');
+	util.log(character);
 
     return character;
 }
@@ -189,8 +183,7 @@ public.get_triumph_score = async function (player)
 
     var score = (await get_request('get_triumph_score', url)).profileRecords.data.score;
 
-	console.log(score);
-    console.log('');
+	util.log(score);
     
     return score;
 }
@@ -259,9 +252,7 @@ public.get_triumph_display_properties = async function (hashIdentifier)
 
     display_properties.id = hashIdentifier;
 
-    console.log('get_triumph_display_properties');
-    console.log(display_properties);
-    console.log('');
+    util.log('get_triumph_display_properties', display_properties);
 
     return display_properties;
 }
@@ -367,9 +358,7 @@ public.get_collectible_display_properties = async function (hashIdentifier)
 
     var display_properties = manifest[hashIdentifier].displayProperties;
 
-    console.log('get_collectible_display_properties');
-    console.log(display_properties);
-    console.log('');
+    util.log('get_collectible_display_properties', display_properties);
 
     return display_properties;
 }
@@ -396,7 +385,7 @@ public.search_manifest = async function (category, search_query)
                     name: item_name
                 });
 
-                console.log(manifest[key]);
+                util.log(manifest[key]);
             }
         }
     });

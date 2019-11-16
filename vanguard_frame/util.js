@@ -17,13 +17,12 @@ public.write_file = function(file_name, contents, suppress_contents_log)
 {
 	var file_path = root_folder + '/' + file_name;
 
-    console.log('writing to file ' + file_path);
+    public.log('writing to file ' + file_path);
+
     if (!suppress_contents_log)
     {
-        console.log('contents:');
-        console.log(contents);
+        public.log('contents:', contents);
     }
-    console.log('');
 
     fs.mkdirSync(
         file_path.substring(0, file_path.lastIndexOf('/')),
@@ -44,7 +43,7 @@ public.read_file = function (file_name, suppress_contents_log)
 {
 	var file_path = root_folder + '/' + file_name;
 
-	console.log('reading from file ' + file_path);
+	public.log('reading from file ' + file_path);
 
 	var contents = fs.readFileSync(file_path);
 
@@ -52,10 +51,8 @@ public.read_file = function (file_name, suppress_contents_log)
 
     if (!suppress_contents_log)
     {
-        console.log('contents:');
-        console.log(contents_deserialized);
+        public.log('contents:', contents_deserialized);
     }
-	console.log('');
 
 	return contents_deserialized;
 }
@@ -76,7 +73,7 @@ public.download_file = async function(url, file_name)
 {
 	var file_path = root_folder + '/' + file_name;
 
-	console.log('downloading file ' + url);
+	public.log('downloading file ' + url);
 
 	fs.mkdirSync(root_folder, {recursive: true});
 
@@ -90,8 +87,7 @@ public.download_file = async function(url, file_name)
 		    }
             else
             {
-                console.log('download complete to ' + file_path);
-                console.log('');
+                public.log('download complete to: ' + file_path);
 
                 resolve(file_path);
             }
@@ -103,8 +99,7 @@ public.upload_file = async function(bot, channel_id, url, file_name)
 {
     var file_path = await public.download_file(url, file_name);
 
-    console.log('uploading ' + file_path);
-    console.log('');
+    public.log('uploading:', file_path);
 
     bot.uploadFile(
     {
@@ -117,8 +112,7 @@ public.upload_file = async function(bot, channel_id, url, file_name)
 
 public.parse_arguments = function(input)
 {
-    console.log('parsing arguments:');
-    console.log(input.raw_message);
+    public.log('parsing arguments:', input.raw_message);
 
     var arguments_raw = input.raw_message.split(' ');
 
@@ -181,8 +175,7 @@ public.parse_arguments = function(input)
 
     input.arguments = arguments;
 
-    console.log('parsed arguments:');
-    console.log(input);
+    public.log('parsed arguments:', input);
 
     return input;
 }
@@ -204,9 +197,19 @@ public.get_date = function ()
     return new Date().toJSON().slice(0, 10);
 }
 
-public.sleep = async function sleep(milliseconds)
+public.sleep = async function (milliseconds)
 {
     return new Promise(x => setTimeout(x, milliseconds));
+}
+
+public.log = function (message, data)
+{
+    console.log(message);
+    if (data)
+    {
+        console.log(data);
+    }
+    console.log('');
 }
 
 module.exports = public;

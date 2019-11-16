@@ -25,9 +25,7 @@ function load_roster()
     {
         roster = { players: [] };
 
-        console.log('created empty roster:');
-        console.log(roster);
-        console.log('');
+        util.log('created empty roster:', roster);
     }
 
     cached_roster = roster;
