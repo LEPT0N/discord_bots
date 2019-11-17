@@ -115,17 +115,28 @@ async function print_leaderboard(input)
     var leaderboard_name = input.arguments[0];
     var leaderboard_parameter = util.try_get_element(input.arguments, 1);
 
-    var leaderboard_data = await leaderboard.get(leaderboard_name, leaderboard_parameter);
+    var results = await leaderboard.get(leaderboard_name, leaderboard_parameter);
 
-    if (leaderboard_data.url)
+    if (results.url)
     {
-        util.upload_file(bot, input.channel_id, leaderboard_data.url, 'leaderboard_icon.jpg');
+        util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
+        
+        await util.sleep(1000);
     }
+
+    var message = results.title + '\r\n';
+
+    if (results.description)
+    {
+        message = message + results.description + '\r\n';
+    }
+
+    var message = message + results.entries.join('\r\n');
 
 	bot.sendMessage(
 	{
 		to: input.channel_id,
-		message: leaderboard_data.message
+		message: message
 	});
 }
 

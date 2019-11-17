@@ -410,4 +410,22 @@ public.get_all_child_triumphs = async function (hashIdentifier)
     return results;
 }
 
+public.get_presentation_node_display_properties = async function (hashIdentifier)
+{
+    var manifest = (await public.get_manifest()).DestinyPresentationNodeDefinition;
+
+    if (!hashIdentifier in manifest)
+    {
+        throw new Error('Presentation Node "' + hashIdentifier + '" is not in the manifest');
+    }
+
+    var display_properties = manifest[hashIdentifier].displayProperties;
+
+    display_properties.id = hashIdentifier;
+
+    util.log('get_presentation_node_display_properties', display_properties);
+
+    return display_properties;
+}
+
 module.exports = public;

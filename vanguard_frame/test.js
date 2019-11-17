@@ -13,7 +13,8 @@ public.run = async function()
     try
     {
 	    // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
-        await test_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
+        // await test_leaderboard({ arguments: ['triumph_score'] });
+        // await test_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
     }
 	catch (error)
 	{
@@ -38,9 +39,7 @@ async function test_leaderboard(input)
     var leaderboard_name = input.arguments[0];
     var leaderboard_parameter = util.try_get_element(input.arguments, 1);
 
-    var data = await leaderboard.get(leaderboard_name, leaderboard_parameter);
-
-    util.log('leaderboard_output', data);
+    await leaderboard.get(leaderboard_name, leaderboard_parameter);
 }
 
 module.exports = public;

@@ -7,7 +7,7 @@ var public = {};
 
 async function triumph_score(player_roster, parameter)
 {
-    var result_array = await Promise.all(player_roster.players.map(async function(value)
+    var data = await Promise.all(player_roster.players.map(async function(value)
     {
         var player_name = value.displayName;
         var triumphs = await bungie.get_triumphs(value);
@@ -15,18 +15,10 @@ async function triumph_score(player_roster, parameter)
         return { name: player_name, score: triumphs.score };
     }));
 
-    result_array.sort(function(a, b)
-    {
-        return b.score - a.score;
-    });
-
-    var output_array = result_array.map(function(value)
-    {
-        return value.score + '\t : ' + value.name
-    });
-    
     return {
-        message: output_array.join('\r\n'),
+        title: 'Triumph Score',
+        description: null,
+        data: data,
         url: null
     };
 }
@@ -57,7 +49,7 @@ async function individual_triumph(player_roster, parameter)
     
     var display_properties = await bungie.get_triumph_display_properties(hashIdentifier);
 
-    var result_array = await Promise.all(player_roster.players.map(async function(value)
+    var data = await Promise.all(player_roster.players.map(async function(value)
     {
         var player_name = value.displayName;
 
@@ -67,25 +59,11 @@ async function individual_triumph(player_roster, parameter)
 
         var objectives = triumph_data.intervalObjectives;
 
-        var progress = objectives[objectives.length - 1].progress;
+        var score = objectives[objectives.length - 1].progress;
 
-        return { name: player_name, progress: progress };
+        return { name: player_name, score: score };
     }));
-
-    result_array.sort(function(a, b)
-    {
-        return b.progress - a.progress;
-    });
-
-    var output_array = result_array.map(function(value)
-    {
-        return value.progress + '\t : ' + value.name
-    });
-
-    var message = display_properties.name + "\r\n" +
-        display_properties.description + "\r\n" +
-        output_array.join('\r\n');
-
+    
     var url = null;
 
     if (display_properties.hasIcon)
@@ -94,7 +72,9 @@ async function individual_triumph(player_roster, parameter)
     }
 
     return {
-        message: message,
+        title: display_properties.name,
+        description: display_properties.description,
+        data: data,
         url: url
     };
 }
@@ -113,17 +93,19 @@ async function triumph_tree(player_roster, parameter)
         throw new Error('Triumph tree "' + parameter + '" is not in my list');
     }
 
-    var triumph_tree_id = known_triumph_trees[parameter];
+    var root_id = known_triumph_trees[parameter];
 
-    var child_triumph_ids = await bungie.get_all_child_triumphs(triumph_tree_id);
+    var root_display_properties = await bungie.get_presentation_node_display_properties(root_id);
+
+    var child_triumph_ids = await bungie.get_all_child_triumphs(root_id);
 
     var child_triumphs = await Promise.all(
         child_triumph_ids.map(async function (item)
     {
         return await bungie.get_triumph_display_properties(item);
-        }));
+    }));
 
-    var result_array = await Promise.all(player_roster.players.map(async function (player)
+    var data = await Promise.all(player_roster.players.map(async function (player)
     {
         var player_triumphs = await bungie.get_triumphs(player);
 
@@ -150,25 +132,24 @@ async function triumph_tree(player_roster, parameter)
         });
 
         return {
-            count: count,
-            player_name: player.displayName,
+            name: player.displayName,
+            score: count,
             details: player_result_details
         };
     }));
+    
+    var url = null;
 
-    result_array.sort(function (a, b)
+    if (root_display_properties.hasIcon)
     {
-        return b.count - a.count;
-    });
-
-    var output_array = result_array.map(function (value)
-    {
-        return value.count + '\t : ' + value.player_name;
-    });
+        url = bungie.root_url + root_display_properties.icon;
+    }
 
     return {
-        message: output_array.join('\r\n'),
-        url: null
+        title: root_display_properties.name,
+        description: root_display_properties.description,
+        data: data,
+        url: url
     };
 }
 
@@ -192,7 +173,7 @@ async function individual_stat(player_roster, parameter)
 
     var property_tree = known_stats[parameter].split(' ');
 
-    var result_array = await Promise.all(player_roster.players.map(async function(value)
+    var data = await Promise.all(player_roster.players.map(async function(value)
     {
         var player_name = value.displayName;
 
@@ -211,21 +192,13 @@ async function individual_stat(player_roster, parameter)
         
         // util.log(node);
 
-        return { name: player_name, stat: node };
+        return { name: player_name, score: node };
     }));
 
-    result_array.sort(function(a, b)
-    {
-        return b.stat - a.stat;
-    });
-
-    var output_array = result_array.map(function(value)
-    {
-        return value.stat + '\t : ' + value.name
-    });
-
     return {
-        message: output_array.join('\r\n'),
+        title: parameter,
+        description: null,
+        data: data,
         url: null
     };
 }
@@ -265,7 +238,7 @@ async function collectibles(player_roster, parameter)
 
     var collectible_set = collectible_sets[parameter];
 
-    var result_array = await Promise.all(player_roster.players.map(async function(player)
+    var data = await Promise.all(player_roster.players.map(async function(player)
     {
         var player_collectibles = await bungie.get_collectibles(player);
 
@@ -287,34 +260,17 @@ async function collectibles(player_roster, parameter)
             {
                 name: collectible_set_item.name,
                 state: state,
-                unlocked: unlocked
+                visible: unlocked
             });
         });
 
-        return { count: count, player_name: player.displayName, details: player_result_details };
+        return { score: count, name: player.displayName, score_detail_list: player_result_details };
     }));
 
-    result_array.sort(function(a, b)
-    {
-        return b.count - a.count;
-    });
-
-    var output_array = result_array.map(function(value)
-    {
-        var player_collectible_list = value.details.filter(detail => detail.unlocked);
-
-        player_collectible_list = player_collectible_list.map(function(detail)
-        {
-            return detail.name;
-        });
-
-        player_collectible_list = player_collectible_list.join(', ');
-
-        return value.count + '\t : ' + value.player_name + ' (' + player_collectible_list + ')';
-    });
-
     return {
-        message: output_array.join('\r\n'),
+        title: parameter,
+        description: null,
+        data: data,
         url: null
     };
 }
@@ -357,7 +313,9 @@ async function triumphs(player_roster, parameter)
 
     var triumph_set = triumph_sets[parameter];
 
-    var result_array = await Promise.all(player_roster.players.map(async function (player)
+    var root_display_properties = await bungie.get_presentation_node_display_properties(1652422747);
+
+    var data = await Promise.all(player_roster.players.map(async function (player)
     {
         var player_triumphs = await bungie.get_triumphs(player);
 
@@ -376,38 +334,28 @@ async function triumphs(player_roster, parameter)
             }
 
             player_result_details.push(
-                {
-                    name: triumph_set_item.name,
-                    state: state,
-                    unlocked: unlocked
-                });
+            {
+                name: triumph_set_item.name,
+                state: state,
+                visible: unlocked
+            });
         });
 
-        return { count: count, player_name: player.displayName, details: player_result_details };
+        return { score: count, name: player.displayName, score_detail_list: player_result_details };
     }));
+    
+    var url = null;
 
-    result_array.sort(function (a, b)
+    if (root_display_properties.hasIcon)
     {
-        return b.count - a.count;
-    });
-
-    var output_array = result_array.map(function (value)
-    {
-        var player_triumph_list = value.details.filter(detail => detail.unlocked);
-
-        player_triumph_list = player_triumph_list.map(function (detail)
-        {
-            return detail.name;
-        });
-
-        player_triumph_list = player_triumph_list.join(', ');
-
-        return value.count + '\t : ' + value.player_name + ' (' + player_triumph_list + ')';
-    });
+        url = bungie.root_url + root_display_properties.icon;
+    }
 
     return {
-        message: output_array.join('\r\n'),
-        url: null
+        title: root_display_properties.name,
+        description: root_display_properties.description,
+        data: data,
+        url: url
     };
 }
 
@@ -430,11 +378,37 @@ public.get = async function(name, parameter)
     
 	var player_roster = roster.get_roster();
 
-    var leaderboard_data = await leaderboards[name](player_roster, parameter);
+    var results = await leaderboards[name](player_roster, parameter);
 
-    util.log(leaderboard_data);
+    results.data.sort(function(a, b)
+    {
+        return b.score - a.score;
+    });
 
-    return leaderboard_data;
+    results.entries = results.data.map(function(value)
+    {
+        var entry = value.score + '\t : ' + value.name;
+
+        if (value.score_detail_list)
+        {
+            var detail_list = value.score_detail_list.filter(detail => detail.visible);
+
+            detail_list = detail_list.map(function (detail)
+            {
+                return detail.name;
+            });
+            
+            detail_list = detail_list.join(', ');
+
+            entry = entry + ' (' + detail_list + ')';
+        }
+
+        return entry;
+    });
+
+    util.log(results);
+
+    return results;
 }
 
 module.exports = public;
