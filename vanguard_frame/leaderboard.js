@@ -383,8 +383,33 @@ async function triumphs(player_roster, parameter)
     };
 }
 
+async function lol(player_roster, parameter)
+{
+    var data = await Promise.all(player_roster.players.map(async function (value)
+    {
+        var player_name = value.displayName;
+
+        var score = 0;
+
+        if (player_name == 'CoachMcGuirk S8')
+        {
+            score = 1;
+        }
+
+        return { name: player_name, score: score };
+    }));
+
+    return {
+        title: 'Best Titan',
+        description: null,
+        data: data,
+        url: null
+    };
+}
+
 var leaderboards =
 {
+    best_titan: lol,
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
     triumph_tree: triumph_tree,
