@@ -115,23 +115,66 @@ async function print_leaderboard(input)
     var leaderboard_name = input.arguments[0];
     var leaderboard_parameter = util.try_get_element(input.arguments, 1);
 
+    if (leaderboard_name == 'all')
+    {
+        bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: '__**LEADERBOARDS ' + util.get_date() + '**__\r\n\r\n'
+        });
+
+        await util.sleep(2000);
+
+        var all_leaderboards = [
+            { arguments: ['triumph_score'] },
+            { arguments: ['individual_triumph', 'crucible_kills'] },
+            { arguments: ['individual_triumph', 'clan_xp'] },
+            { arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] },
+            { arguments: ['triumph_tree', 'exotic_catalysts'] },
+            { arguments: ['triumph_tree', 'lore'] },
+            { arguments: ['individual_stat', 'light_level'] },
+            { arguments: ['individual_stat', 'deaths'] },
+            { arguments: ['individual_stat', 'suicides'] },
+            { arguments: ['individual_stat', 'killing_spree'] },
+            { arguments: ['individual_stat', 'kill_distance'] },
+            { arguments: ['individual_stat', 'kills'] },
+            { arguments: ['collectibles', 'pinnacle_weapons'] },
+            { arguments: ['triumphs', 'seals'] },
+            { arguments: ['triumphs', 'raids_completed'] },
+        ];
+
+        for (var index = 0; index < all_leaderboards.length; index++)
+        {
+            bot.sendMessage({to: input.channel_id, message: '\r\n'});
+            await util.sleep(2000);
+
+            input.arguments = all_leaderboards[index].arguments;
+
+            print_leaderboard(input);
+            
+            await util.sleep(2000);
+        }
+
+        return;
+    }
+
     var results = await leaderboard.get(leaderboard_name, leaderboard_parameter);
 
     if (results.url)
     {
         util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
 
-        await util.sleep(1000);
+        await util.sleep(4000);
     }
 
-    var message = results.title + '\r\n';
+    var message = '__**' + results.title + '**__\r\n';
 
     if (results.description)
     {
         message = message + results.description + '\r\n';
     }
 
-    var message = message + results.entries.join('\r\n');
+    var message = message + '>>> ' + results.entries.join('\r\n');
 
     bot.sendMessage(
         {
