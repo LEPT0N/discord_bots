@@ -84,6 +84,10 @@ var known_triumph_trees =
     // Legend // Triumphs // Account // Exotic Catalysts
     // https://www.light.gg/db/legend/1024788583/triumphs/4230728762/account/1111248994/exotic-catalysts/
     'exotic_catalysts': 1111248994,
+
+    // Legend // Triumphs // Lore
+    // https://www.light.gg/db/legend/1024788583/triumphs/564676571/lore/
+    'lore': 564676571,
 }
 
 async function triumph_tree(player_roster, parameter)
@@ -114,21 +118,24 @@ async function triumph_tree(player_roster, parameter)
 
         child_triumphs.forEach(function (child_triumph)
         {
-            var state = player_triumphs.records[child_triumph.id].state;
-
-            var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
-
-            if (unlocked)
+            if (player_triumphs.records[child_triumph.id])
             {
-                count++;
+                var state = player_triumphs.records[child_triumph.id].state;
+
+                var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
+
+                if (unlocked)
+                {
+                    count++;
+                }
+
+                player_result_details.push(
+                {
+                    name: child_triumph.name,
+                    state: state,
+                    unlocked: unlocked
+                });
             }
-
-            player_result_details.push(
-            {
-                name: child_triumph.name,
-                state: state,
-                unlocked: unlocked
-            });
         });
 
         return {

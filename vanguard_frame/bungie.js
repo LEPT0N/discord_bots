@@ -241,7 +241,7 @@ public.get_triumph_display_properties = async function (hashIdentifier)
 
     display_properties.id = hashIdentifier;
 
-    util.log('get_triumph_display_properties', display_properties);
+    // util.log('get_triumph_display_properties', display_properties);
 
     return display_properties;
 }
@@ -347,7 +347,7 @@ public.get_collectible_display_properties = async function (hashIdentifier)
 
     var display_properties = manifest[hashIdentifier].displayProperties;
 
-    util.log('get_collectible_display_properties', display_properties);
+    // util.log('get_collectible_display_properties', display_properties);
 
     return display_properties;
 }
@@ -423,7 +423,7 @@ public.get_presentation_node_display_properties = async function (hashIdentifier
 
     display_properties.id = hashIdentifier;
 
-    util.log('get_presentation_node_display_properties', display_properties);
+    // util.log('get_presentation_node_display_properties', display_properties);
 
     return display_properties;
 }

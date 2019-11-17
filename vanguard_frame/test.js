@@ -15,6 +15,8 @@ public.run = async function()
 	    // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['triumph_score'] });
         // await test_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
+        // await test_leaderboard({ arguments: ['triumph_tree', 'lore'] });
     }
 	catch (error)
 	{
