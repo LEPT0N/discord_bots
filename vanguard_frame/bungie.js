@@ -177,17 +177,6 @@ public.get_character = async function (player, character_id)
     return character;
 }
 
-public.get_triumph_score = async function (player)
-{
-    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
-
-    var score = (await get_request('get_triumph_score', url)).profileRecords.data.score;
-
-	util.log(score);
-    
-    return score;
-}
-
 // Destiny.DestinyCollectibleState
 public.triumph_state =
 {
@@ -204,7 +193,7 @@ async function download_triumphs(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
-    var triumphs = (await get_request('download_triumphs', url)).profileRecords.data.records;
+    var triumphs = (await get_request('download_triumphs', url)).profileRecords.data;
     
     return triumphs;
 }

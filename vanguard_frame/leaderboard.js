@@ -10,9 +10,9 @@ async function triumph_score(player_roster, parameter)
     var result_array = await Promise.all(player_roster.players.map(async function(value)
     {
         var player_name = value.displayName;
-        var triumph_score = await bungie.get_triumph_score(value);
+        var triumphs = await bungie.get_triumphs(value);
 
-        return { name: player_name, score: triumph_score };
+        return { name: player_name, score: triumphs.score };
     }));
 
     result_array.sort(function(a, b)
@@ -61,7 +61,7 @@ async function individual_triumph(player_roster, parameter)
     {
         var player_name = value.displayName;
 
-        var triumph_data = (await bungie.get_triumphs(value))[hashIdentifier];
+        var triumph_data = (await bungie.get_triumphs(value)).records[hashIdentifier];
 
         // util.log(triumph_data);
 
@@ -132,7 +132,7 @@ async function triumph_tree(player_roster, parameter)
 
         child_triumphs.forEach(function (child_triumph)
         {
-            var state = player_triumphs[child_triumph.id].state;
+            var state = player_triumphs.records[child_triumph.id].state;
 
             var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
 
@@ -366,7 +366,7 @@ async function triumphs(player_roster, parameter)
 
         triumph_set.forEach(function (triumph_set_item)
         {
-            var state = player_triumphs[triumph_set_item.id].state;
+            var state = player_triumphs.records[triumph_set_item.id].state;
 
             var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
 

@@ -55,12 +55,12 @@ async function get_triumph_score(input)
 {
     var player = await bungie.search_destiny_player(input.arguments);
 
-	var triumph_score = await bungie.get_triumph_score(player);
+	var triumphs = await bungie.get_triumphs(player);
 
 	bot.sendMessage(
 	{
 		to: input.channel_id,
-		message: 'Triumph score = ' + triumph_score
+		message: 'Triumph score = ' + triumphs.score
 	});
 }
 
