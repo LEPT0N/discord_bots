@@ -7,7 +7,7 @@ var public = {};
 
 async function triumph_score(player_roster, parameter)
 {
-    var data = await Promise.all(player_roster.players.map(async function(value)
+    var data = await Promise.all(player_roster.players.map(async function (value)
     {
         var player_name = value.displayName;
         var triumphs = await bungie.get_triumphs(value);
@@ -28,11 +28,11 @@ var known_triumphs =
     // Crucible // Lifetime // Combat Record // Fierce Competitor
     // https://www.light.gg/db/legend/triumphs/3015941901/fierce-competitor/
     'crucible_kills': 3015941901,
-    
+
     // Account // Clan // Clan // Major Contributor
     // https://www.light.gg/db/legend/triumphs/1738299320/major-contributor/
     'clan_xp': 1738299320,
-    
+
     // Vanguard // Strikes // Nightfall: The Ordeal
     // https://www.light.gg/db/legend/triumphs/4020709858/lightbearer/
     'nightfall_ordeal_high_score': 4020709858,
@@ -42,14 +42,14 @@ async function individual_triumph(player_roster, parameter)
 {
     if (!(parameter in known_triumphs))
     {
-	    throw new Error('Triumph "' + parameter + '" is not in my list');
+        throw new Error('Triumph "' + parameter + '" is not in my list');
     }
 
     var hashIdentifier = known_triumphs[parameter];
-    
+
     var display_properties = await bungie.get_triumph_display_properties(hashIdentifier);
 
-    var data = await Promise.all(player_roster.players.map(async function(value)
+    var data = await Promise.all(player_roster.players.map(async function (value)
     {
         var player_name = value.displayName;
 
@@ -63,7 +63,7 @@ async function individual_triumph(player_roster, parameter)
 
         return { name: player_name, score: score };
     }));
-    
+
     var url = null;
 
     if (display_properties.hasIcon)
@@ -105,9 +105,9 @@ async function triumph_tree(player_roster, parameter)
 
     var child_triumphs = await Promise.all(
         child_triumph_ids.map(async function (item)
-    {
-        return await bungie.get_triumph_display_properties(item);
-    }));
+        {
+            return await bungie.get_triumph_display_properties(item);
+        }));
 
     var data = await Promise.all(player_roster.players.map(async function (player)
     {
@@ -130,11 +130,11 @@ async function triumph_tree(player_roster, parameter)
                 }
 
                 player_result_details.push(
-                {
-                    name: child_triumph.name,
-                    state: state,
-                    unlocked: unlocked
-                });
+                    {
+                        name: child_triumph.name,
+                        state: state,
+                        unlocked: unlocked
+                    });
             }
         });
 
@@ -144,7 +144,7 @@ async function triumph_tree(player_roster, parameter)
             details: player_result_details
         };
     }));
-    
+
     var url = null;
 
     if (root_display_properties.hasIcon)
@@ -175,12 +175,12 @@ async function individual_stat(player_roster, parameter)
 {
     if (!(parameter in known_stats))
     {
-	    throw new Error('Stat "' + parameter + '" is not in my list');
+        throw new Error('Stat "' + parameter + '" is not in my list');
     }
 
     var property_tree = known_stats[parameter].split(' ');
 
-    var data = await Promise.all(player_roster.players.map(async function(value)
+    var data = await Promise.all(player_roster.players.map(async function (value)
     {
         var player_name = value.displayName;
 
@@ -196,7 +196,7 @@ async function individual_stat(player_roster, parameter)
 
             node = node[property_tree[index]];
         }
-        
+
         // util.log(node);
 
         return { name: player_name, score: node };
@@ -240,19 +240,19 @@ async function collectibles(player_roster, parameter)
 {
     if (!(parameter in collectible_sets))
     {
-	    throw new Error('Set "' + parameter + '" is not in my list');
+        throw new Error('Set "' + parameter + '" is not in my list');
     }
 
     var collectible_set = collectible_sets[parameter];
 
-    var data = await Promise.all(player_roster.players.map(async function(player)
+    var data = await Promise.all(player_roster.players.map(async function (player)
     {
         var player_collectibles = await bungie.get_collectibles(player);
 
         var count = 0;
         var player_result_details = [];
 
-        collectible_set.forEach(function(collectible_set_item)
+        collectible_set.forEach(function (collectible_set_item)
         {
             var state = player_collectibles[collectible_set_item.id].state;
 
@@ -264,11 +264,11 @@ async function collectibles(player_roster, parameter)
             }
 
             player_result_details.push(
-            {
-                name: collectible_set_item.name,
-                state: state,
-                visible: unlocked
-            });
+                {
+                    name: collectible_set_item.name,
+                    state: state,
+                    visible: unlocked
+                });
         });
 
         return { score: count, name: player.displayName, score_detail_list: player_result_details };
@@ -358,16 +358,16 @@ async function triumphs(player_roster, parameter)
             }
 
             player_result_details.push(
-            {
-                name: triumph_set_item.name,
-                state: state,
-                visible: unlocked
-            });
+                {
+                    name: triumph_set_item.name,
+                    state: state,
+                    visible: unlocked
+                });
         });
 
         return { score: count, name: player.displayName, score_detail_list: player_result_details };
     }));
-    
+
     var url = null;
 
     if (root_display_properties.hasIcon)
@@ -393,23 +393,23 @@ var leaderboards =
     triumphs: triumphs,
 };
 
-public.get = async function(name, parameter)
+public.get = async function (name, parameter)
 {
     if (!(name in leaderboards))
     {
-	    throw new Error('leaderboard "' + name + '" does not exist');
+        throw new Error('leaderboard "' + name + '" does not exist');
     }
-    
-	var player_roster = roster.get_roster();
+
+    var player_roster = roster.get_roster();
 
     var results = await leaderboards[name](player_roster, parameter);
 
-    results.data.sort(function(a, b)
+    results.data.sort(function (a, b)
     {
         return b.score - a.score;
     });
 
-    results.entries = results.data.map(function(value)
+    results.entries = results.data.map(function (value)
     {
         var entry = value.score + '\t : ' + value.name;
 
@@ -421,7 +421,7 @@ public.get = async function(name, parameter)
             {
                 return detail.name;
             });
-            
+
             detail_list = detail_list.join(', ');
 
             entry = entry + ' (' + detail_list + ')';

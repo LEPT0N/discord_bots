@@ -9,18 +9,18 @@ public.root_url = 'https://www.bungie.net';
 
 async function get_request(name, url, raw)
 {
-	url = public.root_url + url;
+    url = public.root_url + url;
 
-	util.log(name, url);
+    util.log(name, url);
 
     var response = await fetch(url,
-	{
-        method: 'get',
-        headers:
-		{
-            'X-API-KEY': auth.bungie_key
-        }
-    }).then(response => response.json());
+        {
+            method: 'get',
+            headers:
+            {
+                'X-API-KEY': auth.bungie_key
+            }
+        }).then(response => response.json());
 
     if (raw)
     {
@@ -29,7 +29,7 @@ async function get_request(name, url, raw)
 
     if (response.ErrorCode != 1)
     {
-		util.log(response);
+        util.log(response);
 
         throw new Error(JSON.stringify(response));
     }
@@ -101,26 +101,26 @@ public.get_manifest = async function ()
     return cached_manifest.data;
 }
 
-public.search_destiny_player = async function(arguments)
+public.search_destiny_player = async function (arguments)
 {
-	var displayName = arguments[0];
-	var platform = arguments[1];
+    var displayName = arguments[0];
+    var platform = arguments[1];
     var requested_index = util.try_get_element(arguments, 2);
 
     var url = '/Platform/Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
 
-	var players = (await get_request('search_destiny_player', url));
+    var players = (await get_request('search_destiny_player', url));
 
-	util.log(players);
+    util.log(players);
 
     var matching_players = [];
-	for (var index = 0; index < players.length; index++)
-	{
+    for (var index = 0; index < players.length; index++)
+    {
         if (players[index].iconPath == '/img/theme/bungienet/icons/' + platform + 'Logo.png')
-		{
+        {
             matching_players.push(players[index]);
         }
-	}
+    }
 
     if (requested_index != null)
     {
@@ -133,20 +133,20 @@ public.search_destiny_player = async function(arguments)
     }
     else
     {
-	    if (matching_players.length != 1)
-	    {
-		    var matching_players_names = [];
-		    for (var index = 0; index < matching_players.length; index++)
-		    {
-			    matching_players_names.push(matching_players[index].displayName);
-		    }
+        if (matching_players.length != 1)
+        {
+            var matching_players_names = [];
+            for (var index = 0; index < matching_players.length; index++)
+            {
+                matching_players_names.push(matching_players[index].displayName);
+            }
 
-		    matching_players_names = '[' + matching_players_names.join(',') + ']';
+            matching_players_names = '[' + matching_players_names.join(',') + ']';
 
-		    throw new Error('found ' + matching_players.length + ' players for ' + displayName + ' (' + platform + ') ' + matching_players_names);
-	    }
+            throw new Error('found ' + matching_players.length + ' players for ' + displayName + ' (' + platform + ') ' + matching_players_names);
+        }
 
-	    return matching_players[0];
+        return matching_players[0];
     }
 }
 
@@ -156,45 +156,45 @@ public.get_character_ids = async function (player)
 
     var character_ids = (await get_request('get_character_ids', url)).profile.data.characterIds;
 
-	util.log(character_ids);
+    util.log(character_ids);
 
-	if (character_ids.length == 0)
-	{
-		throw new Error('found no characters for ' + player.displayName);
-	}
-    
+    if (character_ids.length == 0)
+    {
+        throw new Error('found no characters for ' + player.displayName);
+    }
+
     return character_ids;
 }
 
 public.get_character = async function (player, character_id)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '/?components=Characters';
-	
+
     var character = (await get_request('get_character', url)).character.data;
 
-	util.log(character);
+    util.log(character);
 
     return character;
 }
 
 // Destiny.DestinyCollectibleState
 public.triumph_state =
-{
-    RecordRedeemed: 1,
-    RewardUnavailable: 2,
-    ObjectiveNotCompleted: 4,
-    Obscured: 8,
-    Invisible: 16,
-    EntitlementUnowned: 32,
-    CanEquipTitle: 64,
-};
+    {
+        RecordRedeemed: 1,
+        RewardUnavailable: 2,
+        ObjectiveNotCompleted: 4,
+        Obscured: 8,
+        Invisible: 16,
+        EntitlementUnowned: 32,
+        CanEquipTitle: 64,
+    };
 
 async function download_triumphs(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Records';
 
     var triumphs = (await get_request('download_triumphs', url)).profileRecords.data;
-    
+
     return triumphs;
 }
 
@@ -287,22 +287,22 @@ public.get_character_stats = async function (player)
 
 // Destiny.DestinyCollectibleState
 public.collectible_state =
-{
-    NotAcquired: 1,
-    Obscured: 2,
-    Invisible: 4,
-    CannotAffordMaterialRequirements: 8,
-    InventorySpaceUnavailable: 16,
-    UniquenessViolation: 32,
-    PurchaseDisabled: 64,
-};
+    {
+        NotAcquired: 1,
+        Obscured: 2,
+        Invisible: 4,
+        CannotAffordMaterialRequirements: 8,
+        InventorySpaceUnavailable: 16,
+        UniquenessViolation: 32,
+        PurchaseDisabled: 64,
+    };
 
 async function download_collectibles(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
 
     var collectibles = (await get_request('download_collectibles', url)).profileCollectibles.data.collectibles;
-    
+
     return collectibles;
 }
 
@@ -397,9 +397,9 @@ public.get_all_child_triumphs = async function (hashIdentifier)
 
     var child_node_results = await Promise.all(child_nodes.map(
         async function (child)
-    {
-        return await public.get_all_child_triumphs(child.presentationNodeHash);
-    }));
+        {
+            return await public.get_all_child_triumphs(child.presentationNodeHash);
+        }));
 
     child_node_results.forEach(child => results = results.concat(child));
 

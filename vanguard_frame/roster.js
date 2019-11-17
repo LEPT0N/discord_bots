@@ -53,13 +53,13 @@ function get_player_index(roster, player)
     return player_not_found;
 }
 
-public.add_player = function(player)
+public.add_player = function (player)
 {
     var roster = load_roster();
 
     if (get_player_index(roster, player) != player_not_found)
     {
-	    throw new Error('player "' + player.displayName + '" is already on the roster');
+        throw new Error('player "' + player.displayName + '" is already on the roster');
     }
 
     roster.players.push(player);
@@ -67,7 +67,7 @@ public.add_player = function(player)
     save_roster(roster);
 }
 
-public.remove_player = function(player)
+public.remove_player = function (player)
 {
     var roster = load_roster();
 
@@ -75,15 +75,15 @@ public.remove_player = function(player)
 
     if (player_index == player_not_found)
     {
-	    throw new Error('player "' + player.displayName + '" not found in roster');
+        throw new Error('player "' + player.displayName + '" not found in roster');
     }
 
     roster.players.splice(player_index, 1);
-            
+
     save_roster(roster);
 }
 
-public.get_roster = function()
+public.get_roster = function ()
 {
     return load_roster();
 }

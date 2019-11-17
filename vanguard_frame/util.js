@@ -6,16 +6,16 @@ var root_folder = './.data';
 
 var public = {};
 
-public.file_exists = function(file_name)
+public.file_exists = function (file_name)
 {
-	var file_path = root_folder + '/' + file_name;
+    var file_path = root_folder + '/' + file_name;
 
     return fs.existsSync(file_path);
 }
 
-public.write_file = function(file_name, contents, suppress_contents_log)
+public.write_file = function (file_name, contents, suppress_contents_log)
 {
-	var file_path = root_folder + '/' + file_name;
+    var file_path = root_folder + '/' + file_name;
 
     public.log('writing to file ' + file_path);
 
@@ -28,33 +28,33 @@ public.write_file = function(file_name, contents, suppress_contents_log)
         file_path.substring(0, file_path.lastIndexOf('/')),
         { recursive: true });
 
-	var contents_serialized = JSON.stringify(contents);
+    var contents_serialized = JSON.stringify(contents);
 
-	fs.writeFileSync(file_path, contents_serialized, (error) =>
-	{
-		if (error)
-		{
-			throw error;
-		}
-	});
+    fs.writeFileSync(file_path, contents_serialized, (error) =>
+    {
+        if (error)
+        {
+            throw error;
+        }
+    });
 }
 
 public.read_file = function (file_name, suppress_contents_log)
 {
-	var file_path = root_folder + '/' + file_name;
+    var file_path = root_folder + '/' + file_name;
 
-	public.log('reading from file ' + file_path);
+    public.log('reading from file ' + file_path);
 
-	var contents = fs.readFileSync(file_path);
+    var contents = fs.readFileSync(file_path);
 
-	var contents_deserialized = JSON.parse(contents);
+    var contents_deserialized = JSON.parse(contents);
 
     if (!suppress_contents_log)
     {
         public.log('contents:', contents_deserialized);
     }
 
-	return contents_deserialized;
+    return contents_deserialized;
 }
 
 public.try_read_file = function (file_name, suppress_contents_log)
@@ -69,22 +69,22 @@ public.try_read_file = function (file_name, suppress_contents_log)
     }
 }
 
-public.download_file = async function(url, file_name)
+public.download_file = async function (url, file_name)
 {
-	var file_path = root_folder + '/' + file_name;
+    var file_path = root_folder + '/' + file_name;
 
-	public.log('downloading file ' + url);
+    public.log('downloading file ' + url);
 
-	fs.mkdirSync(root_folder, {recursive: true});
+    fs.mkdirSync(root_folder, { recursive: true });
 
     return new Promise((resolve, reject) =>
     {
-        http.get( { url: url }, file_path, function (error, result)
+        http.get({ url: url }, file_path, function (error, result)
         {
-		    if (error)
-		    {
-			    throw error;
-		    }
+            if (error)
+            {
+                throw error;
+            }
             else
             {
                 public.log('download complete to: ' + file_path);
@@ -95,22 +95,22 @@ public.download_file = async function(url, file_name)
     });
 }
 
-public.upload_file = async function(bot, channel_id, url, file_name)
+public.upload_file = async function (bot, channel_id, url, file_name)
 {
     var file_path = await public.download_file(url, file_name);
 
     public.log('uploading:', file_path);
 
     bot.uploadFile(
-    {
-        to: channel_id,
-        file: file_path
-    });
+        {
+            to: channel_id,
+            file: file_path
+        });
 
     fs.unlinkSync(file_path);
 }
 
-public.parse_arguments = function(input)
+public.parse_arguments = function (input)
 {
     public.log('parsing arguments:', input.raw_message);
 
@@ -139,14 +139,14 @@ public.parse_arguments = function(input)
         {
             // Remove the quote
             value = value.slice(1);
-            
+
             var found_end = false;
 
             // Loop through the rest of the arguments
             for (index++; !found_end && index < arguments_raw.length; index++)
             {
                 var added_value = arguments_raw[index];
-                
+
                 // Look for one that ends with a quote
                 if (added_value.slice(-1) == '"')
                 {
@@ -180,7 +180,7 @@ public.parse_arguments = function(input)
     return input;
 }
 
-public.try_get_element = function(array, index)
+public.try_get_element = function (array, index)
 {
     if (index < array.length)
     {

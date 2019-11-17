@@ -4,7 +4,7 @@ var leaderboard = require('./leaderboard.js');
 
 var public = {};
 
-public.run = async function()
+public.run = async function ()
 {
     return;
 
@@ -12,18 +12,18 @@ public.run = async function()
 
     try
     {
-	    // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['triumph_score'] });
         // await test_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
         // await test_leaderboard({ arguments: ['triumph_tree', 'lore'] });
     }
-	catch (error)
-	{
-		var error_details = error.name + " : " + error.message;
+    catch (error)
+    {
+        var error_details = error.name + " : " + error.message;
 
-		util.log(error_details);
-	}
+        util.log(error_details);
+    }
 
     process.exit();
 }

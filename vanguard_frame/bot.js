@@ -8,25 +8,25 @@ var leaderboard = require('./leaderboard.js');
 var test = require('./test.js');
 
 var bot = new discord.Client(
-{
-   token: auth.discord_key,
-   autorun: true
-});
+    {
+        token: auth.discord_key,
+        autorun: true
+    });
 
 bot.on('ready', async function (evt)
 {
     util.log('Connected', 'Logged in as: ' + bot.username + ' - (' + bot.id + ')');
-    
+
     await test.run();
 });
 
 async function echo(input)
 {
     bot.sendMessage(
-	{
-        to: input.channel_id,
-        message: '<' + input.arguments[0] + '>'
-    });
+        {
+            to: input.channel_id,
+            message: '<' + input.arguments[0] + '>'
+        });
 
     util.log('echoed <' + input.arguments[0] + '>');
 }
@@ -35,33 +35,33 @@ async function get_emblems(input)
 {
     var player = await bungie.search_destiny_player(input.arguments);
 
-	var character_ids = await bungie.get_character_ids(player);
+    var character_ids = await bungie.get_character_ids(player);
 
-	for (var index = 0; index < character_ids.length; index++)
-	{
-		var character = await bungie.get_character(player, character_ids[index]);
+    for (var index = 0; index < character_ids.length; index++)
+    {
+        var character = await bungie.get_character(player, character_ids[index]);
 
         var emblem_url = bungie.root_url + character.emblemPath;
 
-		util.log('emblem = ' + emblem_url);
+        util.log('emblem = ' + emblem_url);
 
         var emblem_file_name = character_ids[index] + '_emblem.jpg';
 
         util.upload_file(bot, input.channel_id, emblem_url, emblem_file_name);
-	}
+    }
 }
 
 async function get_triumph_score(input)
 {
     var player = await bungie.search_destiny_player(input.arguments);
 
-	var triumphs = await bungie.get_triumphs(player);
+    var triumphs = await bungie.get_triumphs(player);
 
-	bot.sendMessage(
-	{
-		to: input.channel_id,
-		message: 'Triumph score = ' + triumphs.score
-	});
+    bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: 'Triumph score = ' + triumphs.score
+        });
 }
 
 async function add_player_to_roster(input)
@@ -69,12 +69,12 @@ async function add_player_to_roster(input)
     var player = await bungie.search_destiny_player(input.arguments);
 
     roster.add_player(player);
-    
-	bot.sendMessage(
-	{
-        to: input.channel_id,
-		message: 'Successfully added "' + player.displayName + '" to roster'
-	});
+
+    bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: 'Successfully added "' + player.displayName + '" to roster'
+        });
 }
 
 async function remove_player_from_roster(input)
@@ -82,19 +82,19 @@ async function remove_player_from_roster(input)
     var player = await bungie.search_destiny_player(input.arguments);
 
     roster.remove_player(player);
-    
-	bot.sendMessage(
-	{
-        to: input.channel_id,
-		message: 'Successfully removed "' + player.displayName + '" from roster'
-	});
+
+    bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: 'Successfully removed "' + player.displayName + '" from roster'
+        });
 }
 
 async function print_roster(input)
 {
-	var player_roster = roster.get_roster();
+    var player_roster = roster.get_roster();
 
-    var roster_output_array = player_roster.players.map(function(value)
+    var roster_output_array = player_roster.players.map(function (value)
     {
         return value.displayName;
     });
@@ -102,12 +102,12 @@ async function print_roster(input)
     var roster_output = 'Current roster: \r\n' + roster_output_array.join('\r\n');
 
     util.log(roster_output);
-    
-	bot.sendMessage(
-	{
-		to: input.channel_id,
-		message: roster_output
-	});
+
+    bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: roster_output
+        });
 }
 
 async function print_leaderboard(input)
@@ -120,7 +120,7 @@ async function print_leaderboard(input)
     if (results.url)
     {
         util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
-        
+
         await util.sleep(1000);
     }
 
@@ -133,11 +133,11 @@ async function print_leaderboard(input)
 
     var message = message + results.entries.join('\r\n');
 
-	bot.sendMessage(
-	{
-		to: input.channel_id,
-		message: message
-	});
+    bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: message
+        });
 }
 
 async function search_manifest(input)
@@ -183,10 +183,10 @@ async function search_manifest(input)
     }).join('\r\n');
 
     bot.sendMessage(
-    {
-        to: input.channel_id,
-        message: string_results
-    });
+        {
+            to: input.channel_id,
+            message: string_results
+        });
 }
 
 async function mirror_reactions(input)
@@ -209,11 +209,11 @@ async function mirror_reactions(input)
             util.log('emoji found: "' + emoji + '"');
 
             bot.addReaction(
-            {
-                channelID: input.channel_id,
-                messageID: input.message_id,
-                reaction: emoji
-            });
+                {
+                    channelID: input.channel_id,
+                    messageID: input.message_id,
+                    reaction: emoji
+                });
 
             await util.sleep(1000);
         }
@@ -222,7 +222,7 @@ async function mirror_reactions(input)
 
 async function process_message(input)
 {
-	util.log('start command');
+    util.log('start command');
 
     try
     {
@@ -256,20 +256,20 @@ async function process_message(input)
 
         await commands[input.command](input);
     }
-	catch (error)
-	{
-		var error_details = error.name + " : " + error.message;
+    catch (error)
+    {
+        var error_details = error.name + " : " + error.message;
 
-		util.log(error_details);
-		
-		bot.sendMessage(
-		{
-			to: input.channel_id,
-			message: error_details
-		});
-	}
+        util.log(error_details);
 
-	util.log('end command');
+        bot.sendMessage(
+            {
+                to: input.channel_id,
+                message: error_details
+            });
+    }
+
+    util.log('end command');
 }
 
 bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
