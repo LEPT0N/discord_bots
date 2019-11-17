@@ -294,21 +294,38 @@ async function collectibles(player_roster, parameter)
 var triumph_sets =
 {
     // https://www.light.gg/db/legend/1652422747/seals/
-    'seals': [
-        { id: 2707428411, name: 'Undying' },
-        { id: 3387213440, name: 'Enlightened' },
-        { id: 3793754396, name: 'Harbinger' },
-        { id: 2254764897, name: 'MMXIX' },
-        { id: 1883929036, name: 'Shadow' },
-        { id: 1313291220, name: 'Reckoner' },
-        { id: 2053985130, name: 'Blacksmith' },
-        { id: 2757681677, name: 'Wayfarer' },
-        { id: 3798931976, name: 'Dredgen' },
-        { id: 3369119720, name: 'Unbroken' },
-        { id: 1754983323, name: 'Chronicler' },
-        { id: 1693645129, name: 'Cursebreaker' },
-        { id: 2182090828, name: 'Rivensbane' },
-    ]
+    'seals': {
+        title_presentation_node: 1652422747,
+        triumphs: [
+            { id: 2707428411, name: 'Undying' },
+            { id: 3387213440, name: 'Enlightened' },
+            { id: 3793754396, name: 'Harbinger' },
+            { id: 2254764897, name: 'MMXIX' },
+            { id: 1883929036, name: 'Shadow' },
+            { id: 1313291220, name: 'Reckoner' },
+            { id: 2053985130, name: 'Blacksmith' },
+            { id: 2757681677, name: 'Wayfarer' },
+            { id: 3798931976, name: 'Dredgen' },
+            { id: 3369119720, name: 'Unbroken' },
+            { id: 1754983323, name: 'Chronicler' },
+            { id: 1693645129, name: 'Cursebreaker' },
+            { id: 2182090828, name: 'Rivensbane' },
+        ]
+    },
+
+    // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
+    'raids_completed': {
+        title_presentation_node: 2975760062,
+        triumphs: [
+            { id: 3420353827, name: 'Leviathan' },
+            { id: 2602370549, name: 'Leviathan, Eater of Worlds' },
+            { id: 1742345588, name: 'Leviathan, Spire of Stars' },
+            { id: 2195455623, name: 'Last Wish' },
+            { id: 4060320345, name: 'Scourge of the Past' },
+            { id: 1558682421, name: 'Crown of Sorrow' },
+            { id: 1120290476, name: 'Garden of Salvation' },
+        ]
+    }
 }
 
 async function triumphs(player_roster, parameter)
@@ -320,7 +337,7 @@ async function triumphs(player_roster, parameter)
 
     var triumph_set = triumph_sets[parameter];
 
-    var root_display_properties = await bungie.get_presentation_node_display_properties(1652422747);
+    var root_display_properties = await bungie.get_presentation_node_display_properties(triumph_set.title_presentation_node);
 
     var data = await Promise.all(player_roster.players.map(async function (player)
     {
@@ -329,7 +346,7 @@ async function triumphs(player_roster, parameter)
         var count = 0;
         var player_result_details = [];
 
-        triumph_set.forEach(function (triumph_set_item)
+        triumph_set.triumphs.forEach(function (triumph_set_item)
         {
             var state = player_triumphs.records[triumph_set_item.id].state;
 
