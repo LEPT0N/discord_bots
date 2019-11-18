@@ -17,9 +17,12 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumph_tree', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
         // await test_leaderboard({ arguments: ['triumph_tree', 'lore'] });
+        // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
     }
     catch (error)
     {
+        util.log('Exception:', error);
+
         var error_details = error.name + " : " + error.message;
 
         util.log(error_details);

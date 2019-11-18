@@ -282,35 +282,11 @@ async function collectibles(player_roster, parameter)
     };
 }
 
-// NOTE: scan the set of children in 'Seals' (1652422747)
-// https://www.light.gg/db/legend/1652422747/seals/
-// which takes you here:
-// https://www.light.gg/db/legend/1652422747/seals/1002334440/moments-of-triumph-mmxix/
-// And then 'completionRecordHash' should take you to the list below.
-//
-// should probably just be wrapped in 'bungie.get_seals'
-//
-// So remove 'seals' from this list (comment it out) but leave the leaderboard for later use
 var triumph_sets =
 {
     // https://www.light.gg/db/legend/1652422747/seals/
     'seals': {
-        title_presentation_node: 1652422747,
-        triumphs: [
-            { id: 2707428411, name: 'Undying' },
-            { id: 3387213440, name: 'Enlightened' },
-            { id: 3793754396, name: 'Harbinger' },
-            { id: 2254764897, name: 'MMXIX' },
-            { id: 1883929036, name: 'Shadow' },
-            { id: 1313291220, name: 'Reckoner' },
-            { id: 2053985130, name: 'Blacksmith' },
-            { id: 2757681677, name: 'Wayfarer' },
-            { id: 3798931976, name: 'Dredgen' },
-            { id: 3369119720, name: 'Unbroken' },
-            { id: 1754983323, name: 'Chronicler' },
-            { id: 1693645129, name: 'Cursebreaker' },
-            { id: 2182090828, name: 'Rivensbane' },
-        ]
+        dynamic_set_function: generate_seals_triumph_set
     },
 
     // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
@@ -336,6 +312,11 @@ async function triumphs(player_roster, parameter)
     }
 
     var triumph_set = triumph_sets[parameter];
+
+    if (triumph_set.dynamic_set_function)
+    {
+        triumph_set = await triumph_set.dynamic_set_function();
+    }
 
     var root_display_properties = await bungie.get_presentation_node_display_properties(triumph_set.title_presentation_node);
 
@@ -380,6 +361,39 @@ async function triumphs(player_roster, parameter)
         description: root_display_properties.description,
         data: data,
         url: url
+    };
+}
+
+async function generate_seals_triumph_set()
+{
+    // https://www.light.gg/db/legend/1652422747/seals/
+    var seal_presetation_node_id = 1652422747;
+
+    var manifest = (await bungie.get_manifest());
+
+    var seal_presentation_node = manifest.DestinyPresentationNodeDefinition[seal_presetation_node_id];
+
+    var seals = seal_presentation_node.children.presentationNodes.map(child =>
+    {
+        var child_id = child.presentationNodeHash;
+
+        var child_presentation_node = manifest.DestinyPresentationNodeDefinition[child_id];
+
+        var completion_record_id = child_presentation_node.completionRecordHash;
+
+        var completion_record_presentation_node = manifest.DestinyRecordDefinition[completion_record_id];
+
+        var seal_name = completion_record_presentation_node.titleInfo.titlesByGender.Male;
+
+        return {
+            name: seal_name,
+            id: completion_record_id,
+        };
+    });
+
+    return {
+        title_presentation_node: seal_presetation_node_id,
+        triumphs: seals,
     };
 }
 

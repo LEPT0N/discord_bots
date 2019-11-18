@@ -301,9 +301,9 @@ async function process_message(input)
     }
     catch (error)
     {
-        var error_details = error.name + " : " + error.message;
+        util.log('Exception:', error);
 
-        util.log(error_details);
+        var error_details = error.name + " : " + error.message;
 
         bot.sendMessage(
             {
