@@ -79,87 +79,6 @@ async function individual_triumph(player_roster, parameter)
     };
 }
 
-var known_triumph_trees =
-{
-    // Legend // Triumphs // Account // Exotic Catalysts
-    // https://www.light.gg/db/legend/1024788583/triumphs/4230728762/account/1111248994/exotic-catalysts/
-    'exotic_catalysts': 1111248994,
-
-    // Legend // Triumphs // Lore
-    // https://www.light.gg/db/legend/1024788583/triumphs/564676571/lore/
-    'lore': 564676571,
-}
-
-async function triumph_tree(player_roster, parameter)
-{
-    if (!(parameter in known_triumph_trees))
-    {
-        throw new Error('Triumph tree "' + parameter + '" is not in my list');
-    }
-
-    var root_id = known_triumph_trees[parameter];
-
-    var root_display_properties = await bungie.get_presentation_node_display_properties(root_id);
-
-    var child_triumph_ids = await bungie.get_all_child_triumphs(root_id);
-
-    var child_triumphs = await Promise.all(
-        child_triumph_ids.map(async function (item)
-        {
-            return await bungie.get_triumph_display_properties(item);
-        }));
-
-    var data = await Promise.all(player_roster.players.map(async function (player)
-    {
-        var player_triumphs = await bungie.get_triumphs(player);
-
-        var count = 0;
-        var player_result_details = [];
-
-        child_triumphs.forEach(function (child_triumph)
-        {
-            if (player_triumphs.records[child_triumph.id])
-            {
-                var state = player_triumphs.records[child_triumph.id].state;
-
-                var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
-
-                if (unlocked)
-                {
-                    count++;
-                }
-
-                player_result_details.push(
-                    {
-                        name: child_triumph.name,
-                        state: state,
-                        unlocked: unlocked
-                    });
-            }
-        });
-
-        return {
-            name: player.displayName,
-            score: count,
-            details: player_result_details
-        };
-    }));
-
-    var url = null;
-
-    if (root_display_properties.hasIcon)
-    {
-        url = bungie.root_url + root_display_properties.icon;
-    }
-
-    return {
-        title: root_display_properties.name,
-        description: root_display_properties.description,
-        data: data,
-        url: url
-    };
-}
-
 // Look at the output from get_character_stats to see what's available
 var known_stats =
 {
@@ -284,13 +203,21 @@ async function collectibles(player_roster, parameter)
 
 var triumph_sets =
 {
-    // https://www.light.gg/db/legend/1652422747/seals/
+    'exotic_catalysts': {
+        dynamic_set_function: generate_exotic_catalysts_triumph_set
+    },
+
+    'lore': {
+        dynamic_set_function: generate_lore_triumph_set
+    },
+
     'seals': {
         dynamic_set_function: generate_seals_triumph_set
     },
 
     // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
     'raids_completed': {
+        show_details: true,
         title_presentation_node: 2975760062,
         triumphs: [
             { id: 3420353827, name: 'Leviathan' },
@@ -329,24 +256,40 @@ async function triumphs(player_roster, parameter)
 
         triumph_set.triumphs.forEach(function (triumph_set_item)
         {
-            var state = player_triumphs.records[triumph_set_item.id].state;
-
-            var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
-
-            if (unlocked)
+            if (player_triumphs.records[triumph_set_item.id])
             {
-                count++;
-            }
+                var state = player_triumphs.records[triumph_set_item.id].state;
 
-            player_result_details.push(
+                var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
+
+                if (unlocked)
                 {
-                    name: triumph_set_item.name,
-                    state: state,
-                    visible: unlocked
-                });
+                    count++;
+                }
+
+                if (triumph_set.show_details)
+                {
+                    player_result_details.push(
+                        {
+                            name: triumph_set_item.name,
+                            state: state,
+                            visible: unlocked
+                        });
+                }
+            }
         });
 
-        return { score: count, name: player.displayName, score_detail_list: player_result_details };
+        var result = {
+            score: count,
+            name: player.displayName
+        };
+
+        if (triumph_set.show_details)
+        {
+            result.score_detail_list = player_result_details;
+        }
+
+        return result;
     }));
 
     var url = null;
@@ -366,6 +309,7 @@ async function triumphs(player_roster, parameter)
 
 async function generate_seals_triumph_set()
 {
+    // Legend // Seals
     // https://www.light.gg/db/legend/1652422747/seals/
     var seal_presetation_node_id = 1652422747;
 
@@ -392,8 +336,46 @@ async function generate_seals_triumph_set()
     });
 
     return {
+        show_details: true,
         title_presentation_node: seal_presetation_node_id,
         triumphs: seals,
+    };
+}
+
+async function generate_exotic_catalysts_triumph_set()
+{
+    // Legend // Triumphs // Account // Exotic Catalysts
+    // https://www.light.gg/db/legend/1024788583/triumphs/4230728762/account/1111248994/exotic-catalysts/
+    return await generate_triumph_tree_triumph_set(1111248994);
+}
+
+async function generate_lore_triumph_set()
+{
+    // Legend // Triumphs // Lore
+    // https://www.light.gg/db/legend/1024788583/triumphs/564676571/lore/
+    return await generate_triumph_tree_triumph_set(564676571);
+}
+
+async function generate_triumph_tree_triumph_set(root_id)
+{
+    var manifest = (await bungie.get_manifest());
+
+    var child_triumph_ids = await bungie.get_all_child_triumphs(root_id);
+
+    var triumphs = child_triumph_ids.map(id =>
+    {
+        var presentation_node = manifest.DestinyRecordDefinition[id];
+
+        return {
+            name: presentation_node.name,
+            id: id,
+        };
+    });
+
+    return {
+        show_details: false,
+        title_presentation_node: root_id,
+        triumphs: triumphs,
     };
 }
 
@@ -426,7 +408,6 @@ var leaderboards =
     best_titan: lol,
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
-    triumph_tree: triumph_tree,
     individual_stat: individual_stat,
     collectibles: collectibles,
     triumphs: triumphs,
