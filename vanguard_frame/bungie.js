@@ -428,4 +428,20 @@ public.get_presentation_node_display_properties = async function (hashIdentifier
     return display_properties;
 }
 
+public.get_raids = async function (player, character_id)
+{
+    // Destiny2.GetActivityHistory
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Character/' + character_id + '/Stats/Activities/?page=0&count=10&mode=Raid';
+
+    // Raid == Destiny.HistoricalStats.Definitions.DestinyActivityModeType
+
+    var activities = (await get_request('get_derp', url)).activities;
+
+    util.log('results', activities);
+
+    util.log('results[0]', activities[0]);
+
+    return activities;
+}
+
 module.exports = public;
