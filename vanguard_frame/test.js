@@ -7,7 +7,7 @@ var public = {};
 
 public.run = async function ()
 {
-    return;
+    // return;
 
     util.log('test.run');
 
@@ -20,7 +20,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
-        // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
+        await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
     }
     catch (error)
     {
@@ -53,11 +53,39 @@ async function test_leaderboard(input)
 async function test_raids(input)
 {
     var player = await bungie.search_destiny_player(input.arguments);
-    var character_ids = await bungie.get_character_ids(player);
-    for (var index = 0; index < character_ids.length; index++)
+
+    var activities = await bungie.download_activity_history(player, bungie.activity_mode_type.Raid);
+
+    var completed_activities = activities.filter(function (activity)
     {
-        await bungie.get_raids(player, character_ids[index]);
-    }
+        return activity.values.completed.basic.value == bungie.completed.Yes
+            && activity.values.completionReason.basic.value == bungie.completion_reason.ObjectiveCompleted;
+    });
+
+    util.log('activities returned', completed_activities.length);
+
+    util.write_file(player.membershipId + '_raids.json', activities, true);
+
+    var buckets = {};
+
+    completed_activities.forEach(function (activity)
+    {
+        var bucket_id = activity.activityDetails.referenceId;
+
+        if (!(bucket_id in buckets))
+        {
+            buckets[bucket_id] = 0;
+        }
+
+        buckets[bucket_id]++;
+    });
+
+    await Promise.all(Object.keys(buckets).map(async function (bucket_id)
+    {
+        var display_properties = await bungie.get_activity_display_properties(bucket_id);
+
+        console.log(display_properties.name + ' = ' + buckets[bucket_id]);
+    }));
 }
 
 module.exports = public;

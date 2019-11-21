@@ -431,17 +431,179 @@ public.get_presentation_node_display_properties = async function (hashIdentifier
 public.get_raids = async function (player, character_id)
 {
     // Destiny2.GetActivityHistory
-    var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Character/' + character_id + '/Stats/Activities/?page=0&count=10&mode=Raid';
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Character/' + character_id + '/Stats/Activities/?page=0&count=10&mode=' + public.activity_mode_type.Raid;
 
     // Raid == Destiny.HistoricalStats.Definitions.DestinyActivityModeType
 
     var activities = (await get_request('get_derp', url)).activities;
 
-    util.log('results', activities);
+    // util.log('results', activities);
 
-    util.log('results[0]', activities[0]);
+    // util.log('results[0]', activities[0]);
 
     return activities;
+}
+
+// Destiny.HistoricalStats.Definitions.DestinyActivityModeType
+public.activity_mode_type =
+    {
+        None: 0,
+        Story: 2,
+        Strike: 3,
+        Raid: 4,
+        AllPvP: 5,
+        Patrol: 6,
+        AllPvE: 7,
+        Reserved9: 9,
+        Control: 10,
+        Reserved11: 11,
+        Clash: 12,
+        Reserved13: 13,
+        CrimsonDoubles: 15,
+        Nightfall: 16,
+        HeroicNightfall: 17,
+        AllStrikes: 18,
+        IronBanner: 19,
+        Reserved20: 20,
+        Reserved21: 21,
+        Reserved22: 22,
+        Reserved24: 24,
+        AllMayhem: 25,
+        Reserved26: 26,
+        Reserved27: 27,
+        Reserved28: 28,
+        Reserved29: 29,
+        Reserved30: 30,
+        Supremacy: 31,
+        PrivateMatchesAll: 32,
+        Survival: 37,
+        Countdown: 38,
+        TrialsOfTheNine: 39,
+        Social: 40,
+        TrialsCountdown: 41,
+        TrialsSurvival: 42,
+        IronBannerControl: 43,
+        IronBannerClash: 44,
+        IronBannerSupremacy: 45,
+        ScoredNightfall: 46,
+        ScoredHeroicNightfall: 47,
+        Rumble: 48,
+        AllDoubles: 49,
+        Doubles: 50,
+        PrivateMatchesClash: 51,
+        PrivateMatchesControl: 52,
+        PrivateMatchesSupremacy: 53,
+        PrivateMatchesCountdown: 54,
+        PrivateMatchesSurvival: 55,
+        PrivateMatchesMayhem: 56,
+        PrivateMatchesRumble: 57,
+        HeroicAdventure: 58,
+        Showdown: 59,
+        Lockdown: 60,
+        Scorched: 61,
+        ScorchedTeam: 62,
+        Gambit: 63,
+        AllPvECompetitive: 64,
+        Breakthrough: 65,
+        BlackArmoryRun: 66,
+        Salvage: 67,
+        IronBannerSalvage: 68,
+        PvPCompetitive: 69,
+        PvPQuickplay: 70,
+        ClashQuickplay: 71,
+        ClashCompetitive: 72,
+        ControlQuickplay: 73,
+        ControlCompetitive: 74,
+        GambitPrime: 75,
+        Reckoning: 76,
+        Menagerie: 77,
+        VexOffensive: 78,
+        NightmareHunt: 79,
+        Elimination: 80,
+        Momentum: 81,
+    };
+
+public.completed =
+    {
+        No: 0,
+        Yes: 1,
+    };
+
+public.completion_reason =
+    {
+        ObjectiveCompleted: 0,
+        Failed: 2,
+        Unknown: 255,
+    };
+
+async function download_activity_history(player, mode)
+{
+    var activities = [];
+
+    var character_ids = await public.get_character_ids(player);
+
+    await Promise.all(character_ids.map(async function (character_id)
+    {
+        var url = '/Platform/Destiny2/' + player.membershipType +
+            '/Account/' + player.membershipId + '/Character/' + character_id +
+            '/Stats/Activities/?page=0&count=200&mode=' + mode;
+
+        var character_activities = (await get_request('download_activity_history', url)).activities;
+
+        activities = activities.concat(character_activities);
+    }));
+
+    return activities;
+}
+
+public.download_activity_history = download_activity_history;
+
+var cached_activity_history = {};
+
+public.get_activity_history = async function (player)
+{
+    var today = util.get_date();
+
+    var collectibles_file_name = 'player_data_cache/' + player.membershipId + '_collectibles.json';
+
+    if (!(player.membershipId in cached_collectibles))
+    {
+        cached_collectibles[player.membershipId] = util.try_read_file(collectibles_file_name, true);
+    }
+
+    if (cached_collectibles[player.membershipId] && cached_collectibles[player.membershipId].date == today)
+    {
+        return cached_collectibles[player.membershipId].data;
+    }
+
+    var downloaded_collectibles = await download_collectibles(player);
+
+    cached_collectibles[player.membershipId] = {
+        date: today,
+        data: downloaded_collectibles
+    };
+
+    util.write_file(collectibles_file_name, cached_collectibles[player.membershipId], true);
+
+    return cached_collectibles[player.membershipId].data;
+}
+
+public.get_activity_display_properties = async function (hashIdentifier)
+{
+    var manifest = (await public.get_manifest()).DestinyActivityDefinition;
+
+    if (!hashIdentifier in manifest)
+    {
+        throw new Error('Presentation Node "' + hashIdentifier + '" is not in the manifest');
+    }
+
+    var display_properties = manifest[hashIdentifier].displayProperties;
+
+    display_properties.id = hashIdentifier;
+
+    // util.log('get_presentation_node_display_properties', display_properties);
+
+    return display_properties;
 }
 
 module.exports = public;
