@@ -544,48 +544,78 @@ async function download_activity_history(player, mode)
 
     await Promise.all(character_ids.map(async function (character_id)
     {
-        var url = '/Platform/Destiny2/' + player.membershipType +
-            '/Account/' + player.membershipId + '/Character/' + character_id +
-            '/Stats/Activities/?page=0&count=200&mode=' + mode;
+        var count = 128;
+        var done = false;
 
-        var character_activities = (await get_request('download_activity_history', url)).activities;
+        for (var page = 0; !done; page++)
+        {
+            var url = '/Platform/Destiny2/' + player.membershipType +
+                '/Account/' + player.membershipId +
+                '/Character/' + character_id +
+                '/Stats/Activities/?page=' + page +
+                '&count=' + count +
+                '&mode=' + mode;
 
-        activities = activities.concat(character_activities);
+            var activities_page = (await get_request('download_activity_history', url)).activities;
+
+            if (!activities_page)
+            {
+                util.log('download_activity_history page count', 'null');
+
+                done = true;
+            }
+            else
+            {
+                util.log('download_activity_history page count', activities_page.length);
+
+                activities = activities.concat(activities_page);
+
+                done = (activities_page.length < count);
+            }
+        }
     }));
+
+    util.log('download_activity_history total count', activities.length);
 
     return activities;
 }
 
-public.download_activity_history = download_activity_history;
-
 var cached_activity_history = {};
 
-public.get_activity_history = async function (player)
+public.get_activity_history = async function (player, mode)
 {
     var today = util.get_date();
 
-    var collectibles_file_name = 'player_data_cache/' + player.membershipId + '_collectibles.json';
+    var activity_history_file_name = 'player_data_cache/' + player.membershipId +
+        '_' + mode +
+        '_activity_history.json';
 
-    if (!(player.membershipId in cached_collectibles))
+    if (!(player.membershipId in cached_activity_history))
     {
-        cached_collectibles[player.membershipId] = util.try_read_file(collectibles_file_name, true);
+        cached_activity_history[player.membershipId] = {};
     }
 
-    if (cached_collectibles[player.membershipId] && cached_collectibles[player.membershipId].date == today)
+    if (!(mode in cached_activity_history[player.membershipId]))
     {
-        return cached_collectibles[player.membershipId].data;
+        cached_activity_history[player.membershipId][mode] = util.try_read_file(activity_history_file_name, true);
     }
 
-    var downloaded_collectibles = await download_collectibles(player);
+    if (cached_activity_history[player.membershipId][mode] &&
+        cached_activity_history[player.membershipId][mode].date == today)
+    {
+        return cached_activity_history[player.membershipId][mode].data;
+    }
 
-    cached_collectibles[player.membershipId] = {
+    var downloaded_activity_history = await download_activity_history(player, mode);
+
+    cached_activity_history[player.membershipId][mode] = {
         date: today,
-        data: downloaded_collectibles
+        data: downloaded_activity_history
     };
 
-    util.write_file(collectibles_file_name, cached_collectibles[player.membershipId], true);
+    util.write_file(activity_history_file_name, cached_activity_history[player.membershipId][mode], true);
 
-    return cached_collectibles[player.membershipId].data;
+    return cached_activity_history[player.membershipId][mode].data;
 }
 
 public.get_activity_display_properties = async function (hashIdentifier)

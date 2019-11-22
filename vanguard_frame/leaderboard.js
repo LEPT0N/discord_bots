@@ -403,6 +403,57 @@ async function lol(player_roster, parameter)
     };
 }
 
+var activity_history_sets =
+{
+    'raids_completed': {
+        mode: bungie.activity_mode_type.Raid,
+        name: 'Raids Completed',
+        filter: function (activity)
+        {
+            return activity.values.completed.basic.value == bungie.completed.Yes
+                && activity.values.completionReason.basic.value == bungie.completion_reason.ObjectiveCompleted;
+        },
+    },
+    'raids_failed': {
+        mode: bungie.activity_mode_type.Raid,
+        name: 'Raids Failed',
+        filter: function (activity)
+        {
+            return activity.values.completed.basic.value == bungie.completed.Yes
+                && activity.values.completionReason.basic.value == bungie.completion_reason.Failed;
+        },
+    },
+}
+
+async function activity_history(player_roster, parameter)
+{
+    if (!(parameter in activity_history_sets))
+    {
+        throw new Error('Set "' + parameter + '" is not in my list');
+    }
+
+    var activity_history_set = activity_history_sets[parameter];
+
+    var data = await Promise.all(player_roster.players.map(async function (player)
+    {
+        var player_activity_history = await bungie.get_activity_history(player, activity_history_set.mode);
+
+        player_activity_history = player_activity_history.filter(activity_history_set.filter);
+
+        return {
+            score: player_activity_history.length,
+            name: player.displayName
+        };
+    }));
+
+    return {
+        title: activity_history_set.name,
+        description: null,
+        data: data,
+        url: null
+    };
+}
+
 var leaderboards =
 {
     best_titan: lol,
@@ -411,6 +462,7 @@ var leaderboards =
     individual_stat: individual_stat,
     collectibles: collectibles,
     triumphs: triumphs,
+    activity_history: activity_history,
 };
 
 public.get = async function (name, parameter)

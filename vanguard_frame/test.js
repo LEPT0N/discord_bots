@@ -7,7 +7,7 @@ var public = {};
 
 public.run = async function ()
 {
-    // return;
+    return;
 
     util.log('test.run');
 
@@ -20,7 +20,8 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
-        await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
     }
     catch (error)
     {
@@ -54,17 +55,15 @@ async function test_raids(input)
 {
     var player = await bungie.search_destiny_player(input.arguments);
 
-    var activities = await bungie.download_activity_history(player, bungie.activity_mode_type.Raid);
+    var activities = await bungie.get_activity_history(player, bungie.activity_mode_type.Raid);
 
     var completed_activities = activities.filter(function (activity)
     {
         return activity.values.completed.basic.value == bungie.completed.Yes
-            && activity.values.completionReason.basic.value == bungie.completion_reason.ObjectiveCompleted;
+            && activity.values.completionReason.basic.value == bungie.completion_reason.Failed;
     });
 
     util.log('activities returned', completed_activities.length);
-
-    util.write_file(player.membershipId + '_raids.json', activities, true);
 
     var buckets = {};
 
@@ -80,12 +79,26 @@ async function test_raids(input)
         buckets[bucket_id]++;
     });
 
+    var output = [];
+
     await Promise.all(Object.keys(buckets).map(async function (bucket_id)
     {
         var display_properties = await bungie.get_activity_display_properties(bucket_id);
 
-        console.log(display_properties.name + ' = ' + buckets[bucket_id]);
+        var name = display_properties.name;
+        var count = buckets[bucket_id];
+
+        if (name in output)
+        {
+            output[name] += count;
+        }
+        else
+        {
+            output[name] = count;
+        }
     }));
+
+    util.log('output', output);
 }
 
 module.exports = public;
