@@ -141,6 +141,8 @@ async function print_leaderboard(input)
             { arguments: ['collectibles', 'pinnacle_weapons'] },
             { arguments: ['triumphs', 'seals'] },
             { arguments: ['triumphs', 'raids_completed'] },
+            { arguments: ['activity_history', 'raids_completed'] },
+            { arguments: ['activity_history', 'time_raiding'] },
         ];
 
         for (var index = 0; index < all_leaderboards.length; index++)
