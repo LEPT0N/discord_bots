@@ -19,7 +19,8 @@ async function triumph_score(player_roster, parameter)
         title: 'Triumph Score',
         description: null,
         data: data,
-        url: null
+        url: null,
+        format_score: null,
     };
 }
 
@@ -75,7 +76,8 @@ async function individual_triumph(player_roster, parameter)
         title: display_properties.name,
         description: display_properties.description,
         data: data,
-        url: url
+        url: url,
+        format_score: null,
     };
 }
 
@@ -125,7 +127,8 @@ async function individual_stat(player_roster, parameter)
         title: parameter,
         description: null,
         data: data,
-        url: null
+        url: null,
+        format_score: null,
     };
 }
 
@@ -197,7 +200,8 @@ async function collectibles(player_roster, parameter)
         title: parameter,
         description: null,
         data: data,
-        url: null
+        url: null,
+        format_score: null,
     };
 }
 
@@ -303,7 +307,8 @@ async function triumphs(player_roster, parameter)
         title: root_display_properties.name,
         description: root_display_properties.description,
         data: data,
-        url: url
+        url: url,
+        format_score: null,
     };
 }
 
@@ -399,7 +404,8 @@ async function lol(player_roster, parameter)
         title: 'Best Titan',
         description: null,
         data: data,
-        url: null
+        url: null,
+        format_score: null,
     };
 }
 
@@ -413,6 +419,8 @@ var activity_history_sets =
             return activity.values.completed.basic.value == bungie.completed.Yes
                 && activity.values.completionReason.basic.value == bungie.completion_reason.ObjectiveCompleted;
         },
+        compute_score: history => history.length,
+        format_score: null,
     },
     'raids_failed': {
         mode: bungie.activity_mode_type.Raid,
@@ -422,6 +430,25 @@ var activity_history_sets =
             return activity.values.completed.basic.value == bungie.completed.Yes
                 && activity.values.completionReason.basic.value == bungie.completion_reason.Failed;
         },
+        compute_score: history => history.length,
+        format_score: null,
+    },
+    'time_raiding': {
+        mode: bungie.activity_mode_type.Raid,
+        name: 'Time Spent Raiding',
+        filter: activity => true,
+        compute_score: function (history)
+        {
+            var total_seconds = 0;
+
+            history.forEach(function (entry)
+            {
+                total_seconds += entry.values.timePlayedSeconds.basic.value;
+            });
+
+            return total_seconds;
+        },
+        format_score: util.format_seconds,
     },
 }
 
@@ -440,8 +467,10 @@ async function activity_history(player_roster, parameter)
 
         player_activity_history = player_activity_history.filter(activity_history_set.filter);
 
+        score = activity_history_set.compute_score(player_activity_history);
+
         return {
-            score: player_activity_history.length,
+            score: score,
             name: player.displayName
         };
     }));
@@ -450,7 +479,8 @@ async function activity_history(player_roster, parameter)
         title: activity_history_set.name,
         description: null,
         data: data,
-        url: null
+        url: null,
+        format_score: activity_history_set.format_score,
     };
 }
 
@@ -483,7 +513,14 @@ public.get = async function (name, parameter)
 
     results.entries = results.data.map(function (value)
     {
-        var entry = value.score + '\t : ' + value.name;
+        var score = value.score;
+
+        if (results.format_score)
+        {
+            score = results.format_score(score);
+        }
+
+        var entry = score + '\t : ' + value.name;
 
         if (value.score_detail_list)
         {

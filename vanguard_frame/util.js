@@ -212,4 +212,40 @@ public.log = function (message, data)
     console.log('');
 }
 
+public.format_seconds = function (seconds)
+{
+    var minutes = Math.floor(seconds / 60);
+    seconds = seconds - minutes * 60;
+
+    var hours = Math.floor(minutes / 60);
+    minutes = minutes - hours * 60;
+
+    var days = Math.floor(hours / 24);
+    hours = hours - days * 24;
+
+    var result = [];
+
+    if (days > 0)
+    {
+        result.push(days + ' days');
+    }
+
+    if (hours > 0)
+    {
+        result.push(hours + ' hours');
+    }
+
+    if (minutes > 0)
+    {
+        result.push(minutes + ' minutes');
+    }
+
+    if (seconds > 0)
+    {
+        result.push(seconds + ' seconds');
+    }
+
+    return result.join(' ');
+}
+
 module.exports = public;
