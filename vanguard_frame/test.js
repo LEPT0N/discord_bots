@@ -22,6 +22,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
+        // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
     }
     catch (error)
     {
@@ -99,6 +100,47 @@ async function test_raids(input)
     }));
 
     util.log('output', output);
+}
+
+async function test_weapon_history(input)
+{
+    var manifest = (await bungie.get_manifest()).DestinyInventoryItemDefinition;
+
+    var player = await bungie.search_destiny_player(input.arguments);
+
+    var character_ids = await bungie.get_character_ids(player);
+
+    await Promise.all(character_ids.map(async function (character_id)
+    {
+        var weapons = await bungie.get_weapon_history(player, character_id);
+
+        util.log('weapons count', weapons.length);
+
+        var file_name = player.membershipId +
+            '_' + character_id +
+            '_weapon_history.json';
+
+        util.write_file(file_name, weapons, true);
+
+        var weapon_usage = weapons.map(function (weapon)
+        {
+            var name = manifest[weapon.referenceId].displayProperties.name;
+
+            var kills = weapon.values.uniqueWeaponKills.basic.displayValue;
+
+            return {
+                name: name,
+                kills: kills
+            };
+        });
+
+        weapon_usage.sort(function (a, b)
+        {
+            return b.kills - a.kills;
+        });
+
+        util.log('weapon_usage', weapon_usage);
+    }));
 }
 
 module.exports = public;

@@ -636,4 +636,16 @@ public.get_activity_display_properties = async function (hashIdentifier)
     return display_properties;
 }
 
+public.get_weapon_history = async function (player, character_id)
+{
+    var url = '/Platform/Destiny2/' + player.membershipType +
+        '/Account/' + player.membershipId +
+        '/Character/' + character_id +
+        '/Stats/UniqueWeapons/';
+
+    var weapons = (await get_request('get_weapon_history', url)).weapons;
+
+    return weapons;
+}
+
 module.exports = public;
