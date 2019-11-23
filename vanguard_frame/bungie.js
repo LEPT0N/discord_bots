@@ -428,22 +428,6 @@ public.get_presentation_node_display_properties = async function (hashIdentifier
     return display_properties;
 }
 
-public.get_raids = async function (player, character_id)
-{
-    // Destiny2.GetActivityHistory
-    var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Character/' + character_id + '/Stats/Activities/?page=0&count=10&mode=' + public.activity_mode_type.Raid;
-
-    // Raid == Destiny.HistoricalStats.Definitions.DestinyActivityModeType
-
-    var activities = (await get_request('get_derp', url)).activities;
-
-    // util.log('results', activities);
-
-    // util.log('results[0]', activities[0]);
-
-    return activities;
-}
-
 // Destiny.HistoricalStats.Definitions.DestinyActivityModeType
 public.activity_mode_type =
     {
@@ -636,16 +620,56 @@ public.get_activity_display_properties = async function (hashIdentifier)
     return display_properties;
 }
 
-public.get_weapon_history = async function (player, character_id)
+async function download_weapon_history(player)
 {
-    var url = '/Platform/Destiny2/' + player.membershipType +
-        '/Account/' + player.membershipId +
-        '/Character/' + character_id +
-        '/Stats/UniqueWeapons/';
+    var character_ids = await public.get_character_ids(player);
 
-    var weapons = (await get_request('get_weapon_history', url)).weapons;
+    var weapon_history = await Promise.all(character_ids.map(async function (character_id)
+    {
+        var url = '/Platform/Destiny2/' + player.membershipType +
+            '/Account/' + player.membershipId +
+            '/Character/' + character_id +
+            '/Stats/UniqueWeapons/';
 
-    return weapons;
+        var character_weapon_history = (await get_request('download_weapon_history', url)).weapons;
+
+        return {
+            character_id: character_id,
+            weapon_history: character_weapon_history,
+        };
+    }));
+
+    return weapon_history;
+}
+
+var cached_weapon_history = {};
+
+public.get_weapon_history = async function (player)
+{
+    var today = util.get_date();
+
+    var weapon_history_file_name = 'player_data_cache/' + player.membershipId + '_weapon_history.json';
+
+    if (!(player.membershipId in cached_weapon_history))
+    {
+        cached_weapon_history[player.membershipId] = util.try_read_file(weapon_history_file_name, true);
+    }
+
+    if (cached_weapon_history[player.membershipId] && cached_weapon_history[player.membershipId].date == today)
+    {
+        return cached_weapon_history[player.membershipId].data;
+    }
+
+    var downloaded_weapon_history = await download_weapon_history(player);
+
+    cached_weapon_history[player.membershipId] = {
+        date: today,
+        data: downloaded_weapon_history
+    };
+
+    util.write_file(weapon_history_file_name, cached_weapon_history[player.membershipId], true);
+
+    return cached_weapon_history[player.membershipId].data;
 }
 
 module.exports = public;

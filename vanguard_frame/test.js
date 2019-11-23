@@ -108,21 +108,13 @@ async function test_weapon_history(input)
 
     var player = await bungie.search_destiny_player(input.arguments);
 
-    var character_ids = await bungie.get_character_ids(player);
+    var weapon_history = await bungie.get_weapon_history(player);
 
-    await Promise.all(character_ids.map(async function (character_id)
+    weapon_history.forEach(function (weapons)
     {
-        var weapons = await bungie.get_weapon_history(player, character_id);
+        util.log('weapons count', weapons.weapon_history.length);
 
-        util.log('weapons count', weapons.length);
-
-        var file_name = player.membershipId +
-            '_' + character_id +
-            '_weapon_history.json';
-
-        util.write_file(file_name, weapons, true);
-
-        var weapon_usage = weapons.map(function (weapon)
+        var weapon_usage = weapons.weapon_history.map(function (weapon)
         {
             var name = manifest[weapon.referenceId].displayProperties.name;
 
@@ -140,7 +132,7 @@ async function test_weapon_history(input)
         });
 
         util.log('weapon_usage', weapon_usage);
-    }));
+    });
 }
 
 module.exports = public;
