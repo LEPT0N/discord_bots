@@ -150,6 +150,32 @@ public.search_destiny_player = async function (arguments)
     }
 }
 
+public.beta_get_player_from_hl_cred = async function (arguments)
+{
+    var credential = arguments[0];
+
+    var url = '/User/GetMembershipFromHardLinkedCredential/12/' + credential + '/';
+
+    // var players = (await get_request('derp', url));
+
+    // util.log(players);
+
+    url = public.root_url + url;
+
+    util.log('derp', url);
+
+    var response = await fetch(url,
+        {
+            method: 'get',
+            headers:
+            {
+                'X-API-KEY': auth.bungie_key
+            }
+        });
+
+    util.log(response);
+}
+
 public.get_character_ids = async function (player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
