@@ -495,6 +495,62 @@ async function activity_history(player_roster, parameter)
     };
 }
 
+async function weapon_kills(player_roster, parameter)
+{
+    var weapon_name = parameter;
+
+    var manifest = (await bungie.get_manifest()).DestinyInventoryItemDefinition;
+
+    var data = await Promise.all(player_roster.players.map(async function (player)
+    {
+        var weapon_history = await bungie.get_weapon_history(player);
+
+        var weapon_data = {};
+
+        weapon_history.forEach(function (character_weapon_history)
+        {
+            if (character_weapon_history.weapon_history)
+            {
+                character_weapon_history.weapon_history.forEach(function (weapon)
+                {
+                    var name = manifest[weapon.referenceId].displayProperties.name;
+
+                    var kills = weapon.values.uniqueWeaponKills.basic.value;
+
+                    if (name in weapon_data)
+                    {
+                        weapon_data[name] += kills;
+                    }
+                    else
+                    {
+                        weapon_data[name] = kills;
+                    }
+                });
+            }
+        });
+
+        var kills = 0;
+
+        if (weapon_name in weapon_data)
+        {
+            kills = weapon_data[weapon_name];
+        }
+
+        return {
+            name: player.displayName,
+            score: kills,
+        };
+    }));
+
+    return {
+        title: 'Total kills with ' + weapon_name,
+        description: null,
+        data: data,
+        url: null,
+        format_score: null,
+    };
+}
+
 var leaderboards =
 {
     best_titan: lol,
@@ -504,6 +560,7 @@ var leaderboards =
     collectibles: collectibles,
     triumphs: triumphs,
     activity_history: activity_history,
+    weapon_kills: weapon_kills,
 };
 
 public.get = async function (name, parameter)

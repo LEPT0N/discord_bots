@@ -20,6 +20,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
+        // await test_leaderboard({ arguments: ['weapon_kills', 'The Huckleberry'] });
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
@@ -110,29 +111,31 @@ async function test_weapon_history(input)
 
     var weapon_history = await bungie.get_weapon_history(player);
 
+    var weapon_data = {};
+
     weapon_history.forEach(function (weapons)
     {
-        util.log('weapons count', weapons.weapon_history.length);
-
-        var weapon_usage = weapons.weapon_history.map(function (weapon)
+        if (weapons.weapon_history)
         {
-            var name = manifest[weapon.referenceId].displayProperties.name;
+            weapons.weapon_history.map(function (weapon)
+            {
+                var name = manifest[weapon.referenceId].displayProperties.name;
 
-            var kills = weapon.values.uniqueWeaponKills.basic.displayValue;
+                var kills = weapon.values.uniqueWeaponKills.basic.value;
 
-            return {
-                name: name,
-                kills: kills
-            };
-        });
-
-        weapon_usage.sort(function (a, b)
-        {
-            return b.kills - a.kills;
-        });
-
-        util.log('weapon_usage', weapon_usage);
+                if (name in weapon_data)
+                {
+                    weapon_data[name] += kills;
+                }
+                else
+                {
+                    weapon_data[name] = kills;
+                }
+            });
+        }
     });
+
+    util.log('weapon_data', weapon_data);
 }
 
 module.exports = public;
