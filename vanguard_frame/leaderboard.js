@@ -135,26 +135,26 @@ async function individual_stat(player_roster, parameter)
 var collectible_sets =
 {
     'pinnacle_weapons': [
-        { id: 3260604718, name: 'Luna\'s Howl' },
-        { id: 3260604717, name: 'Not Forgotten' },
-        { id: 4274523516, name: 'Redrix\'s Claymore' },
-        { id: 1111219481, name: 'Redrix\'s Broadsword' },
+        3260604718, // Luna's Howl
+        3260604717, // Not Forgotten
+        4274523516, // Redrix's Claymore
+        1111219481, // Redrix's Broadsword
 
-        { id: 1666039008, name: 'Breakneck' },
-        { id: 3810740723, name: 'Loaded Question' },
-        { id: 4047371119, name: 'The Mountaintop' },
+        1666039008, // Breakneck
+        3810740723, // Loaded Question
+        4047371119, // The Mountaintop
 
-        { id: 543982652, name: 'Oxygen SR3' },
-        { id: 1639266456, name: '21% Delirium' },
-        { id: 2335550020, name: 'The Recluse' },
+        543982652, // Oxygen SR3
+        1639266456, // 21% Delirium
+        2335550020, // The Recluse
 
-        { id: 3830703103, name: 'Wendigo GL3' },
-        { id: 1670904512, name: 'Hush' },
-        { id: 3066162258, name: 'Revoker' },
+        3830703103, // Wendigo GL3
+        1670904512, // Hush
+        3066162258, // Revoker
 
-        { id: 853534062, name: 'Edgewise' },
-        { id: 1510655351, name: 'Exit Strategy' },
-        { id: 1303705556, name: 'Randy\'s Throwing Knife' },
+        853534062, // Edgewise
+        1510655351, // Exit Strategy
+        1303705556, // Randy's Throwing Knife
     ]
 }
 
@@ -167,6 +167,17 @@ async function collectibles(player_roster, parameter)
 
     var collectible_set = collectible_sets[parameter];
 
+    var manifest = (await bungie.get_manifest());
+
+    var item_names = {};
+
+    collectible_set.forEach(function (collectible_id)
+    {
+        var display_properties = manifest.DestinyCollectibleDefinition[collectible_id].displayProperties;
+
+        item_names[collectible_id] = display_properties.name;
+    });
+
     var data = await Promise.all(player_roster.players.map(async function (player)
     {
         var player_collectibles = await bungie.get_collectibles(player);
@@ -174,9 +185,9 @@ async function collectibles(player_roster, parameter)
         var count = 0;
         var player_result_details = [];
 
-        collectible_set.forEach(function (collectible_set_item)
+        collectible_set.forEach(function (collectible_id)
         {
-            var state = player_collectibles[collectible_set_item.id].state;
+            var state = player_collectibles[collectible_id].state;
 
             var unlocked = !(state & bungie.collectible_state.NotAcquired);
 
@@ -187,7 +198,7 @@ async function collectibles(player_roster, parameter)
 
             player_result_details.push(
                 {
-                    name: collectible_set_item.name,
+                    name: item_names[collectible_id],
                     state: state,
                     visible: unlocked
                 });
