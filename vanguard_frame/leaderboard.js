@@ -84,12 +84,13 @@ async function individual_triumph(player_roster, parameter)
 // Look at the output from get_character_stats to see what's available
 var known_stats =
 {
-    'light_level': 'mergedAllCharacters results allPvE allTime highestLightLevel basic displayValue',
-    'deaths': 'mergedAllCharacters results allPvE allTime deaths basic displayValue',
-    'suicides': 'mergedAllCharacters results allPvE allTime suicides basic displayValue',
-    'killing_spree': 'mergedAllCharacters results allPvE allTime longestKillSpree basic displayValue',
-    'kill_distance': 'mergedAllCharacters results allPvE allTime longestKillDistance basic displayValue',
-    'kills': 'mergedAllCharacters results allPvE allTime opponentsDefeated basic displayValue',
+    'light_level': 'mergedAllCharacters merged allTime highestLightLevel basic displayValue',
+    'deaths': 'mergedAllCharacters merged allTime deaths basic displayValue',
+    'suicides': 'mergedAllCharacters merged allTime suicides basic displayValue',
+    'killing_spree': 'mergedAllCharacters merged allTime longestKillSpree basic displayValue',
+    'kill_distance': 'mergedAllCharacters merged allTime longestKillDistance basic displayValue',
+    'kills': 'mergedAllCharacters merged allTime opponentsDefeated basic displayValue',
+    'orbs_generated': 'mergedAllCharacters merged allTime orbsDropped basic displayValue',
 }
 
 async function individual_stat(player_roster, parameter)
