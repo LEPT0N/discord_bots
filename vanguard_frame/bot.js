@@ -141,6 +141,7 @@ async function print_leaderboard(input)
             { arguments: ['triumphs', 'raids_completed'] },
             { arguments: ['activity_history', 'raids_completed'] },
             { arguments: ['activity_history', 'time_raiding'] },
+            { arguments: ['weapon_kills', 'any'] },
         ];
 
         for (var index = 0; index < all_leaderboards.length; index++)

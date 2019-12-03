@@ -529,21 +529,58 @@ async function weapon_kills(player_roster, parameter)
             }
         });
 
-        var kills = 0;
-
-        if (weapon_name in weapon_data)
+        if (weapon_name == 'any')
         {
-            kills = weapon_data[weapon_name];
-        }
+            var top_name = "";
+            var top_kills = 0;
 
-        return {
-            name: player.displayName,
-            score: kills,
-        };
+            Object.keys(weapon_data).forEach(function (name)
+            {
+                if (weapon_data[name] > top_kills)
+                {
+                    top_name = name;
+                    top_kills = weapon_data[name];
+                }
+            });
+
+            return {
+                name: player.displayName,
+                score: top_kills,
+                score_detail_list: [{
+                    name: top_name,
+                    visible: true,
+                }]
+            };
+        }
+        else
+        {
+            var kills = 0;
+
+            if (weapon_name in weapon_data)
+            {
+                kills = weapon_data[weapon_name];
+            }
+
+            return {
+                name: player.displayName,
+                score: kills,
+            };
+        }
     }));
 
+    var title;
+
+    if (weapon_name == 'any')
+    {
+        title = 'Favorite Exotic';
+    }
+    else
+    {
+        title = 'Total kills with ' + weapon_name;
+    }
+
     return {
-        title: 'Total kills with ' + weapon_name,
+        title: title,
         description: null,
         data: data,
         url: null,

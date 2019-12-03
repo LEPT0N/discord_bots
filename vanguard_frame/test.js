@@ -21,6 +21,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
         // await test_leaderboard({ arguments: ['weapon_kills', 'The Huckleberry'] });
+        // await test_leaderboard({ arguments: ['weapon_kills', 'any'] });
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
