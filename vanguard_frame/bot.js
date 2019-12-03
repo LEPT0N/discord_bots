@@ -136,6 +136,7 @@ async function print_leaderboard(input)
             { arguments: ['individual_stat', 'killing_spree'] },
             { arguments: ['individual_stat', 'kill_distance'] },
             { arguments: ['individual_stat', 'kills'] },
+            { arguments: ['individual_stat', 'orbs_generated'] },
             { arguments: ['collectibles', 'pinnacle_weapons'] },
             { arguments: ['triumphs', 'seals'] },
             { arguments: ['triumphs', 'raids_completed'] },
