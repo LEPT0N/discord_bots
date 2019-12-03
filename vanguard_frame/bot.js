@@ -133,8 +133,6 @@ async function print_leaderboard(input)
             { arguments: ['triumphs', 'exotic_catalysts'] },
             { arguments: ['triumphs', 'lore'] },
             { arguments: ['individual_stat', 'light_level'] },
-            { arguments: ['individual_stat', 'deaths'] },
-            { arguments: ['individual_stat', 'suicides'] },
             { arguments: ['individual_stat', 'killing_spree'] },
             { arguments: ['individual_stat', 'kill_distance'] },
             { arguments: ['individual_stat', 'kills'] },
