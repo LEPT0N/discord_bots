@@ -37,6 +37,10 @@ var known_triumphs =
     // Vanguard // Strikes // Nightfall: The Ordeal
     // https://www.light.gg/db/legend/triumphs/4020709858/lightbearer/
     'nightfall_ordeal_high_score': 4020709858,
+
+    // Seasonal // Activities // Season 8 // Season 8: Power Bonus
+    // https://www.light.gg/db/legend/triumphs/1686327621/season-8-power-bonus/
+    'season_8_power_bonus': 1686327621,
 }
 
 async function individual_triumph(player_roster, parameter)
