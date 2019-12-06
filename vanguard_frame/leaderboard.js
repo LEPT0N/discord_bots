@@ -168,6 +168,34 @@ var stat_collections =
             weaponKillsMelee: 'Melees',
         }
     },
+
+    'favorite_special_weapon_type':
+    {
+        title: 'Favorite Special Weapon Type',
+        description: null,
+        stats:
+        {
+            weaponKillsFusionRifle: 'Fusion Rifles',
+            weaponKillsTraceRifle: 'Trace Rifles',
+            weaponKillsShotgun: 'Shotguns',
+            weaponKillsSniper: 'Snipers',
+            weaponKillsGrenadeLauncher: 'Grenade Launchers',
+        }
+    },
+
+    'favorite_heavy_weapon_type':
+    {
+        title: 'Favorite Heavy Weapon Type',
+        description: null,
+        stats:
+        {
+            weaponKillsBeamRifle: 'Linear Fusion Rifles',
+            weaponKillsMachineGun: 'Machine Guns',
+            weaponKillsRocketLauncher: 'Rocket Launchers',
+            weaponKillsSword: 'Swords',
+            weaponKillsGrenadeLauncher: 'Grenade Launchers',
+        }
+    },
 }
 
 async function highest_stat(player_roster, parameter)

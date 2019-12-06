@@ -145,6 +145,8 @@ async function print_leaderboard(input)
             { arguments: ['activity_history', 'time_raiding'] },
             { arguments: ['weapon_kills', 'any'] },
             { arguments: ['highest_stat', 'favorite_weapon_type'] },
+            { arguments: ['highest_stat', 'favorite_special_weapon_type'] },
+            { arguments: ['highest_stat', 'favorite_heavy_weapon_type'] },
         ];
 
         for (var index = 0; index < all_leaderboards.length; index++)
