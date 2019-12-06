@@ -137,6 +137,91 @@ async function individual_stat(player_roster, parameter)
     };
 }
 
+var stat_collections =
+{
+    'favorite_weapon_type':
+    {
+        title: 'Favorite Weapon Type',
+        description: null,
+        stats:
+        {
+            weaponKillsAutoRifle: 'Auto Rifles',
+            weaponKillsBeamRifle: 'Linear Fusion Rifles',
+            weaponKillsBow: 'Bows',
+            weaponKillsFusionRifle: 'Fusion Rifles',
+            weaponKillsHandCannon: 'Hand Cannons',
+            weaponKillsTraceRifle: 'Trace Rifles',
+            weaponKillsMachineGun: 'Machine Guns',
+            weaponKillsPulseRifle: 'Pulse Rifles',
+            weaponKillsRocketLauncher: 'Rocket Launchers',
+            weaponKillsScoutRifle: 'Scout Rifles',
+            weaponKillsShotgun: 'Shotguns',
+            weaponKillsSniper: 'Snipers',
+            weaponKillsSubmachinegun: 'Submachineguns',
+            weaponKillsRelic: 'Relics',
+            weaponKillsSideArm: 'Sidearms',
+            weaponKillsSword: 'Swords',
+            weaponKillsAbility: 'Abilities',
+            weaponKillsGrenade: 'Grenades',
+            weaponKillsGrenadeLauncher: 'Grenade Launchers',
+            weaponKillsSuper: 'Supers',
+            weaponKillsMelee: 'Melees',
+        }
+    },
+}
+
+async function highest_stat(player_roster, parameter)
+{
+    if (!(parameter in stat_collections))
+    {
+        throw new Error('Set "' + parameter + '" is not in my list');
+    }
+
+    var stat_collection = stat_collections[parameter];
+
+    var data = await Promise.all(player_roster.players.map(async function (value)
+    {
+        var player_name = value.displayName;
+
+        var stats = await bungie.get_character_stats(value);
+
+        stats = stats.mergedAllCharacters.merged.allTime;
+
+        var top_name = "";
+        var top_kills = 0;
+
+        Object.keys(stat_collection.stats).forEach(function (stat_node)
+        {
+            var name = stat_collection.stats[stat_node];
+
+            var kills = stats[stat_node].basic.value;
+
+            if (kills > top_kills)
+            {
+                top_name = name;
+                top_kills = kills;
+            }
+        });
+
+        return {
+            name: player_name,
+            score: top_kills,
+            score_detail_list: [{
+                name: top_name,
+                visible: true,
+            }]
+        };
+    }));
+
+    return {
+        title: stat_collection.title,
+        description: stat_collection.description,
+        data: data,
+        url: null,
+        format_score: null,
+    };
+}
+
 var collectible_sets =
 {
     'pinnacle_weapons': [
@@ -599,6 +684,7 @@ var leaderboards =
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
     individual_stat: individual_stat,
+    highest_stat: highest_stat,
     collectibles: collectibles,
     triumphs: triumphs,
     activity_history: activity_history,

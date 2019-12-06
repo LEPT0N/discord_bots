@@ -25,6 +25,7 @@ public.run = async function ()
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
     }
     catch (error)
     {
