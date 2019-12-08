@@ -41,6 +41,10 @@ var known_triumphs =
     // Seasonal // Activities // Season 8 // Season 8: Power Bonus
     // https://www.light.gg/db/legend/triumphs/1686327621/season-8-power-bonus/
     'season_8_power_bonus': 1686327621,
+
+    // Crucible // Lifetime // Glory Ranks
+    // https://www.light.gg/db/legend/triumphs/3155364169/season-8-glory/
+    'glory': 3155364169,
 }
 
 async function individual_triumph(player_roster, parameter)
@@ -62,7 +66,16 @@ async function individual_triumph(player_roster, parameter)
 
         // util.log(triumph_data);
 
-        var objectives = triumph_data.intervalObjectives;
+        var objectives = null;
+
+        if ('intervalObjectives' in triumph_data)
+        {
+            objectives = triumph_data.intervalObjectives;
+        }
+        else
+        {
+            objectives = triumph_data.objectives;
+        }
 
         var score = objectives[objectives.length - 1].progress;
 

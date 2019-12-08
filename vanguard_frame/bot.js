@@ -131,6 +131,7 @@ async function print_leaderboard(input)
             { arguments: ['individual_triumph', 'clan_xp'] },
             { arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] },
             { arguments: ['individual_triumph', 'season_8_power_bonus'] },
+            { arguments: ['individual_triumph', 'glory'] },
             { arguments: ['triumphs', 'exotic_catalysts'] },
             { arguments: ['triumphs', 'lore'] },
             { arguments: ['individual_stat', 'light_level'] },
@@ -170,7 +171,7 @@ async function print_leaderboard(input)
     {
         util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
 
-        await util.sleep(4000);
+        await util.sleep(8000);
     }
 
     var message = '__**' + results.title + '**__\r\n';
