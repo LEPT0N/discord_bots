@@ -113,7 +113,8 @@ async function print_roster(input)
 async function print_leaderboard(input)
 {
     var leaderboard_name = input.arguments[0];
-    var leaderboard_parameter = util.try_get_element(input.arguments, 1);
+    var leaderboard_parameter_1 = util.try_get_element(input.arguments, 1);
+    var leaderboard_parameter_2 = util.try_get_element(input.arguments, 2);
 
     if (leaderboard_name == 'all')
     {
@@ -165,7 +166,7 @@ async function print_leaderboard(input)
         return;
     }
 
-    var results = await leaderboard.get(leaderboard_name, leaderboard_parameter);
+    var results = await leaderboard.get(leaderboard_name, leaderboard_parameter_1, leaderboard_parameter_2);
 
     if (results.url)
     {

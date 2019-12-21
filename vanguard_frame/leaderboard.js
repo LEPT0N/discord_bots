@@ -181,6 +181,36 @@ var stat_collections =
             weaponKillsMelee: 'Melees',
         }
     },
+    
+    'favorite_non_weapon_type':
+    {
+        title: 'Favorite Non-Weapon Type',
+        description: null,
+        stats:
+        {
+            weaponKillsRelic: 'Relics',
+            weaponKillsAbility: 'Abilities',
+            weaponKillsGrenade: 'Grenades',
+            weaponKillsSuper: 'Supers',
+            weaponKillsMelee: 'Melees',
+        }
+    },
+
+    'favorite_primary_weapon_type':
+    {
+        title: 'Favorite Primary Weapon Type',
+        description: null,
+        stats:
+        {
+            weaponKillsAutoRifle: 'Auto Rifles',
+            weaponKillsBow: 'Bows',
+            weaponKillsHandCannon: 'Hand Cannons',
+            weaponKillsPulseRifle: 'Pulse Rifles',
+            weaponKillsScoutRifle: 'Scout Rifles',
+            weaponKillsSubmachinegun: 'Submachineguns',
+            weaponKillsSideArm: 'Sidearms',
+        }
+    },
 
     'favorite_special_weapon_type':
     {
@@ -211,14 +241,33 @@ var stat_collections =
     },
 }
 
-async function highest_stat(player_roster, parameter)
-{
-    if (!(parameter in stat_collections))
+var stat_types=
     {
-        throw new Error('Set "' + parameter + '" is not in my list');
+        'all': ['mergedAllCharacters', 'merged', 'allTime'],
+        'pve': ['mergedAllCharacters', 'results', 'allPvE', 'allTime'],
+        'pvp': ['mergedAllCharacters', 'results', 'allPvP', 'allTime'],
+    };
+
+async function highest_stat(player_roster, parameter_1, parameter_2)
+{
+    if (!(parameter_1 in stat_collections))
+    {
+        throw new Error('Set "' + parameter_1 + '" is not in my list');
     }
 
-    var stat_collection = stat_collections[parameter];
+    var stat_type = stat_types.all;
+
+    if (parameter_2)
+    {
+        stat_type = stat_types[parameter_2];
+        
+        if (!stat_type)
+        {
+            throw new Error('Stat type "' + parameter_2 + '" is not in my list');
+        }
+    }
+
+    var stat_collection = stat_collections[parameter_1];
 
     var data = await Promise.all(player_roster.players.map(async function (value)
     {
@@ -226,7 +275,10 @@ async function highest_stat(player_roster, parameter)
 
         var stats = await bungie.get_character_stats(value);
 
-        stats = stats.mergedAllCharacters.merged.allTime;
+        for (var index = 0; index < stat_type.length; index++)
+        {
+            stats = stats[stat_type[index]];
+        }
 
         var top_name = "";
         var top_kills = 0;
@@ -254,8 +306,15 @@ async function highest_stat(player_roster, parameter)
         };
     }));
 
+    var title = stat_collection.title;
+
+    if (parameter_2 && parameter_2 != 'all')
+    {
+        title = title + " (" + parameter_2 + ")";
+    }
+
     return {
-        title: stat_collection.title,
+        title: title,
         description: stat_collection.description,
         data: data,
         url: null,
@@ -732,7 +791,7 @@ var leaderboards =
     weapon_kills: weapon_kills,
 };
 
-public.get = async function (name, parameter)
+public.get = async function (name, parameter_1, parameter_2)
 {
     if (!(name in leaderboards))
     {
@@ -741,7 +800,7 @@ public.get = async function (name, parameter)
 
     var player_roster = roster.get_roster();
 
-    var results = await leaderboards[name](player_roster, parameter);
+    var results = await leaderboards[name](player_roster, parameter_1, parameter_2);
 
     results.data.sort(function (a, b)
     {

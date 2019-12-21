@@ -26,6 +26,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
     }
     catch (error)
     {
@@ -50,9 +51,10 @@ async function save_collectibles(input)
 async function test_leaderboard(input)
 {
     var leaderboard_name = input.arguments[0];
-    var leaderboard_parameter = util.try_get_element(input.arguments, 1);
+    var leaderboard_parameter_1 = util.try_get_element(input.arguments, 1);
+    var leaderboard_parameter_2 = util.try_get_element(input.arguments, 2);
 
-    await leaderboard.get(leaderboard_name, leaderboard_parameter);
+    await leaderboard.get(leaderboard_name, leaderboard_parameter_1, leaderboard_parameter_2);
 }
 
 async function test_raids(input)

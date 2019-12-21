@@ -19,7 +19,7 @@ function load_roster()
 
     if (util.file_exists(roster_file_name))
     {
-        roster = util.read_file(roster_file_name);
+        roster = util.read_file(roster_file_name, true);
     }
     else
     {
