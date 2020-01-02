@@ -131,7 +131,7 @@ async function print_leaderboard(input)
             { arguments: ['individual_triumph', 'crucible_kills'] },
             { arguments: ['individual_triumph', 'clan_xp'] },
             { arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] },
-            { arguments: ['individual_triumph', 'season_8_power_bonus'] },
+            { arguments: ['individual_triumph', 'power_bonus'] },
             { arguments: ['individual_triumph', 'glory'] },
             { arguments: ['triumphs', 'exotic_catalysts'] },
             { arguments: ['triumphs', 'lore'] },

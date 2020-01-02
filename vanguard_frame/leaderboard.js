@@ -42,9 +42,17 @@ var known_triumphs =
     // https://www.light.gg/db/legend/triumphs/1686327621/season-8-power-bonus/
     'season_8_power_bonus': 1686327621,
 
-    // Crucible // Lifetime // Glory Ranks
+    // Crucible // Lifetime // Glory Ranks // Season 8: Glory
     // https://www.light.gg/db/legend/triumphs/3155364169/season-8-glory/
-    'glory': 3155364169,
+    'season_8_glory': 3155364169,
+
+    // Seasonal // Activities // Season 9 // Season 9: Power Bonus
+    // https://www.light.gg/db/legend/triumphs/2972583416/season-9-power-bonus/
+    'power_bonus': 2972583416,
+
+    // Crucible // Lifetime // Glory Ranks // Season 9: Glory
+    // https://www.light.gg/db/legend/triumphs/859223080/season-9-glory/
+    'glory': 859223080,
 }
 
 async function individual_triumph(player_roster, parameter)
@@ -324,6 +332,7 @@ async function highest_stat(player_roster, parameter_1, parameter_2)
 
 var collectible_sets =
 {
+    // !frame.search_manifest collectibles Blah
     'pinnacle_weapons': [
         3260604718, // Luna's Howl
         3260604717, // Not Forgotten
@@ -345,6 +354,10 @@ var collectible_sets =
         853534062, // Edgewise
         1510655351, // Exit Strategy
         1303705556, // Randy's Throwing Knife
+
+        2011258732, // Buzzard
+        3972149937, // Python
+        4116184726, // Komodo-4FR
     ]
 }
 
