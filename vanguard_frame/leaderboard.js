@@ -5,6 +5,8 @@ var roster = require('./roster.js');
 
 var public = {};
 
+// Leaderboard for player triumph scores
+// parameter: null
 async function triumph_score(player_roster, parameter)
 {
     var data = await Promise.all(player_roster.players.map(async function (value)
@@ -55,6 +57,8 @@ var known_triumphs =
     'glory': 859223080,
 }
 
+// Leaderboard for player score on a specific triumph
+// parameter: any of the keys in known_triumphs above
 async function individual_triumph(player_roster, parameter)
 {
     if (!(parameter in known_triumphs))
@@ -118,6 +122,8 @@ var known_stats =
     'orbs_generated': 'mergedAllCharacters merged allTime orbsDropped basic displayValue',
 }
 
+// Leaderboard for player score on a specific stat
+// parameter: any of the keys in known_stats above
 async function individual_stat(player_roster, parameter)
 {
     if (!(parameter in known_stats))
@@ -256,6 +262,10 @@ var stat_types=
         'pvp': ['mergedAllCharacters', 'results', 'allPvP', 'allTime'],
     };
 
+// Leaderboard for player score on the top stat of a given stat collection
+// parameter_1: any of the keys in stat_collections above
+// parameter_2: optional. any of the keys in stat_types above
+// score_detail_list: always exactly one entry: the stat name of stat used for the player's score
 async function highest_stat(player_roster, parameter_1, parameter_2)
 {
     if (!(parameter_1 in stat_collections))
@@ -361,6 +371,9 @@ var collectible_sets =
     ]
 }
 
+// Leaderboard for player score on the number of collectibles unlocked in a given collectible set
+// parameter: any of the keys in collectible_sets above
+// score_detail_list: list of the collectibles unlocked
 async function collectibles(player_roster, parameter)
 {
     if (!(parameter in collectible_sets))
@@ -449,6 +462,9 @@ var triumph_sets =
     }
 }
 
+// Leaderboard for player score on the number of triumphs unlocked in a given triumph set
+// parameter: any of the keys in triumph_sets above
+// score_detail_list: optional. the list of triumphs unlocked
 async function triumphs(player_roster, parameter)
 {
     if (!(parameter in triumph_sets))
@@ -598,6 +614,8 @@ async function generate_triumph_tree_triumph_set(root_id)
     };
 }
 
+// Leaderboard for player score on whether the player is the best titan
+// parameter: null
 async function lol(player_roster, parameter)
 {
     var data = await Promise.all(player_roster.players.map(async function (value)
@@ -636,6 +654,7 @@ var activity_history_sets =
         compute_score: history => history.length,
         format_score: null,
     },
+
     'raids_failed': {
         mode: bungie.activity_mode_type.Raid,
         name: 'Raids Failed',
@@ -647,6 +666,7 @@ var activity_history_sets =
         compute_score: history => history.length,
         format_score: null,
     },
+
     'time_raiding': {
         mode: bungie.activity_mode_type.Raid,
         name: 'Time Spent Raiding',
@@ -666,6 +686,8 @@ var activity_history_sets =
     },
 }
 
+// Leaderboard for player score on some function of activity history in a given activity history set
+// parameter: any of the keys in activity_history_sets above
 async function activity_history(player_roster, parameter)
 {
     if (!(parameter in activity_history_sets))
@@ -698,6 +720,9 @@ async function activity_history(player_roster, parameter)
     };
 }
 
+// Leaderboard for player score on either kills with a specific exotic weapon, or highest kill count or any exotic weapon
+// parameter: either the name of an exotic weapon, or 'any'
+// score_detail_list: if parameter is 'any', then this always contains one item; the name of the weapon.
 async function weapon_kills(player_roster, parameter)
 {
     var weapon_name = parameter;
