@@ -342,33 +342,41 @@ async function highest_stat(player_roster, parameter_1, parameter_2)
 
 var collectible_sets =
 {
+    'weapons': {
+        dynamic_set_function: generate_weapons_collectible_set
+    },
+
     // !frame.search_manifest collectibles Blah
-    'pinnacle_weapons': [
-        3260604718, // Luna's Howl
-        3260604717, // Not Forgotten
-        4274523516, // Redrix's Claymore
-        1111219481, // Redrix's Broadsword
+    'pinnacle_weapons': {
+        show_details: true,
+        title: 'Pinnacle and Ritual Weapons',
+        collectibles: [
+            3260604718, // Luna's Howl
+            3260604717, // Not Forgotten
+            4274523516, // Redrix's Claymore
+            1111219481, // Redrix's Broadsword
 
-        1666039008, // Breakneck
-        3810740723, // Loaded Question
-        4047371119, // The Mountaintop
+            1666039008, // Breakneck
+            3810740723, // Loaded Question
+            4047371119, // The Mountaintop
 
-        543982652, // Oxygen SR3
-        1639266456, // 21% Delirium
-        2335550020, // The Recluse
+            543982652, // Oxygen SR3
+            1639266456, // 21% Delirium
+            2335550020, // The Recluse
 
-        3830703103, // Wendigo GL3
-        1670904512, // Hush
-        3066162258, // Revoker
+            3830703103, // Wendigo GL3
+            1670904512, // Hush
+            3066162258, // Revoker
 
-        853534062, // Edgewise
-        1510655351, // Exit Strategy
-        1303705556, // Randy's Throwing Knife
+            853534062, // Edgewise
+            1510655351, // Exit Strategy
+            1303705556, // Randy's Throwing Knife
 
-        2011258732, // Buzzard
-        3972149937, // Python
-        4116184726, // Komodo-4FR
-    ]
+            2011258732, // Buzzard
+            3972149937, // Python
+            4116184726, // Komodo-4FR
+        ]
+    }
 }
 
 // Leaderboard for player score on the number of collectibles unlocked in a given collectible set
@@ -383,16 +391,29 @@ async function collectibles(player_roster, parameter)
 
     var collectible_set = collectible_sets[parameter];
 
+    if (collectible_set.dynamic_set_function)
+    {
+        collectible_set = await collectible_set.dynamic_set_function();
+    }
+
     var manifest = (await bungie.get_manifest());
 
     var item_names = {};
 
-    collectible_set.forEach(function (collectible_id)
+    collectible_set.collectibles.forEach(function (collectible_id)
     {
         var display_properties = manifest.DestinyCollectibleDefinition[collectible_id].displayProperties;
 
         item_names[collectible_id] = display_properties.name;
     });
+
+    var root_display_properties = null;
+
+    if (collectible_set.title_presentation_node)
+    {
+        root_display_properties = await bungie.get_presentation_node_display_properties(
+            collectible_set.title_presentation_node);
+    }
 
     var data = await Promise.all(player_roster.players.map(async function (player)
     {
@@ -401,34 +422,94 @@ async function collectibles(player_roster, parameter)
         var count = 0;
         var player_result_details = [];
 
-        collectible_set.forEach(function (collectible_id)
+        collectible_set.collectibles.forEach(function (collectible_id)
         {
-            var state = player_collectibles[collectible_id].state;
-
-            var unlocked = !(state & bungie.collectible_state.NotAcquired);
-
-            if (unlocked)
+            if (player_collectibles[collectible_id])
             {
-                count++;
-            }
+                var state = player_collectibles[collectible_id].state;
 
-            player_result_details.push(
+                var unlocked = !(state & bungie.collectible_state.NotAcquired);
+
+                if (unlocked)
                 {
-                    name: item_names[collectible_id],
-                    state: state,
-                    visible: unlocked
-                });
+                    count++;
+                }
+
+                if (collectible_set.show_details)
+                {
+                    player_result_details.push(
+                        {
+                            name: item_names[collectible_id],
+                            state: state,
+                            visible: unlocked
+                        });
+                }
+            }
         });
 
-        return { score: count, name: player.displayName, score_detail_list: player_result_details };
+        var result = {
+            score: count,
+            name: player.displayName,
+        };
+
+        if (collectible_set.show_details)
+        {
+            result.score_detail_list = player_result_details;
+        }
+
+        return result;
     }));
 
+    var title = parameter;
+
+    if (collectible_set.title)
+    {
+        title = collectible_set.title;
+    }
+
+    if (root_display_properties && root_display_properties.name)
+    {
+        title = root_display_properties.name;
+    }
+
+    var description = null;
+
+    if (root_display_properties && root_display_properties.description)
+    {
+        description = root_display_properties.description;
+    }
+
+    var url = null;
+
+    if (root_display_properties && root_display_properties.hasIcon)
+    {
+        url = bungie.root_url + root_display_properties.icon;
+    }
+
     return {
-        title: parameter,
-        description: null,
+        title: title,
+        description: description,
         data: data,
-        url: null,
+        url: url,
         format_score: null,
+    };
+}
+
+async function generate_weapons_collectible_set()
+{
+    // Legend // Collections // Weapons
+    // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/
+    return await generate_collectible_tree_collectible_set(1528930164);
+}
+
+async function generate_collectible_tree_collectible_set(root_id)
+{
+    var collectible_ids = await bungie.get_all_child_items(root_id, 'collectibles');
+
+    return {
+        show_details: false,
+        title_presentation_node: root_id,
+        collectibles: collectible_ids,
     };
 }
 
@@ -595,7 +676,7 @@ async function generate_triumph_tree_triumph_set(root_id)
 {
     var manifest = (await bungie.get_manifest());
 
-    var child_triumph_ids = await bungie.get_all_child_triumphs(root_id);
+    var child_triumph_ids = await bungie.get_all_child_items(root_id, 'triumphs');
 
     var triumphs = child_triumph_ids.map(id =>
     {

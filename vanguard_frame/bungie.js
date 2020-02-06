@@ -408,13 +408,32 @@ public.search_manifest = async function (category, search_query)
     return results;
 }
 
-public.get_all_child_triumphs = async function (hashIdentifier)
+public.presentation_node_child_type =
+{
+    triumphs:
+    {
+        category_name: 'records',
+        item_name: 'recordHash',
+    },
+    collectibles:
+    {
+        category_name: 'collectibles',
+        item_name: 'collectibleHash',
+    },
+};
+
+public.get_all_child_items = async function (hashIdentifier, child_type)
 {
     var manifest = (await public.get_manifest()).DestinyPresentationNodeDefinition;
 
     if (!hashIdentifier in manifest)
     {
         throw new Error('Presentation Node "' + hashIdentifier + '" is not in the manifest');
+    }
+
+    if (!child_type in public.presentation_node_child_type)
+    {
+        throw new Error('Child Type "' + child_type + '" is not supported');
     }
 
     var results = [];
@@ -424,14 +443,18 @@ public.get_all_child_triumphs = async function (hashIdentifier)
     var child_node_results = await Promise.all(child_nodes.map(
         async function (child)
         {
-            return await public.get_all_child_triumphs(child.presentationNodeHash);
+            return await public.get_all_child_items(
+                child.presentationNodeHash,
+                child_type);
         }));
 
     child_node_results.forEach(child => results = results.concat(child));
 
-    var child_triumphs = manifest[hashIdentifier].children.records;
+    child_type = public.presentation_node_child_type[child_type];
 
-    results = results.concat(child_triumphs.map(item => item.recordHash));
+    var child_items = manifest[hashIdentifier].children[child_type.category_name];
+
+    results = results.concat(child_items.map(item => item[child_type.item_name]));
 
     return results;
 }

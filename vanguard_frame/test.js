@@ -17,6 +17,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumph_score'] });
         // await test_leaderboard({ arguments: ['triumphs', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'weapons'] });
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
@@ -24,6 +25,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['weapon_kills', 'any'] });
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
+        // await test_leaderboard({ arguments: ['activity_history', 'time_raiding'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
