@@ -325,9 +325,19 @@ public.collectible_state =
 
 async function download_collectibles(player)
 {
+    var collectibles = [];
+
+    // Destiny2.GetProfile
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Collectibles';
 
-    var collectibles = (await get_request('download_collectibles', url)).profileCollectibles.data.collectibles;
+    var result = await get_request('download_collectibles', url);
+
+    collectibles.push(result.profileCollectibles.data.collectibles);
+
+    for (var character_id in result.characterCollectibles.data)
+    {
+        collectibles.push(result.characterCollectibles.data[character_id].collectibles);
+    }
 
     return collectibles;
 }

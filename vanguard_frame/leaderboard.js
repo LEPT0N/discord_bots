@@ -346,6 +346,18 @@ var collectible_sets =
         dynamic_set_function: generate_weapons_collectible_set
     },
 
+    'mods': {
+        dynamic_set_function: generate_mods_collectible_set
+    },
+
+    'exotics': {
+        dynamic_set_function: generate_exotics_collectible_set
+    },
+
+    'shaders': {
+        dynamic_set_function: generate_shaders_collectible_set
+    },
+
     // !frame.search_manifest collectibles Blah
     'pinnacle_weapons': {
         show_details: true,
@@ -424,26 +436,33 @@ async function collectibles(player_roster, parameter)
 
         collectible_set.collectibles.forEach(function (collectible_id)
         {
-            if (player_collectibles[collectible_id])
+            var unlocked = false;
+
+            player_collectibles.forEach(function (character_collectibles)
             {
-                var state = player_collectibles[collectible_id].state;
-
-                var unlocked = !(state & bungie.collectible_state.NotAcquired);
-
-                if (unlocked)
+                if (character_collectibles[collectible_id])
                 {
-                    count++;
-                }
+                    var state = character_collectibles[collectible_id].state;
 
-                if (collectible_set.show_details)
-                {
-                    player_result_details.push(
-                        {
-                            name: item_names[collectible_id],
-                            state: state,
-                            visible: unlocked
-                        });
+                    if (!(state & bungie.collectible_state.NotAcquired))
+                    {
+                        unlocked = true;
+                    }
                 }
+            });
+
+            if (unlocked)
+            {
+                count++;
+            }
+
+            if (collectible_set.show_details)
+            {
+                player_result_details.push(
+                    {
+                        name: item_names[collectible_id],
+                        visible: unlocked
+                    });
             }
         });
 
@@ -500,6 +519,27 @@ async function generate_weapons_collectible_set()
     // Legend // Collections // Weapons
     // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/
     return await generate_collectible_tree_collectible_set(1528930164);
+}
+
+async function generate_mods_collectible_set()
+{
+    // Legend // Collections // Mods
+    // https://www.light.gg/db/legend/3790247699/collections/3509235358/mods/
+    return await generate_collectible_tree_collectible_set(3509235358);
+}
+
+async function generate_exotics_collectible_set()
+{
+    // Legend // Collections // Exotic
+    // https://www.light.gg/db/legend/3790247699/collections/1068557105/exotic/
+    return await generate_collectible_tree_collectible_set(1068557105);
+}
+
+async function generate_shaders_collectible_set()
+{
+    // Legend // Collections // Flair // Shaders
+    // https://www.light.gg/db/legend/3790247699/collections/3066887728/flair/1516796296/shaders/
+    return await generate_collectible_tree_collectible_set(1516796296);
 }
 
 async function generate_collectible_tree_collectible_set(root_id)

@@ -18,6 +18,9 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
         // await test_leaderboard({ arguments: ['collectibles', 'weapons'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'mods'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'exotics'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'shaders'] });
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
         // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
