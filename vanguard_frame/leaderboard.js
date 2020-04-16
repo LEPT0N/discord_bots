@@ -388,7 +388,16 @@ var collectible_sets =
             3972149937, // Python
             4116184726, // Komodo-4FR
         ]
-    }
+    },
+
+    // !frame.search_manifest collectibles Blah
+    'oops_all_lunas': {
+        show_details: true,
+        title: 'All Lunas All The Time',
+        collectibles: [
+            3260604718, // Luna's Howl
+        ]
+    },
 }
 
 // Leaderboard for player score on the number of collectibles unlocked in a given collectible set
