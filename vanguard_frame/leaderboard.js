@@ -50,11 +50,19 @@ var known_triumphs =
 
     // Seasonal // Activities // Season 9 // Season 9: Power Bonus
     // https://www.light.gg/db/legend/triumphs/2972583416/season-9-power-bonus/
-    'power_bonus': 2972583416,
+    'season_9_power_bonus': 2972583416,
 
     // Crucible // Lifetime // Glory Ranks // Season 9: Glory
     // https://www.light.gg/db/legend/triumphs/859223080/season-9-glory/
-    'glory': 859223080,
+    'season_9_glory': 859223080,
+
+    // Seasonal // Activities // Season 10 // Season 10: Power Bonus
+    // https://www.light.gg/db/legend/triumphs/230421321/season-10-power-bonus/
+    'power_bonus': 230421321,
+
+    // Crucible // Lifetime // Glory Ranks // Season 10: Glory
+    // https://www.light.gg/db/legend/triumphs/1397652882/season-10-glory/
+    'glory': 1397652882,
 }
 
 // Leaderboard for player score on a specific triumph

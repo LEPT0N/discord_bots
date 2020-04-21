@@ -135,7 +135,6 @@ async function print_leaderboard(input)
             { arguments: ['individual_triumph', 'glory'] },
             { arguments: ['triumphs', 'exotic_catalysts'] },
             { arguments: ['triumphs', 'lore'] },
-            { arguments: ['individual_stat', 'light_level'] },
             { arguments: ['individual_stat', 'killing_spree'] },
             { arguments: ['individual_stat', 'kill_distance'] },
             { arguments: ['individual_stat', 'kills'] },
@@ -153,6 +152,8 @@ async function print_leaderboard(input)
             { arguments: ['highest_stat', 'favorite_weapon_type'] },
             { arguments: ['highest_stat', 'favorite_special_weapon_type'] },
             { arguments: ['highest_stat', 'favorite_heavy_weapon_type'] },
+            { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
+            { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
         ];
 
         for (var index = 0; index < all_leaderboards.length; index++)
