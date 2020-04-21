@@ -121,13 +121,54 @@ async function individual_triumph(player_roster, parameter)
 // Look at the output from get_character_stats to see what's available
 var known_stats =
 {
-    'light_level': 'mergedAllCharacters merged allTime highestLightLevel basic displayValue',
-    'deaths': 'mergedAllCharacters merged allTime deaths basic displayValue',
-    'suicides': 'mergedAllCharacters merged allTime suicides basic displayValue',
-    'killing_spree': 'mergedAllCharacters merged allTime longestKillSpree basic displayValue',
-    'kill_distance': 'mergedAllCharacters merged allTime longestKillDistance basic displayValue',
-    'kills': 'mergedAllCharacters merged allTime opponentsDefeated basic displayValue',
-    'orbs_generated': 'mergedAllCharacters merged allTime orbsDropped basic displayValue',
+    'light_level':
+    {
+        title: 'Light Level',
+        description: 'Highest Currently-Equipped Light Level',
+        tree: 'mergedAllCharacters merged allTime highestLightLevel basic displayValue',
+    },
+
+    'deaths':
+    {
+        title: 'Total Deaths',
+        description: null,
+        tree: 'mergedAllCharacters merged allTime deaths basic displayValue',
+    },
+
+    'suicides':
+    {
+        title: 'Total Misadventures',
+        description: null,
+        tree: 'mergedAllCharacters merged allTime suicides basic displayValue',
+    },
+
+    'killing_spree':
+    {
+        title: 'Longest Killing Spree',
+        description: null,
+        tree: 'mergedAllCharacters merged allTime longestKillSpree basic displayValue',
+    },
+
+    'kill_distance':
+    {
+        title: 'Longest Kill Distance',
+        description: null,
+        tree: 'mergedAllCharacters merged allTime longestKillDistance basic displayValue',
+    },
+
+    'kills':
+    {
+        title: 'Total Kills',
+        description: null,
+        tree: 'mergedAllCharacters merged allTime opponentsDefeated basic displayValue',
+    },
+
+    'orbs_generated':
+    {
+        title: 'Total Orbs Created',
+        description: null,
+        tree: 'mergedAllCharacters merged allTime orbsDropped basic displayValue',
+    },
 }
 
 // Leaderboard for player score on a specific stat
@@ -139,7 +180,9 @@ async function individual_stat(player_roster, parameter)
         throw new Error('Stat "' + parameter + '" is not in my list');
     }
 
-    var property_tree = known_stats[parameter].split(' ');
+    var known_stat = known_stats[parameter];
+
+    var property_tree = known_stat.tree.split(' ');
 
     var data = await Promise.all(player_roster.players.map(async function (value)
     {
@@ -164,8 +207,8 @@ async function individual_stat(player_roster, parameter)
     }));
 
     return {
-        title: parameter,
-        description: null,
+        title: known_stat.title,
+        description: known_stat.description,
         data: data,
         url: null,
         format_score: null,
@@ -395,6 +438,8 @@ var collectible_sets =
             2011258732, // Buzzard
             3972149937, // Python
             4116184726, // Komodo-4FR
+
+            1135136071, // Point of the Stag
         ]
     },
 
@@ -510,7 +555,11 @@ async function collectibles(player_roster, parameter)
 
     var description = null;
 
-    if (root_display_properties && root_display_properties.description)
+    if (collectible_set.description)
+    {
+        description = collectible_set.description;
+    }
+    else if (root_display_properties && root_display_properties.description)
     {
         description = root_display_properties.description;
     }
@@ -535,35 +584,36 @@ async function generate_weapons_collectible_set()
 {
     // Legend // Collections // Weapons
     // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/
-    return await generate_collectible_tree_collectible_set(1528930164);
+    return await generate_collectible_tree_collectible_set(1528930164, 'Total Count of Weapons Unlocked');
 }
 
 async function generate_mods_collectible_set()
 {
     // Legend // Collections // Mods
     // https://www.light.gg/db/legend/3790247699/collections/3509235358/mods/
-    return await generate_collectible_tree_collectible_set(3509235358);
+    return await generate_collectible_tree_collectible_set(3509235358, 'Total Count of Mods Unlocked');
 }
 
 async function generate_exotics_collectible_set()
 {
     // Legend // Collections // Exotic
     // https://www.light.gg/db/legend/3790247699/collections/1068557105/exotic/
-    return await generate_collectible_tree_collectible_set(1068557105);
+    return await generate_collectible_tree_collectible_set(1068557105, 'Total Count of Exotics Unlocked');
 }
 
 async function generate_shaders_collectible_set()
 {
     // Legend // Collections // Flair // Shaders
     // https://www.light.gg/db/legend/3790247699/collections/3066887728/flair/1516796296/shaders/
-    return await generate_collectible_tree_collectible_set(1516796296);
+    return await generate_collectible_tree_collectible_set(1516796296, 'Total Count of Shaders Unlocked');
 }
 
-async function generate_collectible_tree_collectible_set(root_id)
+async function generate_collectible_tree_collectible_set(root_id, description)
 {
     var collectible_ids = await bungie.get_all_child_items(root_id, 'collectibles');
 
     return {
+        description: description,
         show_details: false,
         title_presentation_node: root_id,
         collectibles: collectible_ids,
@@ -586,6 +636,7 @@ var triumph_sets =
 
     // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
     'raids_completed': {
+        description: 'Count of Unique Raids Completed',
         show_details: true,
         title_presentation_node: 2975760062,
         triumphs: [
@@ -671,9 +722,20 @@ async function triumphs(player_roster, parameter)
         url = bungie.root_url + root_display_properties.icon;
     }
 
+    var description = null;
+
+    if (triumph_set.description)
+    {
+        description = triumph_set.description;
+    }
+    else if (root_display_properties.description)
+    {
+        description = root_display_properties.description;
+    }
+
     return {
         title: root_display_properties.name,
-        description: root_display_properties.description,
+        description: description,
         data: data,
         url: url,
         format_score: null,
@@ -709,6 +771,7 @@ async function generate_seals_triumph_set()
     });
 
     return {
+        description: 'Total Count of Seals Unlocked',
         show_details: true,
         title_presentation_node: seal_presetation_node_id,
         triumphs: seals,
@@ -719,17 +782,17 @@ async function generate_exotic_catalysts_triumph_set()
 {
     // Legend // Triumphs // Account // Exotic Catalysts
     // https://www.light.gg/db/legend/1024788583/triumphs/4230728762/account/1111248994/exotic-catalysts/
-    return await generate_triumph_tree_triumph_set(1111248994);
+    return await generate_triumph_tree_triumph_set(1111248994, 'Total Count of Exotic Catalysts Unlocked');
 }
 
 async function generate_lore_triumph_set()
 {
     // Legend // Triumphs // Lore
     // https://www.light.gg/db/legend/1024788583/triumphs/564676571/lore/
-    return await generate_triumph_tree_triumph_set(564676571);
+    return await generate_triumph_tree_triumph_set(564676571, 'Total Count of Lore Triumphs Unlocked');
 }
 
-async function generate_triumph_tree_triumph_set(root_id)
+async function generate_triumph_tree_triumph_set(root_id, description)
 {
     var manifest = (await bungie.get_manifest());
 
@@ -746,6 +809,7 @@ async function generate_triumph_tree_triumph_set(root_id)
     });
 
     return {
+        description: description,
         show_details: false,
         title_presentation_node: root_id,
         triumphs: triumphs,
@@ -859,7 +923,7 @@ async function activity_history(player_roster, parameter)
 }
 
 // Leaderboard for player score on either kills with a specific exotic weapon, or highest kill count or any exotic weapon
-// parameter: either the name of an exotic weapon, or 'any'
+// parameter: either the name of an exotic weapon (ex: Telesto), or 'any'
 // score_detail_list: if parameter is 'any', then this always contains one item; the name of the weapon.
 async function weapon_kills(player_roster, parameter)
 {
@@ -935,10 +999,12 @@ async function weapon_kills(player_roster, parameter)
     }));
 
     var title;
+    var description = null;
 
     if (weapon_name == 'any')
     {
         title = 'Favorite Exotic';
+        description = 'Exotic With the Most Kills For That Player';
     }
     else
     {
@@ -947,7 +1013,7 @@ async function weapon_kills(player_roster, parameter)
 
     return {
         title: title,
-        description: null,
+        description: description,
         data: data,
         url: null,
         format_score: null,

@@ -177,7 +177,7 @@ async function print_leaderboard(input)
     {
         util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
 
-        await util.sleep(8000);
+        await util.sleep(2000);
     }
 
     var message = '__**' + results.title + '**__\r\n';
