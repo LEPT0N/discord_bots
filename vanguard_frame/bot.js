@@ -181,13 +181,15 @@ async function print_leaderboard(input)
     }
 
     var message = '__**' + results.title + '**__\r\n';
+    
+    var message = message + '>>> '
 
     if (results.description)
     {
         message = message + results.description + '\r\n';
     }
 
-    var message = message + '>>> ' + results.entries.join('\r\n');
+    var message = message + '```' + results.entries.join('\r\n') + '```';
 
     bot.sendMessage(
         {

@@ -1049,16 +1049,27 @@ public.get = async function (name, parameter_1, parameter_2)
         return b.score - a.score;
     });
 
+    var longest_score = 0;
+
+    results.data.forEach(function (value)
+    {
+        if (results.format_score)
+        {
+            value.score = results.format_score(value.score);
+        }
+
+        value.score = value.score.toString()
+
+        longest_score = Math.max(longest_score, value.score.length)
+    });
+
     results.entries = results.data.map(function (value)
     {
         var score = value.score;
 
-        if (results.format_score)
-        {
-            score = results.format_score(score);
-        }
+        var spacing = util.create_string(' ', longest_score - score.length);
 
-        var entry = score + '\t : ' + value.name;
+        var entry = score + spacing + ' : ' + value.name;
 
         if (value.score_detail_list)
         {

@@ -248,4 +248,9 @@ public.format_seconds = function (seconds)
     return result.join(' ');
 }
 
+public.create_string = function (fill, length)
+{
+    return Array(length + 1).join(fill);
+}
+
 module.exports = public;
