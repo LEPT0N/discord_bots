@@ -253,4 +253,26 @@ public.create_string = function (fill, length)
     return Array(length + 1).join(fill);
 }
 
+public.add_commas_to_number = function (number)
+{
+    number = number.toString();
+
+    var result = '';
+
+    var group_count = 0;
+
+    for (var index = number.length - 1; index >= 0; index--, group_count++)
+    {
+        if (group_count == 3)
+        {
+            result = ',' + result;
+            group_count = 0;
+        }
+
+        result = number[index] + result;
+    }
+
+    return result;
+}
+
 module.exports = public;

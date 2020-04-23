@@ -22,7 +22,7 @@ async function triumph_score(player_roster, parameter)
         description: null,
         data: data,
         url: null,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -114,7 +114,7 @@ async function individual_triumph(player_roster, parameter)
         description: display_properties.description,
         data: data,
         url: url,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -211,7 +211,7 @@ async function individual_stat(player_roster, parameter)
         description: known_stat.description,
         data: data,
         url: null,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -387,7 +387,7 @@ async function highest_stat(player_roster, parameter_1, parameter_2)
         description: stat_collection.description,
         data: data,
         url: null,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -576,7 +576,7 @@ async function collectibles(player_roster, parameter)
         description: description,
         data: data,
         url: url,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -738,7 +738,7 @@ async function triumphs(player_roster, parameter)
         description: description,
         data: data,
         url: url,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -854,7 +854,7 @@ var activity_history_sets =
                 && activity.values.completionReason.basic.value == bungie.completion_reason.ObjectiveCompleted;
         },
         compute_score: history => history.length,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     },
 
     'raids_failed': {
@@ -866,7 +866,7 @@ var activity_history_sets =
                 && activity.values.completionReason.basic.value == bungie.completion_reason.Failed;
         },
         compute_score: history => history.length,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     },
 
     'time_raiding': {
@@ -1016,7 +1016,7 @@ async function weapon_kills(player_roster, parameter)
         description: description,
         data: data,
         url: null,
-        format_score: null,
+        format_score: util.add_commas_to_number,
     };
 }
 
@@ -1069,7 +1069,7 @@ public.get = async function (name, parameter_1, parameter_2)
 
         var spacing = util.create_string(' ', longest_score - score.length);
 
-        var entry = score + spacing + ' : ' + value.name;
+        var entry = spacing + score + ' : ' + value.name;
 
         if (value.score_detail_list)
         {
