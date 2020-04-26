@@ -183,7 +183,7 @@ async function print_leaderboard(input)
     }
 
     // Print the title
-    var message = '__**' + results.title + '**__\r\n';
+    var header = '__**' + results.title + '**__\r\n';
     
     // Everything after the title should have a quote line
     // message = message + '>>> '
@@ -191,11 +191,11 @@ async function print_leaderboard(input)
     // Print the optional description
     if (results.description)
     {
-        message = message + results.description + '\r\n';
+        header = header + results.description + '\r\n';
     }
 
     // Begin the preformatted block for the data
-    message = message + '```';
+    var entry_border = '```';
 
     // Compute the max length of all of the scores
     var longest_score = 0;
@@ -207,13 +207,13 @@ async function print_leaderboard(input)
     var column_divider = ' | ';
 
     // Print the data for all the leaderboard entries
-    results.entries.forEach(function (entry)
+    var entry_data = results.entries.map(function (entry)
     {
         // Build a string of extra space padding so all the scores line up
         var score_spacing = util.create_string(' ', longest_score - entry.score.length);
         
         // print 'score = name' properly spaced
-        message = message + score_spacing + entry.score + column_divider + entry.name;
+        var entry_output = score_spacing + entry.score + column_divider + entry.name;
 
         // if there is a detail list, print it
         if (entry.score_detail_list)
@@ -222,7 +222,7 @@ async function print_leaderboard(input)
             {
                 // If there's only one detail, just print it after the entry's name.
 
-                message = message + " ( " + entry.score_detail_list[0] + " )";
+                entry_output = entry_output + " ( " + entry.score_detail_list[0] + " )";
             }
             else
             {
@@ -236,11 +236,11 @@ async function print_leaderboard(input)
                 {
                     if (column == 0)
                     {
-                        message = message + '\r\n' + full_spacing + column_divider + '    ' + detail;
+                        entry_output = entry_output + '\r\n' + full_spacing + column_divider + '    ' + detail;
                     }
                     else
                     {
-                        message = message + ', ' + detail;
+                        entry_output = entry_output + ', ' + detail;
                     }
 
                     column = (column + 1) % 3;
@@ -249,20 +249,45 @@ async function print_leaderboard(input)
         }
 
         // End the line after each entry
-        message = message + '\r\n';
+        entry_output = entry_output + '\r\n';
+
+        return entry_output;
     });
 
-    // End the preformatted block for the data
-    message = message + '```';
+    var message = header + entry_border + entry_data.join('') + entry_border;
 
-    // TODO util.log("length is " + message.length); max is 2000, and pinnacle weapons is 2222.
+    if (message.length <= 2000)
+    {
+        // Send the result as one message
+        bot.sendMessage(
+            {
+                to: input.channel_id,
+                message: message
+            });
+    }
+    else
+    {
+        // The message is too big, so must be broken up first.
+        
+        bot.sendMessage(
+            {
+                to: input.channel_id,
+                message: header
+            });
+            
+        await util.sleep(2000);
 
-    // Send the result
-    bot.sendMessage(
+        for (var index = 0; index < entry_data.length; index++)
         {
-            to: input.channel_id,
-            message: message
-        });
+            bot.sendMessage(
+            {
+                to: input.channel_id,
+                message: entry_border + entry_data[index] + entry_border,
+            });
+
+            await util.sleep(2000);
+        }
+    }
 }
 
 async function search_manifest(input)
