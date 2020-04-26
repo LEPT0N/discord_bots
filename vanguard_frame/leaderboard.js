@@ -1044,48 +1044,39 @@ public.get = async function (name, parameter_1, parameter_2)
 
     var results = await leaderboards[name](player_roster, parameter_1, parameter_2);
 
+    // Sort the result list
     results.data.sort(function (a, b)
     {
         return b.score - a.score;
     });
-
-    var longest_score = 0;
-
-    results.data.forEach(function (value)
-    {
-        if (results.format_score)
-        {
-            value.score = results.format_score(value.score);
-        }
-
-        value.score = value.score.toString()
-
-        longest_score = Math.max(longest_score, value.score.length)
-    });
-
+    
     results.entries = results.data.map(function (value)
     {
+        // Format the score
         var score = value.score;
 
-        var spacing = util.create_string(' ', longest_score - score.length);
+        if (results.format_score)
+        {
+            score = results.format_score(score);
+        }
 
-        var entry = spacing + score + ' : ' + value.name;
+        score = score.toString()
+
+        // Filter the details
+        var score_detail_list = null;
 
         if (value.score_detail_list)
         {
-            var detail_list = value.score_detail_list.filter(detail => detail.visible);
+            score_detail_list = value.score_detail_list.filter(detail => detail.visible);
 
-            detail_list = detail_list.map(function (detail)
-            {
-                return detail.name;
-            });
-
-            detail_list = detail_list.join(', ');
-
-            entry = entry + ' (' + detail_list + ')';
+            score_detail_list = score_detail_list.map(detail => detail.name);
         }
 
-        return entry;
+        return {
+            score: score,
+            name: value.name,
+            score_detail_list: score_detail_list,
+        };
     });
 
     util.log(results);

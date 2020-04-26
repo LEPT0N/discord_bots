@@ -171,8 +171,10 @@ async function print_leaderboard(input)
         return;
     }
 
+    // Get the data
     var results = await leaderboard.get(leaderboard_name, leaderboard_parameter_1, leaderboard_parameter_2);
 
+    // Upload the icon
     if (results.url)
     {
         util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
@@ -180,17 +182,82 @@ async function print_leaderboard(input)
         await util.sleep(2000);
     }
 
+    // Print the title
     var message = '__**' + results.title + '**__\r\n';
     
-    var message = message + '>>> '
+    // Everything after the title should have a quote line
+    // message = message + '>>> '
 
+    // Print the optional description
     if (results.description)
     {
         message = message + results.description + '\r\n';
     }
 
-    var message = message + '```' + results.entries.join('\r\n') + '```';
+    // Begin the preformatted block for the data
+    message = message + '```';
 
+    // Compute the max length of all of the scores
+    var longest_score = 0;
+    results.entries.forEach(function (entry)
+    {
+        longest_score = Math.max(longest_score, entry.score.length)
+    });
+
+    var column_divider = ' | ';
+
+    // Print the data for all the leaderboard entries
+    results.entries.forEach(function (entry)
+    {
+        // Build a string of extra space padding so all the scores line up
+        var score_spacing = util.create_string(' ', longest_score - entry.score.length);
+        
+        // print 'score = name' properly spaced
+        message = message + score_spacing + entry.score + column_divider + entry.name;
+
+        // if there is a detail list, print it
+        if (entry.score_detail_list)
+        {
+            if (entry.score_detail_list.length == 1)
+            {
+                // If there's only one detail, just print it after the entry's name.
+
+                message = message + " ( " + entry.score_detail_list[0] + " )";
+            }
+            else
+            {
+                // If there are multiple details, put them on their own line(s), three at a time.
+
+                var full_spacing = util.create_string(' ', longest_score);
+
+                var column = 0;
+
+                entry.score_detail_list.forEach(function (detail)
+                {
+                    if (column == 0)
+                    {
+                        message = message + '\r\n' + full_spacing + column_divider + '    ' + detail;
+                    }
+                    else
+                    {
+                        message = message + ', ' + detail;
+                    }
+
+                    column = (column + 1) % 3;
+                });
+            }
+        }
+
+        // End the line after each entry
+        message = message + '\r\n';
+    });
+
+    // End the preformatted block for the data
+    message = message + '```';
+
+    // TODO util.log("length is " + message.length); max is 2000, and pinnacle weapons is 2222.
+
+    // Send the result
     bot.sendMessage(
         {
             to: input.channel_id,
