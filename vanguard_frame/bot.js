@@ -256,7 +256,7 @@ async function print_leaderboard(input)
 
     var message = header + entry_border + entry_data.join('') + entry_border;
 
-    if (message.length <= 2000)
+    if (message.length <= util.max_message_length)
     {
         // Send the result as one message
         bot.sendMessage(
@@ -269,20 +269,39 @@ async function print_leaderboard(input)
     {
         // The message is too big, so must be broken up first.
         
-        bot.sendMessage(
-            {
-                to: input.channel_id,
-                message: header
-            });
-            
-        await util.sleep(2000);
+        var message_batch = header + entry_border;
 
         for (var index = 0; index < entry_data.length; index++)
+        {
+            if (message_batch.length + entry_data[index].length + entry_border.length <= util.max_message_length)
+            {
+                // If the current entry can fit in the batch, then add it.
+
+                message_batch = message_batch + entry_data[index];
+            }
+            else
+            {
+                // The current entry doesn't fit in the batch, so print the batch and start a new one.
+
+                bot.sendMessage(
+                {
+                    to: input.channel_id,
+                    message: message_batch + entry_border,
+                });
+
+                await util.sleep(2000);
+                    
+                message_batch = entry_border + entry_data[index];
+            }
+        }
+
+        // If there's a remaining batch then print it.
+        if (message_batch != null)
         {
             bot.sendMessage(
             {
                 to: input.channel_id,
-                message: entry_border + entry_data[index] + entry_border,
+                message: message_batch + entry_border,
             });
 
             await util.sleep(2000);

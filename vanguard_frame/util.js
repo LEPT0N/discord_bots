@@ -6,6 +6,8 @@ var root_folder = './.data';
 
 var public = {};
 
+public.max_message_length = 2000;
+
 public.file_exists = function (file_name)
 {
     var file_path = root_folder + '/' + file_name;
