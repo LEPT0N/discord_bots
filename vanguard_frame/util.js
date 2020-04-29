@@ -229,22 +229,22 @@ public.format_seconds = function (seconds)
 
     if (days > 0)
     {
-        result.push(days + ' days');
+        result.push(days + 'd');
     }
 
     if (hours > 0)
     {
-        result.push(hours + ' hours');
+        result.push(hours + 'h');
     }
 
     if (minutes > 0)
     {
-        result.push(minutes + ' minutes');
+        result.push(minutes + 'm');
     }
 
     if (seconds > 0)
     {
-        result.push(seconds + ' seconds');
+        result.push(seconds + 's');
     }
 
     return result.join(' ');
