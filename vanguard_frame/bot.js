@@ -110,6 +110,59 @@ async function print_roster(input)
         });
 }
 
+async function print_all_leaderboards(input)
+{
+    bot.sendMessage(
+        {
+            to: input.channel_id,
+            message: '__**LEADERBOARDS ' + util.get_date() + '**__\r\n\r\n'
+        });
+
+    await util.sleep(2000);
+
+    var all_leaderboards = [
+        { arguments: ['triumph_score'] },
+        { arguments: ['individual_triumph', 'crucible_kills'] },
+        { arguments: ['individual_triumph', 'clan_xp'] },
+        { arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] },
+        { arguments: ['individual_triumph', 'power_bonus'] },
+        { arguments: ['individual_triumph', 'glory'] },
+        { arguments: ['triumphs', 'exotic_catalysts'] },
+        { arguments: ['triumphs', 'lore'] },
+        { arguments: ['individual_stat', 'killing_spree'] },
+        { arguments: ['individual_stat', 'kill_distance'] },
+        { arguments: ['individual_stat', 'kills'] },
+        { arguments: ['individual_stat', 'orbs_generated'] },
+        { arguments: ['collectibles', 'pinnacle_weapons'] },
+        { arguments: ['collectibles', 'weapons'] },
+        { arguments: ['collectibles', 'exotics'] },
+        { arguments: ['collectibles', 'mods'] },
+        { arguments: ['collectibles', 'shaders'] },
+        { arguments: ['triumphs', 'seals'] },
+        { arguments: ['triumphs', 'raids_completed'] },
+        { arguments: ['activity_history', 'raids_completed'] },
+        { arguments: ['activity_history', 'time_raiding'] },
+        { arguments: ['weapon_kills', 'any'] },
+        { arguments: ['highest_stat', 'favorite_weapon_type'] },
+        { arguments: ['highest_stat', 'favorite_special_weapon_type'] },
+        { arguments: ['highest_stat', 'favorite_heavy_weapon_type'] },
+        { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
+        { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
+    ];
+
+    for (var index = 0; index < all_leaderboards.length; index++)
+    {
+        bot.sendMessage({to: input.channel_id, message: '\r\n'});
+        await util.sleep(2000);
+
+        input.arguments = all_leaderboards[index].arguments;
+
+        await print_leaderboard(input);
+            
+        await util.sleep(2000);
+    }
+}
+
 async function print_leaderboard(input)
 {
     var leaderboard_name = input.arguments[0];
@@ -118,55 +171,7 @@ async function print_leaderboard(input)
 
     if (leaderboard_name == 'all')
     {
-        bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: '__**LEADERBOARDS ' + util.get_date() + '**__\r\n\r\n'
-        });
-
-        await util.sleep(2000);
-
-        var all_leaderboards = [
-            { arguments: ['triumph_score'] },
-            { arguments: ['individual_triumph', 'crucible_kills'] },
-            { arguments: ['individual_triumph', 'clan_xp'] },
-            { arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] },
-            { arguments: ['individual_triumph', 'power_bonus'] },
-            { arguments: ['individual_triumph', 'glory'] },
-            { arguments: ['triumphs', 'exotic_catalysts'] },
-            { arguments: ['triumphs', 'lore'] },
-            { arguments: ['individual_stat', 'killing_spree'] },
-            { arguments: ['individual_stat', 'kill_distance'] },
-            { arguments: ['individual_stat', 'kills'] },
-            { arguments: ['individual_stat', 'orbs_generated'] },
-            { arguments: ['collectibles', 'pinnacle_weapons'] },
-            { arguments: ['collectibles', 'weapons'] },
-            { arguments: ['collectibles', 'exotics'] },
-            { arguments: ['collectibles', 'mods'] },
-            { arguments: ['collectibles', 'shaders'] },
-            { arguments: ['triumphs', 'seals'] },
-            { arguments: ['triumphs', 'raids_completed'] },
-            { arguments: ['activity_history', 'raids_completed'] },
-            { arguments: ['activity_history', 'time_raiding'] },
-            { arguments: ['weapon_kills', 'any'] },
-            { arguments: ['highest_stat', 'favorite_weapon_type'] },
-            { arguments: ['highest_stat', 'favorite_special_weapon_type'] },
-            { arguments: ['highest_stat', 'favorite_heavy_weapon_type'] },
-            { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
-            { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
-        ];
-
-        for (var index = 0; index < all_leaderboards.length; index++)
-        {
-            bot.sendMessage({to: input.channel_id, message: '\r\n'});
-            await util.sleep(2000);
-
-            input.arguments = all_leaderboards[index].arguments;
-
-            print_leaderboard(input);
-            
-            await util.sleep(2000);
-        }
+        await print_all_leaderboards(input);
 
         return;
     }
