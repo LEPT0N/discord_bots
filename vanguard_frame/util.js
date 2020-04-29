@@ -260,10 +260,16 @@ public.add_commas_to_number = function (number)
     number = number.toString();
 
     var result = '';
-
     var group_count = 0;
+    var start_index = number.length - 1;
 
-    for (var index = number.length - 1; index >= 0; index--, group_count++)
+    var index_of_dot = number.indexOf('.');
+    if (index_of_dot != -1)
+    {
+        start_index = index_of_dot - 1;
+    }
+
+    for (var index = start_index; index >= 0; index--, group_count++)
     {
         if (group_count == 3)
         {
@@ -272,6 +278,11 @@ public.add_commas_to_number = function (number)
         }
 
         result = number[index] + result;
+    }
+
+    if (index_of_dot != -1)
+    {
+        result = result + number.substring(index_of_dot);
     }
 
     return result;
