@@ -135,11 +135,15 @@ var known_per_character_triumphs =
     'show_your_colors':
     {
         id: 3996842932,
+        group_by_class: true,
     },
 }
 
+// Leaderboard for player score on a specific triumph, data split by character and then grouped by player class.
+// parameter: any of the keys in known_triumphs above
 async function per_character_triumph(player_roster, parameter)
 {
+    // Get input
     if (!(parameter in known_per_character_triumphs))
     {
         throw new Error('Triumph "' + parameter + '" is not in my list');
@@ -147,45 +151,143 @@ async function per_character_triumph(player_roster, parameter)
 
     var known_triumph = known_per_character_triumphs[parameter];
 
+    // Loop through all players in the roster
     var data = await Promise.all(player_roster.players.map(async function (player)
     {
         var player_name = player.displayName;
 
+        // Grab per-character info for this player.
         var characters = (await bungie.get_characters(player));
 
         var player_all_triumph_data = (await bungie.get_per_character_triumphs(player));
 
+        // Loop through all character's triumph data.
         var data = await Promise.all(player_all_triumph_data.map(async function(character_all_triumph_data)
         {
+            // Get the class for this character and their triumph score, adding it to the list.
+
             var class_hash = characters[character_all_triumph_data.character_id].classHash;
-
-            var class_display_properties = (await bungie.get_display_properties(class_hash, bungie.manifest_sections.class));
-
-            var class_name = class_display_properties.name;
 
             var character_triumph_data = character_all_triumph_data.triumphs[known_triumph.id];
 
             var score = get_triumph_score(character_triumph_data);
 
-            // util.log('player "' + player_name + '" has character with class "' + class_name + '" with score "' + score + '"');
-
             return {
-                name: player_name + ' (' + class_name + ')',
-                score: score
+                player_name: player_name,
+                class_hash: class_hash,
+                score: score,
             };
         }));
 
+        // Return the array of entries from each character for this player.
         return data;
     }));
 
+    // We have an array of arrays of data, so flatten it into one array.
     data = data.flat();
 
+    var longest_score = 0;
+
+    // Group the data by player class
+    if (known_triumph.group_by_class)
+    {
+        var grouped_data = {};
+
+        for(var index = 0; index < data.length; index++)
+        {
+            var entry = data[index];
+
+            // Only include entries with a non-zero score in the groups.
+            if (entry.score > 0)
+            {
+                longest_score = Math.max(longest_score, entry.score.toString().length);
+
+                var detail_list_entry = {
+                    name: entry.player_name,
+                    score: entry.score,
+                    visible: true,
+                };
+
+                if (!(entry.class_hash in grouped_data))
+                {
+                    // The first entry in a group, so make a new group.
+
+                    var class_display_properties = (await bungie.get_display_properties(entry.class_hash, bungie.manifest_sections.class));
+
+                    var class_name = class_display_properties.name;
+
+                    grouped_data[entry.class_hash] = {
+                        name: class_name,
+                        score: entry.score,
+                        score_detail_list: [detail_list_entry]
+                        };
+                }
+                else
+                {
+                    // Add this entry to an existing group.
+
+                    grouped_data[entry.class_hash].score += entry.score;
+
+                    grouped_data[entry.class_hash].score_detail_list.push(detail_list_entry);
+                }
+            }
+        }
+
+        // Convert the data from a map to an array
+        data = [];
+
+        Object.keys(grouped_data).forEach(function (group_id)
+        {
+            var group = grouped_data[group_id];
+
+            // Order the details by score within a group.
+            group.score_detail_list.sort(function (a, b)
+            {
+                return b.score - a.score;
+            });
+
+            // Format the output lines for the detail list.
+            group.score_detail_list = group.score_detail_list.map(function (detail_list_entry)
+            {                
+                // Build a string of extra space padding so all the scores line up
+                var score_spacing = util.create_string(' ', longest_score - detail_list_entry.score.toString().length);
+
+                return {
+                    name: score_spacing + detail_list_entry.score + ' | ' + detail_list_entry.name,
+                    visible: true,
+                };
+            });
+
+            data.push({
+                name: group.name,
+                score: group.score,
+                score_detail_list: group.score_detail_list,
+            })
+        });
+    }
+
+    // Grab display information about the triumph
+
+    var triumph_display_properties = await bungie.get_display_properties(
+        known_triumph.id,
+        bungie.manifest_sections.record);
+
+    var url = null;
+
+    if (triumph_display_properties.hasIcon)
+    {
+        url = bungie.root_url + triumph_display_properties.icon;
+    }
+
+    // Return the final result
+
     return {
-        title: 'TODO',
-        description: null,
+        title: triumph_display_properties.name,
+        description: triumph_display_properties.description,
         data: data,
-        url: null,
-        format_score: null,
+        url: url,
+        format_score: util.add_commas_to_number,
+        one_detail_per_line: true,
     };
 }
 

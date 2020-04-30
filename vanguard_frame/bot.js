@@ -236,18 +236,22 @@ async function print_leaderboard(input)
                 var full_spacing = util.create_string(' ', longest_score);
 
                 var current_line_length = 0;
+                var current_column = 0;
 
                 entry.score_detail_list.forEach(function (detail)
                 {
                     var current_line_append = ', ' + detail;
                     var current_line_append_length = current_line_append.length;
 
-                    if (current_line_length == 0 || current_line_length + current_line_append_length > 60)
+                    if (current_line_length == 0
+                    || results.one_detail_per_line
+                    || current_line_length + current_line_append_length > 60)
                     {
                         // First line, or current line is too long, so start a new line.
 
                         var current_line = full_spacing + column_divider + '    ' + detail;
                         current_line_length = current_line.length;
+                        current_column = 0;
 
                         entry_output = entry_output + '\r\n' + current_line;
                     }
@@ -257,6 +261,7 @@ async function print_leaderboard(input)
 
                         entry_output = entry_output + current_line_append;
                         current_line_length += current_line_append_length;
+                        current_column++;
                     }
                 });
             }
