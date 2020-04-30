@@ -254,6 +254,94 @@ public.get_triumphs = async function (player)
     return cached_triumphs[player.membershipId].data;
 }
 
+async function download_per_character_triumphs(player)
+{
+    var character_ids = await public.get_character_ids(player);
+
+    var all_character_triumps = await Promise.all(character_ids.map(async function (character_id)
+    {
+        var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/Character/' + character_id + '?components=Records';
+
+        var character_triumps = (await get_request('download_per_character_triumphs', url)).records.data;
+
+        return {
+            character_id: character_id,
+            triumphs: character_triumps.records,
+        };
+    }));
+
+    return all_character_triumps;
+}
+
+var cached_per_character_triumphs = {};
+
+public.get_per_character_triumphs = async function (player)
+{
+    var today = util.get_date();
+
+    var per_character_triumphs_file_name = 'player_data_cache/' + player.membershipId + '_per_character_triumphs.json';
+
+    if (!(player.membershipId in cached_per_character_triumphs))
+    {
+        cached_per_character_triumphs[player.membershipId] = util.try_read_file(per_character_triumphs_file_name, true);
+    }
+
+    if (cached_per_character_triumphs[player.membershipId] && cached_per_character_triumphs[player.membershipId].date == today)
+    {
+        return cached_per_character_triumphs[player.membershipId].data;
+    }
+
+    var downloaded_per_character_triumphs = await download_per_character_triumphs(player);
+
+    cached_per_character_triumphs[player.membershipId] = {
+        date: today,
+        data: downloaded_per_character_triumphs
+    };
+
+    util.write_file(per_character_triumphs_file_name, cached_per_character_triumphs[player.membershipId], true);
+
+    return cached_per_character_triumphs[player.membershipId].data;
+}
+
+async function download_characters(player)
+{
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Characters';
+
+    var characters = (await get_request('download_characters', url)).characters.data;
+
+    return characters;
+}
+
+var cached_characters = {};
+
+public.get_characters = async function (player)
+{
+    var today = util.get_date();
+
+    var characters_file_name = 'player_data_cache/' + player.membershipId + '_characters.json';
+
+    if (!(player.membershipId in cached_characters))
+    {
+        cached_characters[player.membershipId] = util.try_read_file(characters_file_name, true);
+    }
+
+    if (cached_characters[player.membershipId] && cached_characters[player.membershipId].date == today)
+    {
+        return cached_characters[player.membershipId].data;
+    }
+
+    var downloaded_characters = await download_characters(player);
+
+    cached_characters[player.membershipId] = {
+        date: today,
+        data: downloaded_characters
+    };
+
+    util.write_file(characters_file_name, cached_characters[player.membershipId], true);
+
+    return cached_characters[player.membershipId].data;
+}
+
 async function download_character_stats(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
@@ -762,7 +850,7 @@ public.get_display_properties = async function (hashIdentifier, section)
 
     display_properties.id = hashIdentifier;
 
-    util.log('get_display_properties(' + section + ')', display_properties);
+    // util.log('get_display_properties(' + section + ')', display_properties);
 
     return display_properties;
 }
