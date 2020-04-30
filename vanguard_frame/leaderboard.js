@@ -76,7 +76,9 @@ async function individual_triumph(player_roster, parameter)
 
     var hashIdentifier = known_triumphs[parameter];
 
-    var display_properties = await bungie.get_triumph_display_properties(hashIdentifier);
+    var display_properties = await bungie.get_display_properties(
+        hashIdentifier,
+        bungie.manifest_sections.record);
 
     var data = await Promise.all(player_roster.players.map(async function (value)
     {
@@ -485,8 +487,9 @@ async function collectibles(player_roster, parameter)
 
     if (collectible_set.title_presentation_node)
     {
-        root_display_properties = await bungie.get_presentation_node_display_properties(
-            collectible_set.title_presentation_node);
+        root_display_properties = await bungie.get_display_properties(
+            collectible_set.title_presentation_node,
+            bungie.manifest_sections.presentation_node);
     }
 
     var data = await Promise.all(player_roster.players.map(async function (player)
@@ -668,7 +671,9 @@ async function triumphs(player_roster, parameter)
         triumph_set = await triumph_set.dynamic_set_function();
     }
 
-    var root_display_properties = await bungie.get_presentation_node_display_properties(triumph_set.title_presentation_node);
+    var root_display_properties = await bungie.get_display_properties(
+        triumph_set.title_presentation_node,
+        bungie.manifest_sections.presentation_node);
 
     var data = await Promise.all(player_roster.players.map(async function (player)
     {

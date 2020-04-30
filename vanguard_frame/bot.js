@@ -325,18 +325,12 @@ async function print_leaderboard(input)
 
 async function search_manifest(input)
 {
-    var category = input.arguments[0];
+    var section = input.arguments[0];
     var search_query = input.arguments[1];
-
-    var search_categories =
-    {
-        collectibles: 'DestinyCollectibleDefinition',
-        triumphs: 'DestinyRecordDefinition',
-    };
 
     var results = [];
 
-    if (category == 'all')
+    if (section == 'all')
     {
         var manifest = await bungie.get_manifest();
 
@@ -348,28 +342,37 @@ async function search_manifest(input)
     }
     else
     {
-        if (!(category in search_categories))
+        if (!(section in bungie.manifest_sections))
         {
-            throw new Error('category "' + category + '" does not exist');
+            throw new Error('section "' + section + '" does not exist');
         }
 
         results = (await bungie.search_manifest(
-            search_categories[category],
+            bungie.manifest_sections[section],
             search_query));
     }
-
-    util.log(results);
-
-    var string_results = results.map(function (value)
+    
+    for (var index = 0; index < results.length; index++)
     {
-        return value.key + ' = ' + value.name;
-    }).join('\r\n');
+        var result = results[index];
 
-    bot.sendMessage(
+        util.log(result);
+
+        var result_message = result.key + ' = ' + result.name;
+
+        if (section == 'all')
+        {
+            result_message += ' (' + result.section + ')';
+        }
+
+        bot.sendMessage(
         {
             to: input.channel_id,
-            message: string_results
+            message: result_message,
         });
+        
+        await util.sleep(1000);
+    }
 }
 
 async function mirror_reactions(input)

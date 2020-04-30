@@ -254,24 +254,6 @@ public.get_triumphs = async function (player)
     return cached_triumphs[player.membershipId].data;
 }
 
-public.get_triumph_display_properties = async function (hashIdentifier)
-{
-    var manifest = (await public.get_manifest()).DestinyRecordDefinition;
-
-    if (!hashIdentifier in manifest)
-    {
-        throw new Error('Triumph "' + hashIdentifier + '" is not in the manifest');
-    }
-
-    var display_properties = manifest[hashIdentifier].displayProperties;
-
-    display_properties.id = hashIdentifier;
-
-    // util.log('get_triumph_display_properties', display_properties);
-
-    return display_properties;
-}
-
 async function download_character_stats(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Account/' + player.membershipId + '/Stats/';
@@ -372,25 +354,14 @@ public.get_collectibles = async function (player)
     return cached_collectibles[player.membershipId].data;
 }
 
-public.get_collectible_display_properties = async function (hashIdentifier)
+public.search_manifest = async function (section, search_query)
 {
-    var manifest = (await public.get_manifest()).DestinyCollectibleDefinition;
+    var manifest = (await public.get_manifest())[section];
 
-    if (!hashIdentifier in manifest)
+    if (!manifest)
     {
-        throw new Error('Collectible "' + hashIdentifier + '" is not in the manifest');
+        throw new Error ('section "' + section + '" is not in the manifest');
     }
-
-    var display_properties = manifest[hashIdentifier].displayProperties;
-
-    // util.log('get_collectible_display_properties', display_properties);
-
-    return display_properties;
-}
-
-public.search_manifest = async function (category, search_query)
-{
-    var manifest = (await public.get_manifest())[category];
 
     var results = [];
 
@@ -405,7 +376,7 @@ public.search_manifest = async function (category, search_query)
             if (item_name.includes(search_query))
             {
                 results.push({
-                    category: category,
+                    section: section,
                     key: key,
                     name: item_name
                 });
@@ -467,24 +438,6 @@ public.get_all_child_items = async function (hashIdentifier, child_type)
     results = results.concat(child_items.map(item => item[child_type.item_name]));
 
     return results;
-}
-
-public.get_presentation_node_display_properties = async function (hashIdentifier)
-{
-    var manifest = (await public.get_manifest()).DestinyPresentationNodeDefinition;
-
-    if (!hashIdentifier in manifest)
-    {
-        throw new Error('Presentation Node "' + hashIdentifier + '" is not in the manifest');
-    }
-
-    var display_properties = manifest[hashIdentifier].displayProperties;
-
-    display_properties.id = hashIdentifier;
-
-    // util.log('get_presentation_node_display_properties', display_properties);
-
-    return display_properties;
 }
 
 // Destiny.HistoricalStats.Definitions.DestinyActivityModeType
@@ -661,24 +614,6 @@ public.get_activity_history = async function (player, mode)
     return cached_activity_history[player.membershipId][mode].data;
 }
 
-public.get_activity_display_properties = async function (hashIdentifier)
-{
-    var manifest = (await public.get_manifest()).DestinyActivityDefinition;
-
-    if (!hashIdentifier in manifest)
-    {
-        throw new Error('Presentation Node "' + hashIdentifier + '" is not in the manifest');
-    }
-
-    var display_properties = manifest[hashIdentifier].displayProperties;
-
-    display_properties.id = hashIdentifier;
-
-    // util.log('get_presentation_node_display_properties', display_properties);
-
-    return display_properties;
-}
-
 async function download_weapon_history(player)
 {
     var character_ids = await public.get_character_ids(player);
@@ -729,6 +664,107 @@ public.get_weapon_history = async function (player)
     util.write_file(weapon_history_file_name, cached_weapon_history[player.membershipId], true);
 
     return cached_weapon_history[player.membershipId].data;
+}
+
+public.manifest_sections = 
+{
+    enemy_race: 'DestinyEnemyRaceDefinition',
+    node_step_summary: 'DestinyNodeStepSummaryDefinition',
+    art_dye_channel: 'DestinyArtDyeChannelDefinition',
+    art_dye_reference: 'DestinyArtDyeReferenceDefinition',
+    place: 'DestinyPlaceDefinition',
+    activity: 'DestinyActivityDefinition',
+    activity_type: 'DestinyActivityTypeDefinition',
+    class: 'DestinyClassDefinition',
+    gender: 'DestinyGenderDefinition',
+    inventory_bucket: 'DestinyInventoryBucketDefinition',
+    race: 'DestinyRaceDefinition',
+    talent_grid: 'DestinyTalentGridDefinition',
+    unlock: 'DestinyUnlockDefinition',
+    material_requirement_set: 'DestinyMaterialRequirementSetDefinition',
+    sandbox_perk: 'DestinySandboxPerkDefinition',
+    stat_group: 'DestinyStatGroupDefinition',
+    progression_mapping: 'DestinyProgressionMappingDefinition',
+    faction: 'DestinyFactionDefinition',
+    vendor_group: 'DestinyVendorGroupDefinition',
+    reward_source: 'DestinyRewardSourceDefinition',
+    unlock_value: 'DestinyUnlockValueDefinition',
+    reward_mapping: 'DestinyRewardMappingDefinition',
+    reward_sheet: 'DestinyRewardSheetDefinition',
+    item_category: 'DestinyItemCategoryDefinition',
+    damage_type: 'DestinyDamageTypeDefinition',
+    activity_mode: 'DestinyActivityModeDefinition',
+    medal_tier: 'DestinyMedalTierDefinition',
+    achievement: 'DestinyAchievementDefinition',
+    activity_graph: 'DestinyActivityGraphDefinition',
+    activity_interactable: 'DestinyActivityInteractableDefinition',
+    collectible: 'DestinyCollectibleDefinition',
+    entitlement_offer: 'DestinyEntitlementOfferDefinition',
+    destiny_stat: 'DestinyStatDefinition',
+    item_tier_type: 'DestinyItemTierTypeDefinition',
+    metric: 'DestinyMetricDefinition',
+    platform_bucket_mapping: 'DestinyPlatformBucketMappingDefinition',
+    plug_set: 'DestinyPlugSetDefinition',
+    presentation_node_base: 'DestinyPresentationNodeBaseDefinition',
+    presentation_node: 'DestinyPresentationNodeDefinition',
+    record: 'DestinyRecordDefinition',
+    bond: 'DestinyBondDefinition',
+    character_customization_category: 'DestinyCharacterCustomizationCategoryDefinition',
+    character_customization_option: 'DestinyCharacterCustomizationOptionDefinition',
+    destination: 'DestinyDestinationDefinition',
+    equipment_slot: 'DestinyEquipmentSlotDefinition',
+    inventory_item: 'DestinyInventoryItemDefinition',
+    inventory_item_lite: 'DestinyInventoryItemLiteDefinition',
+    location: 'DestinyLocationDefinition',
+    lore: 'DestinyLoreDefinition',
+    objective: 'DestinyObjectiveDefinition',
+    progression: 'DestinyProgressionDefinition',
+    progression_level_requirement: 'DestinyProgressionLevelRequirementDefinition',
+    reward_adjuster_progression_map: 'DestinyRewardAdjusterProgressionMapDefinition',
+    reward_item_list: 'DestinyRewardItemListDefinition',
+    sack_reward_item_list: 'DestinySackRewardItemListDefinition',
+    sandbox_pattern: 'DestinySandboxPatternDefinition',
+    season: 'DestinySeasonDefinition',
+    season_pass: 'DestinySeasonPassDefinition',
+    socket_category: 'DestinySocketCategoryDefinition',
+    socket_type: 'DestinySocketTypeDefinition',
+    trait: 'DestinyTraitDefinition',
+    trait_category: 'DestinyTraitCategoryDefinition',
+    unlock_count_mapping: 'DestinyUnlockCountMappingDefinition',
+    unlock_event: 'DestinyUnlockEventDefinition',
+    unlock_expression_mapping: 'DestinyUnlockExpressionMappingDefinition',
+    vendor: 'DestinyVendorDefinition',
+    reward_adjuster_pointer: 'DestinyRewardAdjusterPointerDefinition',
+    milestone: 'DestinyMilestoneDefinition',
+    activity_modifier: 'DestinyActivityModifierDefinition',
+    report_reason_category: 'DestinyReportReasonCategoryDefinition',
+    artifact: 'DestinyArtifactDefinition',
+    breaker_type: 'DestinyBreakerTypeDefinition',
+    checklist: 'DestinyChecklistDefinition',
+    energy_type: 'DestinyEnergyTypeDefinition',
+};
+
+public.get_display_properties = async function (hashIdentifier, section)
+{
+    var manifest = (await public.get_manifest())[section];
+
+    if (!manifest)
+    {
+        throw new Error ('section "' + section + '" is not in the manifest');
+    }
+
+    if (!hashIdentifier in manifest)
+    {
+        throw new Error('Presentation Node "' + hashIdentifier + '" is not in section "' + section + '" in the manifest');
+    }
+
+    var display_properties = manifest[hashIdentifier].displayProperties;
+
+    display_properties.id = hashIdentifier;
+
+    util.log('get_display_properties(' + section + ')', display_properties);
+
+    return display_properties;
 }
 
 module.exports = public;
