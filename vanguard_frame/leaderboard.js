@@ -88,18 +88,7 @@ async function individual_triumph(player_roster, parameter)
 
         // util.log(triumph_data);
 
-        var objectives = null;
-
-        if ('intervalObjectives' in triumph_data)
-        {
-            objectives = triumph_data.intervalObjectives;
-        }
-        else
-        {
-            objectives = triumph_data.objectives;
-        }
-
-        var score = objectives[objectives.length - 1].progress;
+        var score = get_triumph_score(triumph_data);
 
         return { name: player_name, score: score };
     }));
@@ -117,6 +106,79 @@ async function individual_triumph(player_roster, parameter)
         data: data,
         url: url,
         format_score: util.add_commas_to_number,
+    };
+}
+
+// Triumphs can have multiple objectives, but the last one seems to track the whole progress.
+function get_triumph_score(triumph_data)
+{
+    var objectives = null;
+
+    if ('intervalObjectives' in triumph_data)
+    {
+        objectives = triumph_data.intervalObjectives;
+    }
+    else
+    {
+        objectives = triumph_data.objectives;
+    }
+
+    var score = objectives[objectives.length - 1].progress;
+
+    return score;
+}
+
+var known_per_character_triumphs =
+{
+    // Events // Events // The Guardian Games
+    // https://www.light.gg/db/legend/triumphs/3996842932/show-your-colors/
+    'show_your_colors':
+    {
+        id: 3996842932,
+    },
+}
+
+async function per_character_triumph(player_roster, parameter)
+{
+    if (!(parameter in known_per_character_triumphs))
+    {
+        throw new Error('Triumph "' + parameter + '" is not in my list');
+    }
+
+    var known_triumph = known_per_character_triumphs[parameter];
+
+    var data = await Promise.all(player_roster.players.map(async function (player)
+    {
+        var player_name = player.displayName;
+
+        var characters = (await bungie.get_characters(player));
+
+        var player_all_triumph_data = (await bungie.get_per_character_triumphs(player));
+
+        await Promise.all(player_all_triumph_data.map(async function(character_all_triumph_data)
+        {
+            var class_hash = characters[character_all_triumph_data.character_id].classHash;
+
+            var class_display_properties = (await bungie.get_display_properties(class_hash, bungie.manifest_sections.class));
+
+            var class_name = class_display_properties.name;
+
+            var character_triumph_data = character_all_triumph_data.triumphs[known_triumph.id];
+
+            var score = get_triumph_score(character_triumph_data);
+
+            util.log('player "' + player_name + '" has character with class "' + class_name + '" with score "' + score + '"');
+        }));
+
+        return { name: player_name, score: 0 };
+    }));
+
+    return {
+        title: 'TODO',
+        description: null,
+        data: data,
+        url: null,
+        format_score: null,
     };
 }
 
@@ -1030,6 +1092,7 @@ var leaderboards =
     best_titan: lol,
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
+    per_character_triumph: per_character_triumph,
     individual_stat: individual_stat,
     highest_stat: highest_stat,
     collectibles: collectibles,
