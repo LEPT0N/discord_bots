@@ -155,7 +155,7 @@ async function per_character_triumph(player_roster, parameter)
 
         var player_all_triumph_data = (await bungie.get_per_character_triumphs(player));
 
-        await Promise.all(player_all_triumph_data.map(async function(character_all_triumph_data)
+        var data = await Promise.all(player_all_triumph_data.map(async function(character_all_triumph_data)
         {
             var class_hash = characters[character_all_triumph_data.character_id].classHash;
 
@@ -167,11 +167,18 @@ async function per_character_triumph(player_roster, parameter)
 
             var score = get_triumph_score(character_triumph_data);
 
-            util.log('player "' + player_name + '" has character with class "' + class_name + '" with score "' + score + '"');
+            // util.log('player "' + player_name + '" has character with class "' + class_name + '" with score "' + score + '"');
+
+            return {
+                name: player_name + ' (' + class_name + ')',
+                score: score
+            };
         }));
 
-        return { name: player_name, score: 0 };
+        return data;
     }));
+
+    data = data.flat();
 
     return {
         title: 'TODO',
