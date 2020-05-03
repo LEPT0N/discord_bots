@@ -303,6 +303,25 @@ public.get_per_character_triumphs = async function (player)
     return cached_per_character_triumphs[player.membershipId].data;
 }
 
+// Triumphs can have multiple objectives, but the last one seems to track the whole progress.
+public.get_triumph_score = function (triumph_data)
+{
+    var objectives = null;
+
+    if ('intervalObjectives' in triumph_data)
+    {
+        objectives = triumph_data.intervalObjectives;
+    }
+    else
+    {
+        objectives = triumph_data.objectives;
+    }
+
+    var score = objectives[objectives.length - 1].progress;
+
+    return score;
+}
+
 async function download_characters(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Characters';

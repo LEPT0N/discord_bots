@@ -88,7 +88,7 @@ async function individual_triumph(player_roster, parameter)
 
         // util.log(triumph_data);
 
-        var score = get_triumph_score(triumph_data);
+        var score = bungie.get_triumph_score(triumph_data);
 
         return { name: player_name, score: score };
     }));
@@ -107,25 +107,6 @@ async function individual_triumph(player_roster, parameter)
         url: url,
         format_score: util.add_commas_to_number,
     };
-}
-
-// Triumphs can have multiple objectives, but the last one seems to track the whole progress.
-function get_triumph_score(triumph_data)
-{
-    var objectives = null;
-
-    if ('intervalObjectives' in triumph_data)
-    {
-        objectives = triumph_data.intervalObjectives;
-    }
-    else
-    {
-        objectives = triumph_data.objectives;
-    }
-
-    var score = objectives[objectives.length - 1].progress;
-
-    return score;
 }
 
 var known_per_character_triumphs =
@@ -170,7 +151,7 @@ async function per_character_triumph(player_roster, parameter)
 
             var character_triumph_data = character_all_triumph_data.triumphs[known_triumph.id];
 
-            var score = get_triumph_score(character_triumph_data);
+            var score = bungie.get_triumph_score(character_triumph_data);
 
             return {
                 player_name: player_name,

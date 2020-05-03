@@ -34,6 +34,8 @@ public.run = async function ()
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
+        // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors'] });
+        await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
     }
     catch (error)
     {
@@ -45,6 +47,53 @@ public.run = async function ()
     }
 
     process.exit();
+}
+
+// Find triumphs that differ between characters.
+async function test_find_differing_triumphs(input)
+{
+    // var display_properties = await bungie.get_display_properties(
+    //     '378857807',
+    //     bungie.manifest_sections.record);
+
+    var player = await bungie.search_destiny_player(input.arguments);
+
+    var all_character_data = await bungie.get_per_character_triumphs(player);
+
+    for (var character_index = 0; character_index < all_character_data.length - 1; character_index++)
+    {
+        first_character_triumphs = all_character_data[character_index].triumphs;
+
+        await Object.keys(first_character_triumphs).map(async function (triumph_id)
+        {
+            var score = bungie.get_triumph_score(first_character_triumphs[triumph_id]);
+
+            for (var other_character_index = character_index + 1; other_character_index < all_character_data.length; other_character_index++)
+            {
+                var other_character_triumphs = all_character_data[other_character_index].triumphs;
+
+                var other_character_triumph = other_character_triumphs[triumph_id];
+
+                if (!other_character_triumph)
+                {
+                    util.log('triumph missing on other character: ' + triumph_id);
+                }
+                else
+                {
+                    var other_score = bungie.get_triumph_score(other_character_triumph);
+
+                    if (score != other_score)
+                    {
+                        var display_properties = await bungie.get_display_properties(
+                            triumph_id,
+                            bungie.manifest_sections.record);
+
+                        util.log('triumph "' + display_properties.name + '" (' + display_properties.description + ') mas mismatched scores (' + score + ') (' + other_score + ')');
+                    }
+                }
+            }
+        });
+    }
 }
 
 async function save_collectibles(input)
@@ -96,7 +145,7 @@ async function test_raids(input)
 
     await Promise.all(Object.keys(buckets).map(async function (bucket_id)
     {
-        var display_properties = await bungie.get_activity_display_properties(bucket_id);
+        var display_properties = await bungie.get_display_properties(bucket_id, bungie.manifest_sections.activity);
 
         var name = display_properties.name;
         var count = buckets[bucket_id];
