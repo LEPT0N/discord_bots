@@ -116,21 +116,61 @@ var known_per_character_triumphs =
     'show_your_colors':
     {
         id: 3996842932,
-        group_by_class: true,
+    },
+
+    // ???
+    // https://www.light.gg/???
+    'the_vault':
+    {
+        id: 1567884322,
     },
 }
 
+var grouping_types =
+{
+    'class':
+    {
+        character_property: 'classHash',
+        manifest_section: bungie.manifest_sections.class,
+    },
+
+    'race':
+    {
+        character_property: 'raceHash',
+        manifest_section: bungie.manifest_sections.race,
+    },
+
+    'gender':
+    {
+        character_property: 'genderHash',
+        manifest_section: bungie.manifest_sections.gender,
+    },
+};
+
 // Leaderboard for player score on a specific triumph, data split by character and then grouped by player class.
-// parameter: any of the keys in known_triumphs above
-async function per_character_triumph(player_roster, parameter)
+// parameter_1: any of the keys in known_triumphs above
+// parameter_2: optiona. Any of the groupings in grouping_types above
+async function per_character_triumph(player_roster, parameter_1, parameter_2)
 {
     // Get input
-    if (!(parameter in known_per_character_triumphs))
+    if (!(parameter_1 in known_per_character_triumphs))
     {
-        throw new Error('Triumph "' + parameter + '" is not in my list');
+        throw new Error('Triumph "' + parameter_1 + '" is not in my list');
     }
 
-    var known_triumph = known_per_character_triumphs[parameter];
+    var known_triumph = known_per_character_triumphs[parameter_1];
+    
+    var grouping = grouping_types.class;
+
+    if (parameter_2)
+    {
+        grouping = grouping_types[parameter_2];
+        
+        if (!grouping)
+        {
+            throw new Error('Grouping "' + parameter_2 + '" is not in my list');
+        }
+    }
 
     // Loop through all players in the roster
     var data = await Promise.all(player_roster.players.map(async function (player)
@@ -147,7 +187,8 @@ async function per_character_triumph(player_roster, parameter)
         {
             // Get the class for this character and their triumph score, adding it to the list.
 
-            var class_hash = characters[character_all_triumph_data.character_id].classHash;
+            var character = characters[character_all_triumph_data.character_id];
+            var group_id = character[grouping.character_property];
 
             var character_triumph_data = character_all_triumph_data.triumphs[known_triumph.id];
 
@@ -155,7 +196,7 @@ async function per_character_triumph(player_roster, parameter)
 
             return {
                 player_name: player_name,
-                class_hash: class_hash,
+                group_id: group_id,
                 score: score,
             };
         }));
@@ -169,83 +210,81 @@ async function per_character_triumph(player_roster, parameter)
 
     var longest_score = 0;
 
-    // Group the data by player class
-    if (known_triumph.group_by_class)
+    // Group the data by some character statistic
+
+    var grouped_data = {};
+
+    for(var index = 0; index < data.length; index++)
     {
-        var grouped_data = {};
+        var entry = data[index];
 
-        for(var index = 0; index < data.length; index++)
+        // Only include entries with a non-zero score in the groups.
+        if (entry.score > 0)
         {
-            var entry = data[index];
+            longest_score = Math.max(longest_score, entry.score.toString().length);
 
-            // Only include entries with a non-zero score in the groups.
-            if (entry.score > 0)
+            var detail_list_entry = {
+                name: entry.player_name,
+                score: entry.score,
+                visible: true,
+            };
+
+            if (!(entry.group_id in grouped_data))
             {
-                longest_score = Math.max(longest_score, entry.score.toString().length);
+                // The first entry in a group, so make a new group.
 
-                var detail_list_entry = {
-                    name: entry.player_name,
+                var class_display_properties = (await bungie.get_display_properties(entry.group_id, grouping.manifest_section));
+
+                var class_name = class_display_properties.name;
+
+                grouped_data[entry.group_id] = {
+                    name: class_name,
                     score: entry.score,
-                    visible: true,
-                };
+                    score_detail_list: [detail_list_entry]
+                    };
+            }
+            else
+            {
+                // Add this entry to an existing group.
 
-                if (!(entry.class_hash in grouped_data))
-                {
-                    // The first entry in a group, so make a new group.
+                grouped_data[entry.group_id].score += entry.score;
 
-                    var class_display_properties = (await bungie.get_display_properties(entry.class_hash, bungie.manifest_sections.class));
-
-                    var class_name = class_display_properties.name;
-
-                    grouped_data[entry.class_hash] = {
-                        name: class_name,
-                        score: entry.score,
-                        score_detail_list: [detail_list_entry]
-                        };
-                }
-                else
-                {
-                    // Add this entry to an existing group.
-
-                    grouped_data[entry.class_hash].score += entry.score;
-
-                    grouped_data[entry.class_hash].score_detail_list.push(detail_list_entry);
-                }
+                grouped_data[entry.group_id].score_detail_list.push(detail_list_entry);
             }
         }
-
-        // Convert the data from a map to an array
-        data = [];
-
-        Object.keys(grouped_data).forEach(function (group_id)
-        {
-            var group = grouped_data[group_id];
-
-            // Order the details by score within a group.
-            group.score_detail_list.sort(function (a, b)
-            {
-                return b.score - a.score;
-            });
-
-            // Format the output lines for the detail list.
-            group.score_detail_list = group.score_detail_list.map(function (detail_list_entry)
-            {                
-                // Build a string of extra space padding so all the scores line up
-                var score_spacing = util.create_string(' ', longest_score - detail_list_entry.score.toString().length);
-
-                return {
-                    name: score_spacing + detail_list_entry.score + ' | ' + detail_list_entry.name,
-                    visible: true,
-                };
-            });
-
-            data.push({
-                name: group.name,
-                score: group.score,
-                score_detail_list: group.score_detail_list,
-            })
-        });
     }
+
+    // Convert the data from a map to an array
+    data = [];
+
+    Object.keys(grouped_data).forEach(function (group_id)
+    {
+        var group = grouped_data[group_id];
+
+        // Order the details by score within a group.
+        group.score_detail_list.sort(function (a, b)
+        {
+            return b.score - a.score;
+        });
+
+        // Format the output lines for the detail list.
+        group.score_detail_list = group.score_detail_list.map(function (detail_list_entry)
+        {                
+            // Build a string of extra space padding so all the scores line up
+            var score_spacing = util.create_string(' ', longest_score - detail_list_entry.score.toString().length);
+
+            return {
+                name: score_spacing + detail_list_entry.score + ' | ' + detail_list_entry.name,
+                visible: true,
+            };
+        });
+
+        data.push({
+            name: group.name,
+            score: group.score,
+            score_detail_list: group.score_detail_list,
+        })
+    });
 
     // Grab display information about the triumph
 
