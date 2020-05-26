@@ -182,7 +182,7 @@ async function individual_triumph(player_roster, parameter)
     {
         var player_name = player.displayName;
 
-        var high_score = 0;
+        var result_details = [];
 
         // Loop through all triumphs for this set.
         await Promise.all(known_triumph.triumphs_for_data.map(async function (triumph_id)
@@ -191,7 +191,15 @@ async function individual_triumph(player_roster, parameter)
         
             var score = bungie.get_triumph_score(triumph_data);
 
-            high_score = Math.max(score, high_score);
+            var triumph_name = (await bungie.get_display_properties(
+                triumph_id,
+                bungie.manifest_sections.record)).name;
+
+            result_details.push(
+            {
+                name: triumph_name,
+                score: score,
+            });
         }));
 
         if (known_triumph.per_character_triumphs_for_data)
@@ -207,13 +215,33 @@ async function individual_triumph(player_roster, parameter)
                     var triumph_data = character_triumph_data.triumphs[triumph_id];
                 
                     var score = bungie.get_triumph_score(triumph_data);
-                
-                    high_score = Math.max(score, high_score);
+
+                    var triumph_name = (await bungie.get_display_properties(
+                        triumph_id,
+                        bungie.manifest_sections.record)).name;
+
+                    result_details.push(
+                    {
+                        name: triumph_name,
+                        score: score,
+                    });
                 }));
             }));
         }
 
-        return { name: player_name, score: high_score };
+        result_details.sort(function (a, b)
+        {
+            return b.score - a.score;
+        });
+
+        return {
+            name: player_name,
+            score: result_details[0].score,
+            score_detail_list: [{
+                name: result_details[0].name,
+                visible: true,
+            }]
+        };
     }));
 
     var url = null;
