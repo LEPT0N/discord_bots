@@ -47,6 +47,7 @@ var known_triumphs =
     'nightfall_ordeal_high_score': 
     {
         triumph_for_title: 4020709858,
+        show_details: true,
         triumphs_for_data:
         [
             // Vanguard // Strikes // Nightfall: The Ordeal // Lightbearer
@@ -234,13 +235,20 @@ async function individual_triumph(player_roster, parameter)
             return b.score - a.score;
         });
 
+        var detail_list = null;
+
+        if (known_triumph.show_details)
+        {
+            detail_list = [{
+                name: result_details[0].name,
+                visible: true,
+            }];
+        }
+
         return {
             name: player_name,
             score: result_details[0].score,
-            score_detail_list: [{
-                name: result_details[0].name,
-                visible: true,
-            }]
+            score_detail_list: detail_list,
         };
     }));
 
