@@ -16,6 +16,7 @@ public.run = async function ()
         // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_leaderboard({ arguments: ['triumph_score'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'clan_xp'] });
+        await test_leaderboard({ arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] });
         // await test_leaderboard({ arguments: ['triumphs', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
         // await test_leaderboard({ arguments: ['collectibles', 'weapons'] });
@@ -35,7 +36,9 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
         // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors'] });
-        await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors', 'class'] });
+
+        // await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
     }
     catch (error)
     {
@@ -88,7 +91,7 @@ async function test_find_differing_triumphs(input)
                             triumph_id,
                             bungie.manifest_sections.record);
 
-                        util.log('triumph "' + display_properties.name + '" (' + display_properties.description + ') mas mismatched scores (' + score + ') (' + other_score + ')');
+                        util.log('triumph "' + display_properties.name + '" (' + display_properties.description + ') (' + triumph_id + ') has mismatched scores (' + score + ') (' + other_score + ')');
                     }
                 }
             }

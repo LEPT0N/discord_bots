@@ -30,39 +30,136 @@ var known_triumphs =
 {
     // Crucible // Lifetime // Combat Record // Fierce Competitor
     // https://www.light.gg/db/legend/triumphs/3015941901/fierce-competitor/
-    'crucible_kills': 3015941901,
+    'crucible_kills':
+    {
+        triumph_for_title: 3015941901,
+        triumphs_for_data: [ 3015941901 ],
+    },
 
     // Account // Clan // Clan // Major Contributor
     // https://www.light.gg/db/legend/triumphs/1738299320/major-contributor/
-    'clan_xp': 1738299320,
+    'clan_xp':
+    {
+        triumph_for_title: 1738299320,
+        triumphs_for_data: [ 1738299320 ],
+    },
 
-    // Vanguard // Strikes // Nightfall: The Ordeal
-    // https://www.light.gg/db/legend/triumphs/4020709858/lightbearer/
-    'nightfall_ordeal_high_score': 4020709858,
+    'nightfall_ordeal_high_score': 
+    {
+        triumph_for_title: 4020709858,
+        triumphs_for_data:
+        [
+            // Vanguard // Strikes // Nightfall: The Ordeal // Lightbearer
+            // https://www.light.gg/db/legend/triumphs/4020709858/lightbearer/
+            4020709858,
+
+            // Vanguard // Strikes // Nightfall // Lake of Shadows
+            // https://www.light.gg/db/legend/triumphs/1329556468/lake-of-shadows/
+            1329556468,
+
+            // Vanguard // Strikes // Nightfall // The Insight Terminus
+            // https://www.light.gg/db/legend/triumphs/3399168111/the-insight-terminus/
+            3399168111,
+
+            // Vanguard // Strikes // Nightfall // The Hollowed Lair
+            // https://www.light.gg/db/legend/triumphs/3450793480/the-hollowed-lair/
+            3450793480,
+
+            // Vanguard // Strikes // Nightfall // Warden of Nothing
+            // https://www.light.gg/db/legend/triumphs/2836924866/warden-of-nothing/
+            2836924866,
+            
+            // Vanguard // Strikes // Nightfall // The Pyramidion
+            // https://www.light.gg/db/legend/triumphs/1060780635/the-pyramidion/
+            1060780635,
+            
+            // Vanguard // Strikes // Nightfall // The Inverted Spire
+            // https://www.light.gg/db/legend/triumphs/3973165904/the-inverted-spire/
+            3973165904,
+            
+            // Vanguard // Strikes // Nightfall // Exodus Crash
+            // https://www.light.gg/db/legend/triumphs/1526865549/exodus-crash/
+            1526865549,
+
+            // Vanguard // Strikes // Nightfall // The Arms Dealer
+            // https://www.light.gg/db/legend/triumphs/3340846443/the-arms-dealer/
+            3340846443,
+
+            // Vanguard // Strikes // Nightfall // Savathûn's Song
+            // https://www.light.gg/db/legend/triumphs/2099501667/savath%C3%BBns-song/
+            2099501667,
+
+            // Vanguard // Strikes // Nightfall // A Garden World
+            // https://www.light.gg/db/legend/triumphs/2692332187/a-garden-world//
+            2692332187,
+            
+            // Vanguard // Strikes // Nightfall // Tree of Probabilities
+            // https://www.light.gg/db/legend/triumphs/2282894388/tree-of-probabilities/
+            2282894388,
+            
+            // Vanguard // Strikes // Nightfall // Strange Terrain
+            // https://www.light.gg/db/legend/triumphs/165166474/strange-terrain/
+            165166474,
+            
+            // Vanguard // Strikes // Nightfall // Will of the Thousands
+            // https://www.light.gg/db/legend/triumphs/1039797865/will-of-the-thousands/
+            1039797865,
+        ],
+        per_character_triumphs_for_data:
+        [
+            // Vanguard // Strikes // Nightfall // The Corrupted
+            // https://www.light.gg/db/legend/triumphs/3951275509/the-corrupted/
+            3951275509,
+        ],
+    },
 
     // Seasonal // Activities // Season 8 // Season 8: Power Bonus
     // https://www.light.gg/db/legend/triumphs/1686327621/season-8-power-bonus/
-    'season_8_power_bonus': 1686327621,
+    'season_8_power_bonus':
+    {
+        triumph_for_title: 1686327621,
+        triumphs_for_data: [ 1686327621 ],
+    },
 
     // Crucible // Lifetime // Glory Ranks // Season 8: Glory
     // https://www.light.gg/db/legend/triumphs/3155364169/season-8-glory/
-    'season_8_glory': 3155364169,
+    'season_8_glory':
+    {
+        triumph_for_title: 3155364169,
+        triumphs_for_data: [ 3155364169 ],
+    },
 
     // Seasonal // Activities // Season 9 // Season 9: Power Bonus
     // https://www.light.gg/db/legend/triumphs/2972583416/season-9-power-bonus/
-    'season_9_power_bonus': 2972583416,
+    'season_9_power_bonus':
+    {
+        triumph_for_title: 2972583416,
+        triumphs_for_data: [ 2972583416 ],
+    },
 
     // Crucible // Lifetime // Glory Ranks // Season 9: Glory
     // https://www.light.gg/db/legend/triumphs/859223080/season-9-glory/
-    'season_9_glory': 859223080,
+    'season_9_glory':
+    {
+        triumph_for_title: 859223080,
+        triumphs_for_data: [ 859223080 ],
+    },
 
     // Seasonal // Activities // Season 10 // Season 10: Power Bonus
     // https://www.light.gg/db/legend/triumphs/230421321/season-10-power-bonus/
-    'power_bonus': 230421321,
+    'power_bonus':
+    {
+        triumph_for_title: 230421321,
+        triumphs_for_data: [ 230421321 ],
+    },
 
     // Crucible // Lifetime // Glory Ranks // Season 10: Glory
     // https://www.light.gg/db/legend/triumphs/1397652882/season-10-glory/
-    'glory': 1397652882,
+    'glory':
+    {
+        triumph_for_title: 1397652882,
+        triumphs_for_data: [ 1397652882 ],
+    },
 }
 
 // Leaderboard for player score on a specific triumph
@@ -74,23 +171,49 @@ async function individual_triumph(player_roster, parameter)
         throw new Error('Triumph "' + parameter + '" is not in my list');
     }
 
-    var hashIdentifier = known_triumphs[parameter];
+    var known_triumph = known_triumphs[parameter];
 
     var display_properties = await bungie.get_display_properties(
-        hashIdentifier,
+        known_triumph.triumph_for_title,
         bungie.manifest_sections.record);
 
-    var data = await Promise.all(player_roster.players.map(async function (value)
+    // Loop through all players in the roster.
+    var data = await Promise.all(player_roster.players.map(async function (player)
     {
-        var player_name = value.displayName;
+        var player_name = player.displayName;
 
-        var triumph_data = (await bungie.get_triumphs(value)).records[hashIdentifier];
+        var high_score = 0;
 
-        // util.log(triumph_data);
+        // Loop through all triumphs for this set.
+        await Promise.all(known_triumph.triumphs_for_data.map(async function (triumph_id)
+        {
+            var triumph_data = (await bungie.get_triumphs(player)).records[triumph_id];
+        
+            var score = bungie.get_triumph_score(triumph_data);
 
-        var score = bungie.get_triumph_score(triumph_data);
+            high_score = Math.max(score, high_score);
+        }));
 
-        return { name: player_name, score: score };
+        if (known_triumph.per_character_triumphs_for_data)
+        {
+            // Loop through all per-character triumphs for this set.
+            await Promise.all(known_triumph.per_character_triumphs_for_data.map(async function (triumph_id)
+            {
+                var player_triumph_data = (await bungie.get_per_character_triumphs(player));
+
+                // Loop through all characters for this player.
+                var data = await Promise.all(player_triumph_data.map(async function(character_triumph_data)
+                {
+                    var triumph_data = character_triumph_data.triumphs[triumph_id];
+                
+                    var score = bungie.get_triumph_score(triumph_data);
+                
+                    high_score = Math.max(score, high_score);
+                }));
+            }));
+        }
+
+        return { name: player_name, score: high_score };
     }));
 
     var url = null;
@@ -633,6 +756,7 @@ var collectible_sets =
             4116184726, // Komodo-4FR
 
             1135136071, // Point of the Stag
+            3371544734, // Felwinter's Lie
         ]
     },
 
