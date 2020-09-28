@@ -950,9 +950,18 @@ async function generate_mods_collectible_set()
 
 async function generate_exotics_collectible_set()
 {
+    // I want to explicitly exclude ornaments
+
     // Legend // Collections // Exotic
     // https://www.light.gg/db/legend/3790247699/collections/1068557105/exotic/
-    return await generate_collectible_tree_collectible_set(1068557105, 'Total Count of Exotics Unlocked');
+    // Legend // Collections // Exotic // Weapons
+    // https://www.light.gg/db/legend/3790247699/collections/1068557105/exotic/2214408526/weapons/
+    // Legend // Collections // Exotic // Armor
+    // https://www.light.gg/db/legend/3790247699/collections/1068557105/exotic/1789205056/armor/
+    return await generate_collectible_tree_collectible_set(
+        1068557105,
+        'Total Count of Exotics Unlocked',
+        [2214408526, 1789205056]);
 }
 
 async function generate_shaders_collectible_set()
@@ -962,9 +971,22 @@ async function generate_shaders_collectible_set()
     return await generate_collectible_tree_collectible_set(1516796296, 'Total Count of Shaders Unlocked');
 }
 
-async function generate_collectible_tree_collectible_set(root_id, description)
+async function generate_collectible_tree_collectible_set(root_id, description, source_ids)
 {
-    var collectible_ids = await bungie.get_all_child_items(root_id, 'collectibles');
+    var collectible_ids = [];
+
+    // source_ids is an optoinal array of ids to use. Default to root_id.
+    if (!source_ids)
+    {
+        source_ids = [ root_id ];
+    }
+
+    var data = await Promise.all(source_ids.map(async function (source_id)
+    {
+        var ids = await bungie.get_all_child_items(source_id, 'collectibles');
+
+        collectible_ids = collectible_ids.concat(ids);
+    }));
 
     return {
         description: description,
