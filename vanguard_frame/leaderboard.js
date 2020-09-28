@@ -148,7 +148,7 @@ var known_triumphs =
 
     // Seasonal // Activities // Season 10 // Season 10: Power Bonus
     // https://www.light.gg/db/legend/triumphs/230421321/season-10-power-bonus/
-    'power_bonus':
+    'season_10_power_bonus':
     {
         triumph_for_title: 230421321,
         triumphs_for_data: [ 230421321 ],
@@ -156,10 +156,26 @@ var known_triumphs =
 
     // Crucible // Lifetime // Glory Ranks // Season 10: Glory
     // https://www.light.gg/db/legend/triumphs/1397652882/season-10-glory/
-    'glory':
+    'season_10_glory':
     {
         triumph_for_title: 1397652882,
         triumphs_for_data: [ 1397652882 ],
+    },
+
+    // Seasonal // Activities // Season 11 // Season of Arrivals: Power Bonus
+    // https://www.light.gg/db/legend/triumphs/2801882959/season-of-arrivals-power-bonus/
+    'power_bonus':
+    {
+        triumph_for_title: 2801882959,
+        triumphs_for_data: [ 2801882959 ],
+    },
+
+    // Crucible // Lifetime // Glory Ranks // Season of Arrivals: Glory
+    // https://www.light.gg/db/legend/triumphs/3056033539/season-of-arrivals-glory/
+    'glory':
+    {
+        triumph_for_title: 3056033539,
+        triumphs_for_data: [ 3056033539 ],
     },
 }
 
