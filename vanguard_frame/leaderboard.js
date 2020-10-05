@@ -177,6 +177,14 @@ var known_triumphs =
         triumph_for_title: 3056033539,
         triumphs_for_data: [ 3056033539 ],
     },
+
+    // Destinations // Major // Mars // Sleeping Beauty
+    // https://www.light.gg/db/legend/triumphs/1178901007/sleeping-beauty/
+    'sleeper_nodes':
+    {
+        triumph_for_title: 1178901007,
+        triumphs_for_data: [ 1178901007 ],
+    },
 }
 
 // Leaderboard for player score on a specific triumph
