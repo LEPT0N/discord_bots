@@ -962,7 +962,16 @@ async function generate_weapons_collectible_set()
 {
     // Legend // Collections // Weapons
     // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/
-    return await generate_collectible_tree_collectible_set(1528930164, 'Total Count of Weapons Unlocked');
+    // Legend // Collections // Weapons // Primary
+    // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/1731162900/primary/
+    // Legend // Collections // Weapons // Special
+    // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/638914517/special/
+    // Legend // Collections // Weapons // Heavy
+    // https://www.light.gg/db/legend/3790247699/collections/1528930164/weapons/3686962409/heavy/
+    return await generate_collectible_tree_collectible_set(
+        1528930164,
+        'Total Count of Weapons Unlocked',
+        [1731162900, 638914517, 3686962409]);
 }
 
 async function generate_mods_collectible_set()
