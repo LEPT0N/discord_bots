@@ -1155,36 +1155,53 @@ async function triumphs(player_roster, parameter)
 
 async function generate_seals_triumph_set()
 {
-    // Legend // Seals
-    // https://www.light.gg/db/legend/1652422747/seals/
-    var seal_presetation_node_id = 1652422747;
+    // found these by looking at the seals in light.gg and looking ath 'parentNodeHashes':
+    // https://www.light.gg/db/legend/616318467/seals/1486062207/last-wish/
+    // https://www.light.gg/db/legend/1881970629/legacy-seals/1321008461/almighty/
+
+    var seal_presentation_node_ids =
+    [
+        // seals
+        616318467,
+
+        // legacy seals
+        1881970629,
+    ];
 
     var manifest = (await bungie.get_manifest());
 
-    var seal_presentation_node = manifest.DestinyPresentationNodeDefinition[seal_presetation_node_id];
-
-    var seals = seal_presentation_node.children.presentationNodes.map(child =>
+    var seals = seal_presentation_node_ids.map(function (seal_presentation_node_id)
     {
-        var child_id = child.presentationNodeHash;
+        var seal_presentation_node = manifest.DestinyPresentationNodeDefinition[seal_presentation_node_id];
 
-        var child_presentation_node = manifest.DestinyPresentationNodeDefinition[child_id];
+        var seals = seal_presentation_node.children.presentationNodes.map(child =>
+        {
+            var child_id = child.presentationNodeHash;
 
-        var completion_record_id = child_presentation_node.completionRecordHash;
+            var child_presentation_node = manifest.DestinyPresentationNodeDefinition[child_id];
 
-        var completion_record_presentation_node = manifest.DestinyRecordDefinition[completion_record_id];
+            var completion_record_id = child_presentation_node.completionRecordHash;
 
-        var seal_name = completion_record_presentation_node.titleInfo.titlesByGender.Male;
+            var completion_record_presentation_node = manifest.DestinyRecordDefinition[completion_record_id];
 
-        return {
-            name: seal_name,
-            id: completion_record_id,
-        };
+            var seal_name = completion_record_presentation_node.titleInfo.titlesByGender.Male;
+
+            return {
+                name: seal_name,
+                id: completion_record_id,
+            };
+        });
+
+        return seals;
     });
+
+    // We have an array of arrays of data, so flatten it into one array.
+    seals = seals.flat();
 
     return {
         description: 'Total Count of Seals Unlocked',
         show_details: true,
-        title_presentation_node: seal_presetation_node_id,
+        title_presentation_node: seal_presentation_node_ids[0],
         triumphs: seals,
     };
 }
