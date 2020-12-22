@@ -41,6 +41,8 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors', 'class'] });
 
         // await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
+
+        test_find_emoji("hi friend <:asdf:12345> is cool 123");
     }
     catch (error)
     {
@@ -116,6 +118,16 @@ async function test_leaderboard(input)
     var leaderboard_parameter_2 = util.try_get_element(input.arguments, 2);
 
     await leaderboard.get(leaderboard_name, leaderboard_parameter_1, leaderboard_parameter_2);
+}
+
+async function test_find_emoji(input)
+{
+    var emojis = util.find_emojis(input);
+
+    emojis.forEach(function(emoji)
+    {
+        util.log('emoji found: "' + emoji + '"');
+    });
 }
 
 async function test_raids(input)

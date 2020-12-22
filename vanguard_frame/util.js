@@ -288,4 +288,51 @@ public.add_commas_to_number = function (number)
     return result;
 }
 
+public.find_emojis = function (input)
+{
+    var results = [];
+
+    // Find built-in emojis
+    for (var i = 0; i < input.length; i++)
+    {
+        if (input.charCodeAt(i) >= 0x1000)
+        {
+            // Built-in emojis are a group of unicode characters
+
+            var emoji_characters = [];
+
+            while (input.charCodeAt(i) >= 0x1000)
+            {
+                emoji_characters.push(input[i]);
+                i++;
+            }
+            i--;
+
+            var emoji = emoji_characters.join('');
+
+            results.push(emoji);
+        }
+        else
+        {
+            // custom emojis look like this: <:GsSolar:775752806572228609>
+            //
+            // https://support.discord.com/hc/en-us/articles/360036479811-Custom-Emojis
+            //  "Emoji names must be at least 2 characters long and can only contain alphanumeric characters and underscores"
+            //
+            // When adding a reaction to a post, you need to return this: GsSolar:775752806572228609
+            // See this in the stringifyEmoji function in \node_modules\discord.io\lib\index.js
+            // So here we capture that in matches[1].
+
+            var matches =  input.substring(i).match('^<:(([A-Z]|[a-z]|[0-9]|_){2,}:[0-9]+)>');
+
+            if (matches)
+            {
+                results.push(matches[1]);
+            }
+        }
+    }
+
+    return results;
+}
+
 module.exports = public;

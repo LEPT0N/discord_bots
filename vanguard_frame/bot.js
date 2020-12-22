@@ -382,32 +382,20 @@ async function search_manifest(input)
 
 async function mirror_reactions(input)
 {
-    for (var i = 0; i < input.raw_message.length; i++)
+    var emojis = util.find_emojis(input.raw_message);
+    
+    for (var index = 0; index < emojis.length; index++)
     {
-        if (input.raw_message.charCodeAt(i) >= 0x1000)
+        util.log('emoji found: "' + emojis[index] + '"');
+
+        bot.addReaction(
         {
-            var emoji_characters = [];
+            channelID: input.channel_id,
+            messageID: input.message_id,
+            reaction: emojis[index]
+        });
 
-            while (input.raw_message.charCodeAt(i) >= 0x1000)
-            {
-                emoji_characters.push(input.raw_message[i]);
-                i++;
-            }
-            i--;
-
-            var emoji = emoji_characters.join('');
-
-            util.log('emoji found: "' + emoji + '"');
-
-            bot.addReaction(
-                {
-                    channelID: input.channel_id,
-                    messageID: input.message_id,
-                    reaction: emoji
-                });
-
-            await util.sleep(1000);
-        }
+        await util.sleep(1000);
     }
 }
 
