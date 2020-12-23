@@ -39,10 +39,11 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
         // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors'] });
         // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors', 'class'] });
+        // await test_leaderboard({ arguments: ['true_facts', 'eyes_of_tomorrow'] });
 
         // await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
 
-        test_find_emoji("hi friend <:asdf:12345> is cool 123");
+        // test_find_emoji("hi friend <:asdf:12345> is cool 123");
     }
     catch (error)
     {

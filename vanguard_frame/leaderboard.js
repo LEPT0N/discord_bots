@@ -1246,29 +1246,60 @@ async function generate_triumph_tree_triumph_set(root_id, description)
 
 // Leaderboard for player score on whether the player is the best titan
 // parameter: null
-async function lol(player_roster, parameter)
+async function true_facts(player_roster, parameter)
 {
-    var data = await Promise.all(player_roster.players.map(async function (value)
+    if (parameter == 'best_titan')
     {
-        var player_name = value.displayName;
-
-        var score = 0;
-
-        if (player_name == 'CoachMcGuirk S8')
+        var data = await Promise.all(player_roster.players.map(async function (value)
         {
-            score = 1;
-        }
+            var player_name = value.displayName;
 
-        return { name: player_name, score: score };
-    }));
+            var score = 0;
 
-    return {
-        title: 'Best Titan',
-        description: null,
-        data: data,
-        url: null,
-        format_score: null,
-    };
+            if (player_name == 'CoachMcGuirk S8')
+            {
+                score = 1;
+            }
+
+            return { name: player_name, score: score };
+        }));
+
+        return {
+            title: 'Best Titan',
+            description: null,
+            data: data,
+            url: null,
+            format_score: null,
+        };
+    }
+    else if (parameter == 'eyes_of_tomorrow')
+    {
+        var data = await Promise.all(player_roster.players.map(async function (value)
+        {
+            var player_name = value.displayName;
+
+            var score = 0;
+
+            if (player_name == 'AmeliaGimli')
+            {
+                score = 5;
+            }
+
+            return { name: player_name, score: score };
+        }));
+
+        return {
+            title: 'Number of Eyes of Tomorrow owned',
+            description: null,
+            data: data,
+            url: null,
+            format_score: null,
+        };
+    }
+    else
+    {
+        throw new Error('true fact "' + name + '" does not exist');
+    }
 }
 
 var activity_history_sets =
@@ -1450,7 +1481,7 @@ async function weapon_kills(player_roster, parameter)
 
 var leaderboards =
 {
-    best_titan: lol,
+    true_facts: true_facts,
     triumph_score: triumph_score,
     individual_triumph: individual_triumph,
     per_character_triumph: per_character_triumph,
