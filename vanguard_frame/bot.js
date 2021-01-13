@@ -121,7 +121,8 @@ async function print_all_leaderboards(input)
     await util.sleep(2000);
 
     var all_leaderboards = [
-        { arguments: ['triumph_score'] },
+        { arguments: ['triumph_score', 'total'] },
+        { arguments: ['triumph_score', 'active'] },
         { arguments: ['individual_triumph', 'crucible_kills'] },
         { arguments: ['individual_triumph', 'clan_xp'] },
         { arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] },

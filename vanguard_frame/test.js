@@ -14,7 +14,9 @@ public.run = async function ()
     try
     {
         // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
-        // await test_leaderboard({ arguments: ['triumph_score'] });
+        // await test_leaderboard({ arguments: ['triumph_score', 'active'] });
+        // await test_leaderboard({ arguments: ['triumph_score', 'total'] });
+        // await test_leaderboard({ arguments: ['triumph_score', 'legacy'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'clan_xp'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'glory'] });

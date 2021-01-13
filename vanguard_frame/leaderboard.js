@@ -5,21 +5,52 @@ var roster = require('./roster.js');
 
 var public = {};
 
+var triumph_score_types =
+{
+    'active':
+    {
+        node: 'activeScore',
+        title: 'Active Triumph Score',
+        description: null,
+    },
+
+    'total':
+    {
+        node: 'lifetimeScore',
+        title: 'Total Triumph Score',
+        description: null,
+    },
+
+    'legacy':
+    {
+        node: 'legacyScore',
+        title: 'Legacy Triumph Score',
+        description: null,
+    },
+};
+
 // Leaderboard for player triumph scores
-// parameter: null
+// parameter: any of the keys in triumph_score_types above
 async function triumph_score(player_roster, parameter)
 {
+    if (!(parameter in triumph_score_types))
+    {
+        throw new Error('Triumph score type "' + parameter_1 + '" is not in my list');
+    }
+
+    var triumph_score_type = triumph_score_types[parameter];
+
     var data = await Promise.all(player_roster.players.map(async function (value)
     {
         var player_name = value.displayName;
         var triumphs = await bungie.get_triumphs(value);
 
-        return { name: player_name, score: triumphs.score };
+        return { name: player_name, score: triumphs[triumph_score_type.node] };
     }));
 
     return {
-        title: 'Triumph Score',
-        description: null,
+        title: triumph_score_type.title,
+        description: triumph_score_type.description,
         data: data,
         url: null,
         format_score: util.add_commas_to_number,
