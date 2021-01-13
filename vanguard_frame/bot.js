@@ -399,6 +399,15 @@ async function mirror_reactions(input)
     }
 }
 
+async function admin_tools(input)
+{
+    bot.sendMessage(
+    {
+        to: input.channel_id,
+        message: 'Inbox deleted.',
+    });
+}
+
 async function process_message(input)
 {
     util.log('start command');
@@ -422,6 +431,8 @@ async function process_message(input)
             search_manifest: search_manifest,
 
             mirror_reactions: mirror_reactions,
+
+            admin_tools: admin_tools,
         };
 
         input = util.parse_arguments(input);
