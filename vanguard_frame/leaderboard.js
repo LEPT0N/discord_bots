@@ -59,23 +59,23 @@ async function triumph_score(player_roster, parameter)
 
 var known_triumphs =
 {
-    // Crucible // Lifetime // Combat Record // Fierce Competitor
-    // https://www.light.gg/db/legend/triumphs/3015941901/fierce-competitor/
+    // Lifetime // Competitive // Crucible // Fierce Competitor
+    // https://www.light.gg/db/legend/triumphs/1897223897/fierce-competitor/
     'crucible_kills':
     {
-        triumph_for_title: 3015941901,
-        triumphs_for_data: [ 3015941901 ],
+        triumph_for_title: 1897223897,
+        triumphs_for_data: [ 1897223897 ],
     },
 
-    // Account // Clan // Clan // Major Contributor
-    // https://www.light.gg/db/legend/triumphs/1738299320/major-contributor/
+    // Lifetime // Social // Clans // Major Contributor
+    // https://www.light.gg/db/legend/triumphs/2505589392/major-contributor/
     'clan_xp':
     {
-        triumph_for_title: 1738299320,
-        triumphs_for_data: [ 1738299320 ],
+        triumph_for_title: 2505589392,
+        triumphs_for_data: [ 2505589392 ],
     },
 
-    'nightfall_ordeal_high_score': 
+    /*'nightfall_ordeal_high_score': deprecated. Keeping it around to show how you would define a triumph set like this
     {
         triumph_for_title: 4020709858,
         show_details: true,
@@ -143,78 +143,30 @@ var known_triumphs =
             // https://www.light.gg/db/legend/triumphs/3951275509/the-corrupted/
             3951275509,
         ],
-    },
+    },*/
 
-    // Seasonal // Activities // Season 8 // Season 8: Power Bonus
-    // https://www.light.gg/db/legend/triumphs/1686327621/season-8-power-bonus/
-    'season_8_power_bonus':
-    {
-        triumph_for_title: 1686327621,
-        triumphs_for_data: [ 1686327621 ],
-    },
-
-    // Crucible // Lifetime // Glory Ranks // Season 8: Glory
-    // https://www.light.gg/db/legend/triumphs/3155364169/season-8-glory/
-    'season_8_glory':
-    {
-        triumph_for_title: 3155364169,
-        triumphs_for_data: [ 3155364169 ],
-    },
-
-    // Seasonal // Activities // Season 9 // Season 9: Power Bonus
-    // https://www.light.gg/db/legend/triumphs/2972583416/season-9-power-bonus/
-    'season_9_power_bonus':
-    {
-        triumph_for_title: 2972583416,
-        triumphs_for_data: [ 2972583416 ],
-    },
-
-    // Crucible // Lifetime // Glory Ranks // Season 9: Glory
-    // https://www.light.gg/db/legend/triumphs/859223080/season-9-glory/
-    'season_9_glory':
-    {
-        triumph_for_title: 859223080,
-        triumphs_for_data: [ 859223080 ],
-    },
-
-    // Seasonal // Activities // Season 10 // Season 10: Power Bonus
-    // https://www.light.gg/db/legend/triumphs/230421321/season-10-power-bonus/
-    'season_10_power_bonus':
-    {
-        triumph_for_title: 230421321,
-        triumphs_for_data: [ 230421321 ],
-    },
-
-    // Crucible // Lifetime // Glory Ranks // Season 10: Glory
-    // https://www.light.gg/db/legend/triumphs/1397652882/season-10-glory/
-    'season_10_glory':
-    {
-        triumph_for_title: 1397652882,
-        triumphs_for_data: [ 1397652882 ],
-    },
-
-    // Seasonal // Activities // Season 11 // Season of Arrivals: Power Bonus
-    // https://www.light.gg/db/legend/triumphs/2801882959/season-of-arrivals-power-bonus/
+    // Season of the Hunt // General // General // Season of the Hunt: Power Bonus
+    // https://www.light.gg/db/legend/triumphs/997318734/season-of-the-hunt-power-bonus/
     'power_bonus':
     {
-        triumph_for_title: 2801882959,
-        triumphs_for_data: [ 2801882959 ],
+        triumph_for_title: 997318734,
+        triumphs_for_data: [ 997318734 ],
     },
 
-    // Crucible // Lifetime // Glory Ranks // Season of Arrivals: Glory
-    // https://www.light.gg/db/legend/triumphs/3056033539/season-of-arrivals-glory/
+    // Season of the Hunt // General // Crucible // Season 12: Glory
+    // https://www.light.gg/db/legend/triumphs/3369065397/season-12-glory/
     'glory':
     {
-        triumph_for_title: 3056033539,
-        triumphs_for_data: [ 3056033539 ],
+        triumph_for_title: 3369065397,
+        triumphs_for_data: [ 3369065397 ],
     },
 
-    // Destinations // Major // Mars // Sleeping Beauty
-    // https://www.light.gg/db/legend/triumphs/1178901007/sleeping-beauty/
-    'sleeper_nodes':
+    // Season of the Hunt // General // General // Season of the Hunt: Season Pass Rank
+    // https://www.light.gg/db/legend/triumphs/2805259041/season-of-the-hunt-season-pass-rank/
+    'season_pass_rank':
     {
-        triumph_for_title: 1178901007,
-        triumphs_for_data: [ 1178901007 ],
+        triumph_for_title: 2805259041,
+        triumphs_for_data: [ 2805259041 ],
     },
 }
 
@@ -323,6 +275,7 @@ async function individual_triumph(player_roster, parameter)
     };
 }
 
+// These don't exist any more. TODO: find more interesting per-character triumphs so this can live on.
 var known_per_character_triumphs =
 {
     // Events // Events // The Guardian Games
@@ -627,7 +580,7 @@ var stat_collections =
     'favorite_weapon_type':
     {
         title: 'Favorite Weapon Type',
-        description: null,
+        description: 'Weapon type',
         stats:
         {
             weaponKillsAutoRifle: 'Auto Rifles',
@@ -657,7 +610,7 @@ var stat_collections =
     'favorite_non_weapon_type':
     {
         title: 'Favorite Non-Weapon Type',
-        description: null,
+        description: 'Non-weapon type',
         stats:
         {
             weaponKillsRelic: 'Relics',
@@ -671,7 +624,7 @@ var stat_collections =
     'favorite_primary_weapon_type':
     {
         title: 'Favorite Primary Weapon Type',
-        description: null,
+        description: 'Primary weapon type',
         stats:
         {
             weaponKillsAutoRifle: 'Auto Rifles',
@@ -687,7 +640,7 @@ var stat_collections =
     'favorite_special_weapon_type':
     {
         title: 'Favorite Special Weapon Type',
-        description: null,
+        description: 'Special weapon type',
         stats:
         {
             weaponKillsFusionRifle: 'Fusion Rifles',
@@ -701,7 +654,7 @@ var stat_collections =
     'favorite_heavy_weapon_type':
     {
         title: 'Favorite Heavy Weapon Type',
-        description: null,
+        description: 'Heavy weapon type',
         stats:
         {
             weaponKillsBeamRifle: 'Linear Fusion Rifles',
@@ -784,14 +737,20 @@ async function highest_stat(player_roster, parameter_1, parameter_2)
 
     var title = stat_collection.title;
 
+    var description_detail = '';
+
     if (parameter_2 && parameter_2 != 'all')
     {
         title = title + " (" + parameter_2 + ")";
+
+        description_detail = ' (in ' + parameter_2 + ')';
     }
+
+    var description = stat_collection.description + ' with the most kills' + description_detail + ' for that player'
 
     return {
         title: title,
-        description: stat_collection.description,
+        description: description,
         data: data,
         url: null,
         format_score: util.add_commas_to_number,
@@ -1075,6 +1034,7 @@ var triumph_sets =
     },
 
     // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
+    /* Unfortunately this can no longer be tracked via triumphs.
     'raids_completed': {
         description: 'Count of Unique Raids Completed',
         show_details: true,
@@ -1088,7 +1048,7 @@ var triumph_sets =
             { id: 1558682421, name: 'Crown of Sorrow' },
             { id: 1120290476, name: 'Garden of Salvation' },
         ]
-    }
+    }*/
 }
 
 // Leaderboard for player score on the number of triumphs unlocked in a given triumph set
@@ -1239,16 +1199,18 @@ async function generate_seals_triumph_set()
 
 async function generate_exotic_catalysts_triumph_set()
 {
-    // Legend // Triumphs // Account // Exotic Catalysts
-    // https://www.light.gg/db/legend/1024788583/triumphs/4230728762/account/1111248994/exotic-catalysts/
-    return await generate_triumph_tree_triumph_set(1111248994, 'Total Count of Exotic Catalysts Unlocked');
+    // Legend // Triumphs // Exotic Catalysts // Exotic Catalysts // Exotic Catalysts
+    // https://www.light.gg/db/legend/1163735237/triumphs/511607103/exotic-catalysts/2744330515/exotic-catalysts/1984921914/exotic-catalysts/
+    return await generate_triumph_tree_triumph_set(1984921914, 'Total Count of Exotic Catalysts Unlocked');
 }
 
 async function generate_lore_triumph_set()
 {
-    // Legend // Triumphs // Lore
-    // https://www.light.gg/db/legend/1024788583/triumphs/564676571/lore/
-    return await generate_triumph_tree_triumph_set(564676571, 'Total Count of Lore Triumphs Unlocked');
+    // Legend // Triumphs // Lore // Lore
+    // https://www.light.gg/db/legend/1163735237/triumphs/1993337477/lore/4077680549/lore/
+    return await generate_triumph_tree_triumph_set(4077680549, 'Total Count of Lore Triumphs Unlocked');
+
+    // TODO: the numbers here seem low. I think this is just counting the books, now. to get the pages I also need to enumerate 'records/recordHash'
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description)

@@ -14,34 +14,71 @@ public.run = async function ()
     try
     {
         // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
+
         // await test_leaderboard({ arguments: ['triumph_score', 'active'] });
         // await test_leaderboard({ arguments: ['triumph_score', 'total'] });
         // await test_leaderboard({ arguments: ['triumph_score', 'legacy'] });
+
+        // await test_leaderboard({ arguments: ['individual_triumph', 'crucible_kills'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'clan_xp'] });
-        // await test_leaderboard({ arguments: ['individual_triumph', 'nightfall_ordeal_high_score'] });
+        // await test_leaderboard({ arguments: ['individual_triumph', 'power_bonus'] });
+        // await test_leaderboard({ arguments: ['individual_triumph', 'season_pass_rank'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'glory'] });
-        // await test_leaderboard({ arguments: ['individual_triumph', 'sleeper_nodes'] });
-        // await test_leaderboard({ arguments: ['triumphs', 'exotic_catalysts'] });
-        // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
+        
+        // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors'] });
+        // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors', 'class'] });
+        
+        // await test_leaderboard({ arguments: ['individual_stat', 'light_level'] });
+        // await test_leaderboard({ arguments: ['individual_stat', 'deaths'] });
+        // await test_leaderboard({ arguments: ['individual_stat', 'suicides'] });
+        // await test_leaderboard({ arguments: ['individual_stat', 'killing_spree'] });
+        // await test_leaderboard({ arguments: ['individual_stat', 'kill_distance'] });
+        // await test_leaderboard({ arguments: ['individual_stat', 'kills'] });
+        // await test_leaderboard({ arguments: ['individual_stat', 'orbs_generated'] });
+        
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pve'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_non_weapon_type'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_non_weapon_type', 'pvp'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_non_weapon_type', 'pve'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_primary_weapon_type'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_primary_weapon_type', 'pvp'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_primary_weapon_type', 'pve'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_special_weapon_type'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_special_weapon_type', 'pvp'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_special_weapon_type', 'pve'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_heavy_weapon_type'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_heavy_weapon_type', 'pvp'] });
+        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_heavy_weapon_type', 'pve'] });
+        
         // await test_leaderboard({ arguments: ['collectibles', 'weapons'] });
         // await test_leaderboard({ arguments: ['collectibles', 'mods'] });
         // await test_leaderboard({ arguments: ['collectibles', 'exotics'] });
         // await test_leaderboard({ arguments: ['collectibles', 'shaders'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'pinnacle_weapons'] });
+        // await test_leaderboard({ arguments: ['collectibles', 'oops_all_lunas'] });
+
+        // TODO: double check these numbers. in fact. doublecheck ALL numbers.
+        // await test_leaderboard({ arguments: ['triumphs', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
-        // await test_leaderboard({ arguments: ['triumphs', 'raids_completed'] });
-        // await test_leaderboard({ arguments: ['weapon_kills', 'The Huckleberry'] });
-        // await test_leaderboard({ arguments: ['weapon_kills', 'any'] });
-        // await test_leaderboard({ arguments: ['individual_stat', 'kills'] });
-        // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
+
+        // await test_leaderboard({ arguments: ['true_facts', 'best_titan'] });
+        // await test_leaderboard({ arguments: ['true_facts', 'eyes_of_tomorrow'] });
+        
+        // await test_leaderboard({ arguments: ['activity_history', 'raids_completed'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
         // await test_leaderboard({ arguments: ['activity_history', 'time_raiding'] });
+
+        // await test_leaderboard({ arguments: ['weapon_kills', 'The Huckleberry'] });
+        // await test_leaderboard({ arguments: ['weapon_kills', 'Trinity Ghoul'] });
+        // await test_leaderboard({ arguments: ['weapon_kills', 'Riskrunner'] });
+        // await test_leaderboard({ arguments: ['weapon_kills', 'Anarchy'] });
+        // await test_leaderboard({ arguments: ['weapon_kills', 'any'] });
+
+        // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
-        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
-        // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
-        // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors'] });
-        // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors', 'class'] });
-        // await test_leaderboard({ arguments: ['true_facts', 'eyes_of_tomorrow'] });
 
         // await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
 
