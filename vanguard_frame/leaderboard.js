@@ -1085,7 +1085,7 @@ async function triumphs(player_roster, parameter)
             {
                 var state = player_triumphs.records[triumph_set_item.id].state;
 
-                var unlocked = !(state & bungie.triumph_state.ObjectiveNotCompleted);
+                var unlocked = (state & bungie.triumph_state.RecordRedeemed);
 
                 if (unlocked)
                 {
@@ -1209,8 +1209,6 @@ async function generate_lore_triumph_set()
     // Legend // Triumphs // Lore // Lore
     // https://www.light.gg/db/legend/1163735237/triumphs/1993337477/lore/4077680549/lore/
     return await generate_triumph_tree_triumph_set(4077680549, 'Total Count of Lore Triumphs Unlocked');
-
-    // TODO: the numbers here seem low. I think this is just counting the books, now. to get the pages I also need to enumerate 'records/recordHash'
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description)
