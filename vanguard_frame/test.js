@@ -63,6 +63,7 @@ public.run = async function ()
         // await test_leaderboard({ arguments: ['triumphs', 'exotic_catalysts'] });
         // await test_leaderboard({ arguments: ['triumphs', 'lore'] });
         // await test_leaderboard({ arguments: ['triumphs', 'seals'] });
+        // await test_leaderboard({ arguments: ['triumphs', 'seasonal_challenges'] });
 
         // await test_leaderboard({ arguments: ['true_facts', 'best_titan'] });
         // await test_leaderboard({ arguments: ['true_facts', 'eyes_of_tomorrow'] });
@@ -109,7 +110,7 @@ async function test_find_differing_triumphs(input)
 
     for (var character_index = 0; character_index < all_character_data.length - 1; character_index++)
     {
-        first_character_triumphs = all_character_data[character_index].triumphs;
+        first_character_triumphs = all_character_data[character_index].records;
 
         await Object.keys(first_character_triumphs).map(async function (triumph_id)
         {
@@ -117,7 +118,7 @@ async function test_find_differing_triumphs(input)
 
             for (var other_character_index = character_index + 1; other_character_index < all_character_data.length; other_character_index++)
             {
-                var other_character_triumphs = all_character_data[other_character_index].triumphs;
+                var other_character_triumphs = all_character_data[other_character_index].records;
 
                 var other_character_triumph = other_character_triumphs[triumph_id];
 

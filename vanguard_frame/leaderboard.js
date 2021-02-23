@@ -220,7 +220,7 @@ async function individual_triumph(player_roster, parameter)
                 // Loop through all characters for this player.
                 var data = await Promise.all(player_triumph_data.map(async function(character_triumph_data)
                 {
-                    var triumph_data = character_triumph_data.triumphs[triumph_id];
+                    var triumph_data = character_triumph_data.records[triumph_id];
                 
                     var score = bungie.get_triumph_score(triumph_data);
 
@@ -357,7 +357,7 @@ async function per_character_triumph(player_roster, parameter_1, parameter_2)
             var character = characters[character_all_triumph_data.character_id];
             var group_id = character[grouping.character_property];
 
-            var character_triumph_data = character_all_triumph_data.triumphs[known_triumph.id];
+            var character_triumph_data = character_all_triumph_data.records[known_triumph.id];
 
             var score = bungie.get_triumph_score(character_triumph_data);
 
@@ -1033,6 +1033,10 @@ var triumph_sets =
         dynamic_set_function: generate_seals_triumph_set
     },
 
+    'seasonal_challenges': {
+        dynamic_set_function: generate_seasonal_challenges_triumph_set
+    },
+
     // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
     /* Unfortunately this can no longer be tracked via triumphs.
     'raids_completed': {
@@ -1074,7 +1078,18 @@ async function triumphs(player_roster, parameter)
 
     var data = await Promise.all(player_roster.players.map(async function (player)
     {
-        var player_triumphs = await bungie.get_triumphs(player);
+        var player_triumphs;
+
+        if (triumph_set.use_per_character_data)
+        {
+            // This data only enumerates in the per-character triumphs,
+            // but all characters have the same data, so just use the first one.
+            player_triumphs = (await bungie.get_per_character_triumphs(player))[0];
+        }
+        else
+        {
+            var player_triumphs = await bungie.get_triumphs(player);
+        }
 
         var count = 0;
         var player_result_details = [];
@@ -1211,7 +1226,15 @@ async function generate_lore_triumph_set()
     return await generate_triumph_tree_triumph_set(4077680549, 'Total Count of Lore Triumphs Unlocked');
 }
 
-async function generate_triumph_tree_triumph_set(root_id, description)
+async function generate_seasonal_challenges_triumph_set()
+{
+    // Legend // Seasonal Challenges
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/
+    // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
+    return await generate_triumph_tree_triumph_set(3443694067, 'Total Count of Seasonal Challenges Unlocked', true);
+}
+
+async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
 {
     var manifest = (await bungie.get_manifest());
 
@@ -1222,7 +1245,7 @@ async function generate_triumph_tree_triumph_set(root_id, description)
         var presentation_node = manifest.DestinyRecordDefinition[id];
 
         return {
-            name: presentation_node.name,
+            name: presentation_node.displayProperties.name,
             id: id,
         };
     });
@@ -1232,6 +1255,7 @@ async function generate_triumph_tree_triumph_set(root_id, description)
         show_details: false,
         title_presentation_node: root_id,
         triumphs: triumphs,
+        use_per_character_data: use_per_character_data,
     };
 }
 

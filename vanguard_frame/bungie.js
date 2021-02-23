@@ -266,7 +266,7 @@ async function download_per_character_triumphs(player)
 
         return {
             character_id: character_id,
-            triumphs: character_triumps.records,
+            records: character_triumps.records,
         };
     }));
 
