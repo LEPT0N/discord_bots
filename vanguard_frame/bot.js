@@ -134,6 +134,7 @@ async function print_all_leaderboards(input)
         { arguments: ['triumphs', 'exotic_catalysts'] },
         { arguments: ['triumphs', 'lore'] },
         { arguments: ['triumphs', 'seals'] },
+        { arguments: ['triumphs', 'seasonal_challenges'] },
 
         { arguments: ['individual_stat', 'killing_spree'] },
         { arguments: ['individual_stat', 'kill_distance'] },
