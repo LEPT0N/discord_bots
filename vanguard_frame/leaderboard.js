@@ -1033,6 +1033,10 @@ var triumph_sets =
         dynamic_set_function: generate_seals_triumph_set
     },
 
+    'gilded_seals': {
+        dynamic_set_function: generate_gilded_seals_triumph_set
+    },
+
     'seasonal_challenges': {
         dynamic_set_function: generate_seasonal_challenges_triumph_set
     },
@@ -1160,6 +1164,16 @@ async function triumphs(player_roster, parameter)
 
 async function generate_seals_triumph_set()
 {
+    return generate_seals_triumph_set_worker(false);
+}
+
+async function generate_gilded_seals_triumph_set()
+{
+    return generate_seals_triumph_set_worker(true);
+}
+
+async function generate_seals_triumph_set_worker(get_gilded_seals)
+{
     // found these by looking at the seals in light.gg and looking ath 'parentNodeHashes':
     // https://www.light.gg/db/legend/616318467/seals/1486062207/last-wish/
     // https://www.light.gg/db/legend/1881970629/legacy-seals/1321008461/almighty/
@@ -1181,8 +1195,6 @@ async function generate_seals_triumph_set()
 
         var seals = seal_presentation_node.children.presentationNodes.map(child =>
         {
-            var results = [];
-
             var child_id = child.presentationNodeHash;
 
             var child_presentation_node = manifest.DestinyPresentationNodeDefinition[child_id];
@@ -1193,34 +1205,43 @@ async function generate_seals_triumph_set()
 
             var seal_name = completion_record_presentation_node.titleInfo.titlesByGender.Male;
 
-            results.push(
-                {
-                    name: seal_name,
-                    id: completion_record_id,
-                });
-
             var gilding_record_id = completion_record_presentation_node.titleInfo.gildingTrackingRecordHash;
 
-            if (gilding_record_id)
+            if (get_gilded_seals)
             {
-                results.push(
-                    {
-                        name: seal_name + ' (Gilded)',
-                        id: gilding_record_id,
-                    });
+                return {
+                    name: seal_name,
+                    id: gilding_record_id,
+                };
             }
-
-            return results;
+            else
+            {
+                return {
+                    name: seal_name,
+                    id: completion_record_id,
+                };
+            }
         });
 
         return seals;
     });
 
-    // We have an array of arrays of arrays of data, so flatten it into one array.
-    seals = seals.flat(2);
+    // We have an array of arrays of data, so flatten it into one array.
+    seals = seals.flat();
+
+    var description;
+    if (get_gilded_seals)
+    {
+        description = 'Total Count of Gilded Seals Unlocked';
+    }
+    else
+    {
+        description = 'Total Count of Seals Unlocked';
+    }
+
 
     return {
-        description: 'Total Count of Seals Unlocked',
+        description: description,
         show_details: true,
         title_presentation_node: seal_presentation_node_ids[0],
         triumphs: seals,
