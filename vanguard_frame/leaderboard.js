@@ -1098,9 +1098,9 @@ async function triumphs(player_roster, parameter)
         {
             if (player_triumphs.records[triumph_set_item.id])
             {
-                var state = player_triumphs.records[triumph_set_item.id].state;
+                var objectives = player_triumphs.records[triumph_set_item.id].objectives[0];
 
-                var unlocked = (state & bungie.triumph_state.RecordRedeemed);
+                var unlocked = objectives.complete;
 
                 if (unlocked)
                 {
@@ -1112,7 +1112,6 @@ async function triumphs(player_roster, parameter)
                     player_result_details.push(
                         {
                             name: triumph_set_item.name,
-                            state: state,
                             visible: unlocked
                         });
                 }
@@ -1182,6 +1181,8 @@ async function generate_seals_triumph_set()
 
         var seals = seal_presentation_node.children.presentationNodes.map(child =>
         {
+            var results = [];
+
             var child_id = child.presentationNodeHash;
 
             var child_presentation_node = manifest.DestinyPresentationNodeDefinition[child_id];
@@ -1192,17 +1193,31 @@ async function generate_seals_triumph_set()
 
             var seal_name = completion_record_presentation_node.titleInfo.titlesByGender.Male;
 
-            return {
-                name: seal_name,
-                id: completion_record_id,
-            };
+            results.push(
+                {
+                    name: seal_name,
+                    id: completion_record_id,
+                });
+
+            var gilding_record_id = completion_record_presentation_node.titleInfo.gildingTrackingRecordHash;
+
+            if (gilding_record_id)
+            {
+                results.push(
+                    {
+                        name: seal_name + ' (Gilded)',
+                        id: gilding_record_id,
+                    });
+            }
+
+            return results;
         });
 
         return seals;
     });
 
-    // We have an array of arrays of data, so flatten it into one array.
-    seals = seals.flat();
+    // We have an array of arrays of arrays of data, so flatten it into one array.
+    seals = seals.flat(2);
 
     return {
         description: 'Total Count of Seals Unlocked',
