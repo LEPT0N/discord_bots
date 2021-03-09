@@ -5,7 +5,7 @@ var leaderboard = require('./leaderboard.js');
 
 var public = {};
 
-public.run = async function ()
+public.run = async function (bot)
 {
     return;
 

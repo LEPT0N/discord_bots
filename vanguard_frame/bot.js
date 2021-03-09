@@ -7,18 +7,16 @@ var roster = require('./roster.js');
 var leaderboard = require('./leaderboard.js');
 var test = require('./test.js');
 
+util.log('Arguments:', process.argv);
+
+var commandline_command = process.argv[2];
+var commandline_parameters = process.argv.slice(3);
+
 var bot = new discord.Client(
     {
         token: auth.discord_key,
         autorun: true
     });
-
-bot.on('ready', async function (evt)
-{
-    util.log('Connected', 'Logged in as: ' + bot.username + ' - (' + bot.id + ')');
-
-    await test.run();
-});
 
 async function echo(input)
 {
@@ -417,6 +415,84 @@ async function admin_tools(input)
     });
 }
 
+async function print_message(parameters)
+{
+    var channel_name = parameters[0];
+    var message = parameters[1];
+    var extra = parameters[2];
+
+    if (channel_name == null || message == null)
+    {
+        throw new Error('Too few parameters');
+    }
+    else if (extra != null)
+    {
+        throw new Error('Too many parameters');
+    }
+
+    bot.sendMessage(
+        {
+            to: util.get_channel_id(bot, channel_name),
+            message: message
+        });
+}
+
+async function process_commandline()
+{
+    util.log('start commandline command');
+
+    try
+    {
+        var commandline_commands =
+        {
+            print_message: print_message,
+        };
+
+        if (!(commandline_command in commandline_commands))
+        {
+            throw new Error('Unrecognized commandline command "' + commandline_command + '"');
+        }
+
+        util.log(commandline_commands[commandline_command]);
+
+        await commandline_commands[commandline_command](commandline_parameters);
+    }
+    catch (error)
+    {
+        util.log('Exception:', error);
+
+        var error_details = error.name + " : " + error.message;
+
+        bot.sendMessage(
+            {
+                to: util.get_channel_id(bot, 'test'),
+                message: error_details
+            });
+    }
+
+    util.log('end commandline command');
+}
+
+bot.on('ready', async function (evt)
+{
+    Object.keys(bot.servers).forEach(function (server_id)
+    {
+        util.log('Connected to Server:', bot.servers[server_id].name + ' - (' + server_id + ')');
+    });
+    util.log('Logged in as:', bot.username + ' - (' + bot.id + ')');
+
+    await test.run(bot);
+
+    if (commandline_command != null)
+    {
+        await process_commandline();
+
+        await util.sleep(500);
+
+        process.exit();
+    }
+});
+
 async function process_message(input)
 {
     util.log('start command');
@@ -471,20 +547,23 @@ async function process_message(input)
     util.log('end command');
 }
 
-bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
+if (commandline_command == null)
 {
-    var wake_command = '!frame.'
-
-    if (raw_message.substring(0, wake_command.length) == wake_command)
+    bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
     {
-        var raw_message = raw_message.substring(wake_command.length);
+        var wake_command = '!frame.'
 
-        process_message({
-            user_name: user_name,
-            user_id: user_id,
-            channel_id: channel_id,
-            message_id: data.d.id,
-            raw_message: raw_message,
-        });
-    }
-});
+        if (raw_message.substring(0, wake_command.length) == wake_command)
+        {
+            var raw_message = raw_message.substring(wake_command.length);
+
+            process_message({
+                user_name: user_name,
+                user_id: user_id,
+                channel_id: channel_id,
+                message_id: data.d.id,
+                raw_message: raw_message,
+            });
+        }
+    });
+}

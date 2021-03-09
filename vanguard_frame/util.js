@@ -335,4 +335,29 @@ public.find_emojis = function (input)
     return results;
 }
 
+public.get_channel_id = function (bot, channel_name)
+{
+    var id = null;
+
+    Object.keys(bot.channels).forEach(function (channel_id)
+    {
+        if (bot.channels[channel_id].name == channel_name)
+        {
+            if (id != null)
+            {
+                throw new Error('Two channels found with the same name "' + channel_name + '".');
+            }
+
+            id = channel_id;
+        }
+    });
+    
+    if (id == null)
+    {
+        throw new Error('No channel found with the name "' + channel_name + '".');
+    }
+
+    return id;
+}
+
 module.exports = public;
