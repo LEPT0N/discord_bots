@@ -437,15 +437,22 @@ async function print_message(parameters)
 
     var message = util.read_file(file_name, false, true);
 
+    var reacted_to_message = false;
+
     bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
     {
-        await mirror_reactions({
-            user_name: user_name,
-            user_id: user_id,
-            channel_id: channel_id,
-            message_id: data.d.id,
-            raw_message: raw_message,
-        });
+        if (user_id == bot.id)
+        {
+            await mirror_reactions({
+                user_name: user_name,
+                user_id: user_id,
+                channel_id: channel_id,
+                message_id: data.d.id,
+                raw_message: raw_message,
+            });
+
+            reacted_to_message = true;
+        }
     });
 
     await util.sleep(500);
@@ -456,7 +463,17 @@ async function print_message(parameters)
             message: message
         });
 
-    await util.sleep(500);
+    for (var waits = 0; waits < 7 && !reacted_to_message; waits++)
+    {
+        util.log('waiting to react to the message...');
+
+        await util.sleep(500);
+    }
+
+    if (!reacted_to_message)
+    {
+        throw new Error('Timeout waiting to react to message.');
+    }
 }
 
 async function process_commandline()
