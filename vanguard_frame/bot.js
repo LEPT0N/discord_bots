@@ -402,8 +402,21 @@ async function mirror_reactions(input)
             reaction: emojis[index]
         });
 
-        await util.sleep(1000);
+        await util.sleep(500);
     }
+}
+
+var stored_message_prefix = 'stored_messages/message_';
+var stored_message_suffix = '.txt';
+
+async function store_message(input)
+{
+    var message_name = input.arguments[0];
+    var message_contents = input.arguments[1];
+
+    var file_name = stored_message_prefix + message_name + stored_message_suffix;
+
+    util.write_file(file_name, message_contents, false, true);
 }
 
 async function admin_tools(input)
@@ -418,23 +431,32 @@ async function admin_tools(input)
 async function print_message(parameters)
 {
     var channel_name = parameters[0];
-    var message = parameters[1];
-    var extra = parameters[2];
+    var message_name = parameters[1];
+    
+    var file_name = stored_message_prefix + message_name + stored_message_suffix;
 
-    if (channel_name == null || message == null)
+    var message = util.read_file(file_name, false, true);
+
+    bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
     {
-        throw new Error('Too few parameters');
-    }
-    else if (extra != null)
-    {
-        throw new Error('Too many parameters');
-    }
+        await mirror_reactions({
+            user_name: user_name,
+            user_id: user_id,
+            channel_id: channel_id,
+            message_id: data.d.id,
+            raw_message: raw_message,
+        });
+    });
+
+    await util.sleep(500);
 
     bot.sendMessage(
         {
             to: util.get_channel_id(bot, channel_name),
             message: message
         });
+
+    await util.sleep(500);
 }
 
 async function process_commandline()
@@ -516,6 +538,8 @@ async function process_message(input)
             search_manifest: search_manifest,
 
             mirror_reactions: mirror_reactions,
+
+            store_message: store_message,
 
             admin_tools: admin_tools,
         };

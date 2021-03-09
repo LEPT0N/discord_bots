@@ -15,7 +15,7 @@ public.file_exists = function (file_name)
     return fs.existsSync(file_path);
 }
 
-public.write_file = function (file_name, contents, suppress_contents_log)
+public.write_file = function (file_name, contents, suppress_contents_log, raw_write)
 {
     var file_path = root_folder + '/' + file_name;
 
@@ -30,9 +30,17 @@ public.write_file = function (file_name, contents, suppress_contents_log)
         file_path.substring(0, file_path.lastIndexOf('/')),
         { recursive: true });
 
-    var contents_serialized = JSON.stringify(contents);
+    var file_contents = null;
+    if (raw_write)
+    {
+        file_contents = contents;
+    }
+    else
+    {
+        file_contents = JSON.stringify(contents);
+    }
 
-    fs.writeFileSync(file_path, contents_serialized, (error) =>
+    fs.writeFileSync(file_path, file_contents, (error) =>
     {
         if (error)
         {
@@ -41,7 +49,7 @@ public.write_file = function (file_name, contents, suppress_contents_log)
     });
 }
 
-public.read_file = function (file_name, suppress_contents_log)
+public.read_file = function (file_name, suppress_contents_log, raw_read)
 {
     var file_path = root_folder + '/' + file_name;
 
@@ -49,14 +57,22 @@ public.read_file = function (file_name, suppress_contents_log)
 
     var contents = fs.readFileSync(file_path);
 
-    var contents_deserialized = JSON.parse(contents);
+    var file_contents = null;
+    if (raw_read)
+    {
+        file_contents = contents;
+    }
+    else
+    {
+        file_contents = JSON.parse(contents);
+    }
 
     if (!suppress_contents_log)
     {
-        public.log('contents:', contents_deserialized);
+        public.log('contents:', file_contents);
     }
 
-    return contents_deserialized;
+    return file_contents;
 }
 
 public.try_read_file = function (file_name, suppress_contents_log)
