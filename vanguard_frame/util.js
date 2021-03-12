@@ -132,7 +132,7 @@ public.parse_arguments = function (input)
 {
     public.log('parsing arguments:', input.raw_message);
 
-    var arguments_raw = input.raw_message.split(' ');
+    var arguments_raw = input.raw_message.split(/ |\n|\r|\t/);
 
     if (arguments_raw.length < 1 || arguments_raw[0].length < 1)
     {
@@ -374,6 +374,14 @@ public.get_channel_id = function (bot, channel_name)
     }
 
     return id;
+}
+
+public.is_whitespace = function (character)
+{
+    return character == '\r'
+        || character == '\n'
+        || character == '\t'
+        || character == ' ';
 }
 
 module.exports = public;

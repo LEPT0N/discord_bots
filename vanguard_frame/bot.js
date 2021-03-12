@@ -412,11 +412,31 @@ var stored_message_suffix = '.txt';
 async function store_message(input)
 {
     var message_name = input.arguments[0];
-    var message_contents = input.arguments[1];
+
+    // trim the command, and leading whitespace, from the message contents
+    var message_contents = input.raw_message;
+
+    // Teim off the command
+    var message_contents = message_contents.substring(input.command.length + 1);
+
+    // Teim off the message name
+    var message_contents = message_contents.substring(message_name.length + 1);
+
+    // Trim off leading whitespace
+    while (util.is_whitespace(message_contents[0]))
+    {
+        message_contents = message_contents.substring(1);
+    }
 
     var file_name = stored_message_prefix + message_name + stored_message_suffix;
 
     util.write_file(file_name, message_contents, false, true);
+
+    bot.sendMessage(
+    {
+        to: input.channel_id,
+        message: 'Saved message to ' + file_name,
+    });
 }
 
 async function admin_tools(input)
@@ -437,12 +457,15 @@ async function print_message(parameters)
 
     var message = util.read_file(file_name, false, true);
 
+    var reacting_to_message = false;
     var reacted_to_message = false;
 
     bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
     {
-        if (user_id == bot.id)
+        if (user_id == bot.id && !reacting_to_message)
         {
+            reacting_to_message = true;
+
             await mirror_reactions({
                 user_name: user_name,
                 user_id: user_id,
@@ -450,7 +473,7 @@ async function print_message(parameters)
                 message_id: data.d.id,
                 raw_message: raw_message,
             });
-
+            
             reacted_to_message = true;
         }
     });
@@ -463,17 +486,26 @@ async function print_message(parameters)
             message: message
         });
 
-    for (var waits = 0; waits < 7 && !reacted_to_message; waits++)
+    for (var waits = 0; waits < 7 && !reacting_to_message; waits++)
     {
         util.log('waiting to react to the message...');
 
         await util.sleep(500);
     }
 
-    if (!reacted_to_message)
+    if (!reacting_to_message)
     {
         throw new Error('Timeout waiting to react to message.');
     }
+
+    while (!reacted_to_message)
+    {
+        util.log('waiting to finish reacting to the message...');
+
+        await util.sleep(500);
+    }
+
+    util.log('done printing message');
 }
 
 async function process_commandline()
