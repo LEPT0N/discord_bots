@@ -413,13 +413,13 @@ async function store_message(input)
 {
     var message_name = input.arguments[0];
 
-    // trim the command, and leading whitespace, from the message contents
+    // Trim the command, and leading whitespace, from the message contents
     var message_contents = input.raw_message;
 
-    // Teim off the command
+    // Trim off the command
     var message_contents = message_contents.substring(input.command.length + 1);
 
-    // Teim off the message name
+    // Trim off the message name
     var message_contents = message_contents.substring(message_name.length + 1);
 
     // Trim off leading whitespace
@@ -435,7 +435,7 @@ async function store_message(input)
     bot.sendMessage(
     {
         to: input.channel_id,
-        message: 'Saved message to ' + file_name,
+        message: 'Saved message "' + message_name + '"',
     });
 }
 
@@ -473,7 +473,7 @@ async function print_message(parameters)
                 message_id: data.d.id,
                 raw_message: raw_message,
             });
-            
+
             reacted_to_message = true;
         }
     });
