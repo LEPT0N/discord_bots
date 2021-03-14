@@ -524,7 +524,7 @@ async function process_commandline()
             throw new Error('Unrecognized commandline command "' + commandline_command + '"');
         }
 
-        util.log(commandline_commands[commandline_command]);
+        util.log('Running ' + commandline_command);
 
         await commandline_commands[commandline_command](commandline_parameters);
     }
@@ -600,7 +600,7 @@ async function process_message(input)
             throw new Error('Unrecognized command "' + input.command + '"');
         }
 
-        util.log(commands[input.command]);
+        util.log('Running ' + input.command);
 
         await commands[input.command](input);
     }

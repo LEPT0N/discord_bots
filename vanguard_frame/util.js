@@ -26,9 +26,7 @@ public.write_file = function (file_name, contents, suppress_contents_log, raw_wr
         public.log('contents:', contents);
     }
 
-    fs.mkdirSync(
-        file_path.substring(0, file_path.lastIndexOf('/')),
-        { recursive: true });
+    public.ensure_folder_exists(file_name);
 
     var file_contents = null;
     if (raw_write)
@@ -87,13 +85,25 @@ public.try_read_file = function (file_name, suppress_contents_log)
     }
 }
 
+public.ensure_folder_exists = function (file)
+{
+    if (!public.file_exists(file))
+    {
+        var file_path = root_folder + '/' + file;
+
+        fs.mkdirSync(
+            file_path.substring(0, file_path.lastIndexOf('/')),
+            { recursive: true });
+    }
+}
+
 public.download_file = async function (url, file_name)
 {
     var file_path = root_folder + '/' + file_name;
 
     public.log('downloading file ' + url);
 
-    fs.mkdirSync(root_folder, { recursive: true });
+    public.ensure_folder_exists(file_name);
 
     return new Promise((resolve, reject) =>
     {
@@ -220,6 +230,8 @@ public.sleep = async function (milliseconds)
     return new Promise(x => setTimeout(x, milliseconds));
 }
 
+var log_file = null;
+
 public.log = function (message, data)
 {
     console.log(message);
@@ -228,6 +240,26 @@ public.log = function (message, data)
         console.log(data);
     }
     console.log('');
+
+    if (log_file == null)
+    {
+        log_file = 'logs/' + public.current_time_as_string() + '.txt';
+
+        public.ensure_folder_exists(log_file);
+
+        log_file = root_folder + '/' + log_file;
+    }
+
+    var message_header = '[' + public.current_time_as_string() + '] ';
+
+    fs.appendFileSync(log_file, message_header + message + '\r\n');
+    
+    if (data)
+    {
+        fs.appendFileSync(log_file, '\r\n');
+        fs.appendFileSync(log_file, JSON.stringify(data));
+        fs.appendFileSync(log_file, '\r\n\r\n');
+    }
 }
 
 public.format_seconds = function (seconds)
@@ -382,6 +414,23 @@ public.is_whitespace = function (character)
         || character == '\n'
         || character == '\t'
         || character == ' ';
+}
+
+public.pad_number = function (number, length)
+{
+    return number.toString().padStart(length, '0');
+}
+
+public.current_time_as_string = function ()
+{
+    var now = new Date();
+
+    return public.pad_number(now.getFullYear(), 4) + '_'
+        + public.pad_number(now.getMonth(), 2) + '_'
+        + public.pad_number(now.getDate(), 2) + '_'
+        + public.pad_number(now.getHours(), 2) + '_'
+        + public.pad_number(now.getMinutes(), 2) + '_'
+        + public.pad_number(now.getSeconds(), 2);
 }
 
 module.exports = public;
