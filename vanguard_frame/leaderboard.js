@@ -147,7 +147,7 @@ var known_triumphs =
 
     // Season of the Hunt // General // General // Season of the Hunt: Power Bonus
     // https://www.light.gg/db/legend/triumphs/997318734/season-of-the-hunt-power-bonus/
-    'power_bonus':
+    'power_bonus_season_12':
     {
         triumph_for_title: 997318734,
         triumphs_for_data: [ 997318734 ],
@@ -155,7 +155,7 @@ var known_triumphs =
 
     // Season of the Hunt // General // Crucible // Season 12: Glory
     // https://www.light.gg/db/legend/triumphs/3369065397/season-12-glory/
-    'glory':
+    'glory_season_12':
     {
         triumph_for_title: 3369065397,
         triumphs_for_data: [ 3369065397 ],
@@ -163,10 +163,34 @@ var known_triumphs =
 
     // Season of the Hunt // General // General // Season of the Hunt: Season Pass Rank
     // https://www.light.gg/db/legend/triumphs/2805259041/season-of-the-hunt-season-pass-rank/
-    'season_pass_rank':
+    'season_pass_rank_season_12':
     {
         triumph_for_title: 2805259041,
         triumphs_for_data: [ 2805259041 ],
+    },
+
+    // Season of the Chosen // General // General // Artifact Power
+    // https://www.light.gg/db/legend/triumphs/1113384427/artifact-power/
+    'power_bonus':
+    {
+        triumph_for_title: 1113384427,
+        triumphs_for_data: [ 1113384427 ],
+    },
+
+    // Season of the Chosen // General // Crucible // Glory in Battle
+    // https://www.light.gg/db/legend/triumphs/3898902024/glory-in-battle/
+    'glory':
+    {
+        triumph_for_title: 3898902024,
+        triumphs_for_data: [ 3898902024 ],
+    },
+
+    // Season of the Chosen // General // General // Season Pass
+    // https://www.light.gg/db/legend/triumphs/1661195512/season-pass/
+    'season_pass_rank':
+    {
+        triumph_for_title: 1661195512,
+        triumphs_for_data: [ 1661195512 ],
     },
 }
 
