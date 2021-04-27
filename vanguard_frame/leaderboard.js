@@ -1126,9 +1126,20 @@ async function triumphs(player_roster, parameter)
         {
             if (player_triumphs.records[triumph_set_item.id])
             {
-                var objectives = player_triumphs.records[triumph_set_item.id].objectives[0];
 
-                var unlocked = objectives.complete;
+                var unlocked = false;
+
+                if (player_triumphs.records[triumph_set_item.id].objectives)
+                {
+                    var objectives = player_triumphs.records[triumph_set_item.id].objectives[0];
+
+                    unlocked = objectives.complete;
+                 }
+                else
+                {
+                    var state = player_triumphs.records[triumph_set_item.id].state;
+                    unlocked = state & bungie.triumph_state.RecordRedeemed;
+                }
 
                 if (unlocked)
                 {
