@@ -885,6 +885,13 @@ async function collectibles(player_roster, parameter)
     {
         var player_collectibles = await bungie.get_collectibles(player);
 
+        if (collectible_set.exclude_character_specific_data)
+        {
+            // The first entry in the array is from 'profileCollectibles.data.collectibles'
+            // All others are from 'characterCollectibles.data[character_id].collectibles'
+            player_collectibles = [ player_collectibles[0] ];
+        }
+
         var count = 0;
         var player_result_details = [];
 
@@ -992,7 +999,13 @@ async function generate_mods_collectible_set()
 {
     // Legend // Collections // Mods
     // https://www.light.gg/db/legend/3790247699/collections/3509235358/mods/
-    return await generate_collectible_tree_collectible_set(3509235358, 'Total Count of Mods Unlocked');
+    var result = await generate_collectible_tree_collectible_set(3509235358, 'Total Count of Mods Unlocked');
+
+    // The only character-specific mods are from the artifact. I don't want the amount of overlap between artifact
+    // mods between your characters to affect your leaderboard position.
+    result.exclude_character_specific_data = true;
+
+    return result;
 }
 
 async function generate_exotics_collectible_set()

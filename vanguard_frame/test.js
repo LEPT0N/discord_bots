@@ -84,6 +84,8 @@ public.run = async function (bot)
 
         // await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
 
+        // await compare_user_collectibles({ user_1: ['LEPT0N', 'xboxLive'], user_2: ['Sandman11', 'steam'], root_node_id: 3509235358 }); // mods
+
         // test_find_emoji("hi friend <:asdf:12345> is cool 123");
     }
     catch (error)
@@ -96,6 +98,94 @@ public.run = async function (bot)
     }
 
     process.exit();
+}
+
+// Compare collections of two different accounts
+async function compare_user_collectibles(input)
+{
+    var player_1 = await bungie.search_destiny_player(input.user_1);
+    var player_2 = await bungie.search_destiny_player(input.user_2);
+    
+    var collectibles = await bungie.get_all_child_items(input.root_node_id, 'collectibles');
+
+    var player_1_collectibles = await bungie.get_collectibles(player_1);
+    var player_2_collectibles = await bungie.get_collectibles(player_2);
+
+    var player_1_unlocked_count = 0;
+    var player_2_unlocked_count = 0;
+
+    // The first element of the array are character-agnostic mods. The rest are character-specific mods.
+    // The only character-specific mods are from the artifact, which I don't care about.
+    player_1_collectibles = [ player_1_collectibles[0] ];
+    player_2_collectibles = [ player_2_collectibles[0] ];
+
+    await Promise.all(collectibles.map(async function (collectible_id)
+    {
+        var player_1_unlocked = false;
+        var player_2_unlocked = false;
+
+        player_1_collectibles.forEach(function (character_collectibles)
+        {
+            if (character_collectibles[collectible_id])
+            {
+                var state = character_collectibles[collectible_id].state;
+
+                if (!(state & bungie.collectible_state.NotAcquired))
+                {
+                    player_1_unlocked = true;
+                }
+            }
+        });
+
+        player_2_collectibles.forEach(function (character_collectibles)
+        {
+            if (character_collectibles[collectible_id])
+            {
+                var state = character_collectibles[collectible_id].state;
+
+                if (!(state & bungie.collectible_state.NotAcquired))
+                {
+                    player_2_unlocked = true;
+                }
+            }
+        });
+
+        if (player_1_unlocked)
+        {
+            player_1_unlocked_count++;
+        }
+
+        if (player_2_unlocked)
+        {
+            player_2_unlocked_count++;
+        }
+
+        if (player_1_unlocked != player_2_unlocked)
+        {
+            var player_with;
+            var player_without;
+
+            if (player_1_unlocked)
+            {
+                player_with = player_1;
+                player_without = player_2;
+            }
+            else
+            {
+                player_with = player_2;
+                player_without = player_1;
+            }
+
+            var display_properties = await bungie.get_display_properties(
+                collectible_id,
+                bungie.manifest_sections.collectible);
+
+            util.log(player_with.displayName + ' has "' + display_properties.name + '" (' + collectible_id + ') but ' + player_without.displayName + ' does not');
+        }
+    }));
+
+    util.log(player_1.displayName + ' unlocked ' + player_1_unlocked_count + ' collectibles');
+    util.log(player_2.displayName + ' unlocked ' + player_2_unlocked_count + ' collectibles');
 }
 
 // Find triumphs that differ between characters.
