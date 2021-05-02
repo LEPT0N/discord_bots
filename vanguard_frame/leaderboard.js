@@ -685,7 +685,8 @@ var stat_collections =
             weaponKillsMachineGun: 'Machine Guns',
             weaponKillsRocketLauncher: 'Rocket Launchers',
             weaponKillsSword: 'Swords',
-            weaponKillsGrenadeLauncher: 'Grenade Launchers',
+            // Excluding these now since Salvager's Salvo is so popular it's overshadowing any heavy weapon type.
+            // weaponKillsGrenadeLauncher: 'Grenade Launchers',
         }
     },
 }
