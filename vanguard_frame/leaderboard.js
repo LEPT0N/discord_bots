@@ -1350,6 +1350,26 @@ var known_metrics =
     {
         id: 3329916678,
     },
+
+    'unbroken_gild_count':
+    {
+        id: 1250683514,
+    },
+
+    'dredgen_gild_count':
+    {
+        id: 2365336843,
+    },
+
+    'conqueror_gild_count':
+    {
+        id: 3266682176,
+    },
+
+    'flawless_gild_count':
+    {
+        id: 4112712479,
+    },
 }
 
 // Leaderboard for player score on a player metric (stat tracker)

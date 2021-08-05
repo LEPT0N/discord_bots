@@ -80,6 +80,10 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['weapon_kills', 'any'] });
 
         // await test_leaderboard({ arguments: ['metrics', 'triumph_score'] });
+        // await test_leaderboard({ arguments: ['metrics', 'unbroken_gild_count'] });
+        // await test_leaderboard({ arguments: ['metrics', 'dredgen_gild_count'] });
+        // await test_leaderboard({ arguments: ['metrics', 'conqueror_gild_count'] });
+        // await test_leaderboard({ arguments: ['metrics', 'flawless_gild_count'] });
 
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
