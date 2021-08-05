@@ -86,6 +86,8 @@ public.run = async function (bot)
 
         // await compare_user_collectibles({ user_1: ['LEPT0N', 'xboxLive'], user_2: ['Sandman11', 'steam'], root_node_id: 3509235358 }); // mods
 
+        // await test_metrics({ user: ['LEPT0N', 'xboxLive']}); // mods
+
         // test_find_emoji("hi friend <:asdf:12345> is cool 123");
     }
     catch (error)
@@ -98,6 +100,28 @@ public.run = async function (bot)
     }
 
     process.exit();
+}
+
+async function test_metrics(input)
+{
+    var player = await bungie.search_destiny_player(input.user);
+
+    var player_metrics = (await bungie.get_metrics(player));
+
+    util.log('player_metrics', player_metrics.metrics['3329916678']);
+
+    util.log('player_metrics.metricsRootNodeHash', player_metrics.metricsRootNodeHash);
+
+    var root_display_properties = await bungie.get_display_properties(
+        '3329916678',
+        bungie.manifest_sections.metric);
+
+    util.log('root_display_properties', root_display_properties);
+
+    // 1250683514 = Crucible Seal Gildings
+    // 2365336843 = Gambit Seal Gildings
+    // 3266682176 = Conqueror Seal Gildings
+    // 4112712479 = Flawless Seal Gildings
 }
 
 // Compare collections of two different accounts

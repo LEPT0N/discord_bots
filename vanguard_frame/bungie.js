@@ -322,6 +322,45 @@ public.get_triumph_score = function (triumph_data)
     return score;
 }
 
+async function download_metrics(player)
+{
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Metrics';
+
+    var metrics = (await get_request('download_metrics', url)).metrics.data;
+
+    return metrics;
+}
+
+var cached_metrics = {};
+
+public.get_metrics = async function (player)
+{
+    var today = util.get_date();
+
+    var metrics_file_name = 'player_data_cache/' + player.membershipId + '_metrics.json';
+
+    if (!(player.membershipId in cached_metrics))
+    {
+        cached_metrics[player.membershipId] = util.try_read_file(metrics_file_name, true);
+    }
+
+    if (cached_metrics[player.membershipId] && cached_metrics[player.membershipId].date == today)
+    {
+        return cached_metrics[player.membershipId].data;
+    }
+
+    var downloaded_metrics = await download_metrics(player);
+
+    cached_metrics[player.membershipId] = {
+        date: today,
+        data: downloaded_metrics
+    };
+
+    util.write_file(metrics_file_name, cached_metrics[player.membershipId], true);
+
+    return cached_metrics[player.membershipId].data;
+}
+
 async function download_characters(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Characters';
