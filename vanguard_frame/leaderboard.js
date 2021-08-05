@@ -1344,6 +1344,62 @@ async function generate_triumph_tree_triumph_set(root_id, description, use_per_c
     };
 }
 
+var known_metrics =
+{
+    'triumph_score':
+    {
+        id: 3329916678,
+    },
+}
+
+// Leaderboard for player score on a player metric (stat tracker)
+// parameter: any of the keys in known_metrics above
+async function metrics(player_roster, parameter)
+{
+    if (!(parameter in known_metrics))
+    {
+        throw new Error('Metric "' + parameter + '" is not in my list');
+    }
+
+    var known_metric = known_metrics[parameter];
+
+    var display_properties = await bungie.get_display_properties(
+        known_metric.id,
+        bungie.manifest_sections.metric);
+
+    var data = await Promise.all(player_roster.players.map(async function (player)
+    {
+        var player_metrics = await bungie.get_metrics(player);
+
+        var score = 0;
+
+        if (player_metrics[known_metric.id])
+        {
+            score = player_metrics[known_metric.id].objectiveProgress.progress;
+        }
+
+        return {
+            score: score,
+            name: player.displayName,
+        };
+    }));
+
+    var url = null;
+
+    if (display_properties.hasIcon)
+    {
+        url = bungie.root_url + display_properties.icon;
+    }
+
+    return {
+        title: display_properties.name,
+        description: display_properties.description,
+        data: data,
+        url: url,
+        format_score: util.add_commas_to_number,
+    };
+}
+
 // Leaderboard for player score on whether the player is the best titan
 // parameter: null
 async function true_facts(player_roster, parameter)
@@ -1589,6 +1645,7 @@ var leaderboards =
     highest_stat: highest_stat,
     collectibles: collectibles,
     triumphs: triumphs,
+    metrics: metrics,
     activity_history: activity_history,
     weapon_kills: weapon_kills,
 };

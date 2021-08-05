@@ -326,7 +326,7 @@ async function download_metrics(player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Metrics';
 
-    var metrics = (await get_request('download_metrics', url)).metrics.data;
+    var metrics = (await get_request('download_metrics', url)).metrics.data.metrics;
 
     return metrics;
 }

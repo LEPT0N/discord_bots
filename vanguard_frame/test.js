@@ -79,6 +79,8 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['weapon_kills', 'Anarchy'] });
         // await test_leaderboard({ arguments: ['weapon_kills', 'any'] });
 
+        // await test_leaderboard({ arguments: ['metrics', 'triumph_score'] });
+
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
 
@@ -108,9 +110,7 @@ async function test_metrics(input)
 
     var player_metrics = (await bungie.get_metrics(player));
 
-    util.log('player_metrics', player_metrics.metrics['3329916678']);
-
-    util.log('player_metrics.metricsRootNodeHash', player_metrics.metricsRootNodeHash);
+    util.log('player_metrics', player_metrics['3329916678']);
 
     var root_display_properties = await bungie.get_display_properties(
         '3329916678',
