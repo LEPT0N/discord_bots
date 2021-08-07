@@ -127,7 +127,7 @@ async function print_all_leaderboards(input)
         { arguments: ['individual_triumph', 'clan_xp'] },
         { arguments: ['individual_triumph', 'power_bonus'] },
         { arguments: ['individual_triumph', 'season_pass_rank'] },
-        { arguments: ['individual_triumph', 'glory'] },
+        { arguments: ['metrics', 'glory'] },
 
         { arguments: ['triumphs', 'exotic_catalysts'] },
         { arguments: ['triumphs', 'lore'] },

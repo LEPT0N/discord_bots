@@ -171,7 +171,7 @@ var known_triumphs =
 
     // Season of the Chosen // General // General // Artifact Power
     // https://www.light.gg/db/legend/triumphs/1113384427/artifact-power/
-    'power_bonus':
+    'power_bonus_season_13':
     {
         triumph_for_title: 1113384427,
         triumphs_for_data: [ 1113384427 ],
@@ -179,10 +179,18 @@ var known_triumphs =
 
     // Season of the Chosen // General // Crucible // Glory in Battle
     // https://www.light.gg/db/legend/triumphs/3898902024/glory-in-battle/
-    'glory':
+    'glory_season_13':
     {
         triumph_for_title: 3898902024,
         triumphs_for_data: [ 3898902024 ],
+    },
+
+    // Season of the Splicer // General // General // Paradromic Power
+    // https://www.light.gg/db/legend/triumphs/1046620632/paradromic-power/
+    'power_bonus':
+    {
+        triumph_for_title: 1046620632,
+        triumphs_for_data: [1046620632],
     },
 
     // Season of the Chosen // General // General // Season Pass
@@ -1369,6 +1377,11 @@ var known_metrics =
     'flawless_gild_count':
     {
         id: 4112712479,
+    },
+
+    'glory':
+    {
+        id: 268448617,
     },
 }
 
