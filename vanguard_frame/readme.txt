@@ -34,3 +34,4 @@ https://discordjs.guide/popular-topics/reactions.html#unicode-emojis
 https://javacord.org/wiki/basic-tutorials/emojis-and-reactions/
 https://github.com/vdurmont/emoji-java
 
+https://discord.com/developers/docs/intro
