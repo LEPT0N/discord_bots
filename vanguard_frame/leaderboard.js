@@ -1321,10 +1321,10 @@ async function generate_lore_triumph_set()
 
 async function generate_seasonal_challenges_triumph_set()
 {
-    // Legend // Seasonal Challenges
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/
+    // Legend // Seasonal Challenges // Weekly
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/1709491586/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(3443694067, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(1709491586, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
