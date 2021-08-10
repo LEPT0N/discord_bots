@@ -899,7 +899,7 @@ public.get_display_properties = async function (hashIdentifier, section)
         throw new Error ('section "' + section + '" is not in the manifest');
     }
 
-    if (!hashIdentifier in manifest)
+    if (!(hashIdentifier in manifest))
     {
         throw new Error('Presentation Node "' + hashIdentifier + '" is not in section "' + section + '" in the manifest');
     }

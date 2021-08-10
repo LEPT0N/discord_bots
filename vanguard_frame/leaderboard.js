@@ -1389,12 +1389,21 @@ var known_metrics =
 // parameter: any of the keys in known_metrics above
 async function metrics(player_roster, parameter)
 {
+    var known_metric;
+
     if (!(parameter in known_metrics))
     {
-        throw new Error('Metric "' + parameter + '" is not in my list');
-    }
+        if (isNaN(parameter))
+        {
+            throw new Error('Metric "' + parameter + '" must either be one of the known values, or an id number.');
+        }
 
-    var known_metric = known_metrics[parameter];
+        known_metric = { id: parameter };
+    }
+    else
+    {
+        known_metric = known_metrics[parameter];
+    }
 
     var display_properties = await bungie.get_display_properties(
         known_metric.id,
