@@ -371,7 +371,7 @@ async function search_manifest(input)
 
         util.log(result);
 
-        var result_message = result.key + ' = ' + result.name;
+        var result_message = result.key + ' = ' + result.name + ' [' + result.description + ']';
 
         if (section == 'all')
         {

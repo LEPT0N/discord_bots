@@ -518,13 +518,15 @@ public.search_manifest = async function (section, search_query)
             manifest[key].displayProperties.name)
         {
             var item_name = manifest[key].displayProperties.name;
+            var item_description = manifest[key].displayProperties.description;
 
             if (item_name.includes(search_query))
             {
                 results.push({
                     section: section,
                     key: key,
-                    name: item_name
+                    name: item_name,
+                    description: item_description,
                 });
 
                 util.log(manifest[key]);
