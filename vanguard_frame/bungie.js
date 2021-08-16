@@ -831,7 +831,7 @@ public.unlock_value_ui_style =
     raw_float: 13,
 };
 
-public.get_objective_progress = async function (objective)
+public.get_objective_progress_value = async function (objective)
 {
     var objective_definition = await public.get_manifest_entry(
         objective.objectiveHash,
