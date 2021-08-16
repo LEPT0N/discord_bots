@@ -132,11 +132,8 @@ async function print_all_leaderboards(input)
         { arguments: ['triumphs', 'exotic_catalysts'] },
         { arguments: ['triumphs', 'lore'] },
         { arguments: ['triumphs', 'seals'] },
-        { arguments: ['triumphs', 'gilded_seals'] },
-        { arguments: ['metrics', 'unbroken_gild_count'] },
         { arguments: ['metrics', 'dredgen_gild_count'] },
         { arguments: ['metrics', 'conqueror_gild_count'] },
-        { arguments: ['metrics', 'flawless_gild_count'] },
         { arguments: ['triumphs', 'seasonal_challenges'] },
 
         { arguments: ['individual_stat', 'killing_spree'] },
