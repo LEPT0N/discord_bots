@@ -1417,7 +1417,7 @@ async function metrics(player_roster, parameter)
 
         if (player_metrics[known_metric.id])
         {
-            score = player_metrics[known_metric.id].objectiveProgress.progress;
+            score = await bungie.get_objective_progress_value(player_metrics[known_metric.id].objectiveProgress);
         }
 
         return {

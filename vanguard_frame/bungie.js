@@ -812,6 +812,60 @@ public.get_weapon_history = async function (player)
     return cached_weapon_history[player.membershipId].data;
 }
 
+// Destiny.DestinyUnlockValueUIStyle
+public.unlock_value_ui_style =
+{
+    automatic: 0,
+    fraction: 1,
+    checkbox: 2,
+    percentage: 3,
+    date_time: 4,
+    fraction_float: 5,
+    integer: 6,
+    time_duration: 7,
+    hidden: 8,
+    multiplier: 9,
+    green_pips: 10,
+    red_pips: 11,
+    explicit_percentage: 12,
+    raw_float: 13,
+};
+
+public.get_objective_progress = async function (objective)
+{
+    var objective_definition = await public.get_manifest_entry(
+        objective.objectiveHash,
+        public.manifest_sections.objective);
+
+    var objective_value_style;
+
+    if (objective.complete)
+    {
+        objective_value_style = objective_definition.completedValueStyle;
+    }
+    else
+    {
+        objective_value_style = objective_definition.inProgressValueStyle;
+    }
+
+    var value;
+
+    if (objective_value_style == public.unlock_value_ui_style.integer)
+    {
+        value = objective.progress;
+    }
+    else if (objective_value_style == public.unlock_value_ui_style.raw_float)
+    {
+        value = objective.progress / 100;
+    }
+    else
+    {
+        throw new Error('Update get_objective_progress to handle DestinyUnlockValueUIStyle == ' + objective_value_style);
+    }
+
+    return value;
+}
+
 public.manifest_sections = 
 {
     enemy_race: 'DestinyEnemyRaceDefinition',
@@ -890,25 +944,34 @@ public.manifest_sections =
     energy_type: 'DestinyEnergyTypeDefinition',
 };
 
-public.get_display_properties = async function (hashIdentifier, section)
+public.get_manifest_entry = async function (hash_identifier, section)
 {
     var manifest = (await public.get_manifest())[section];
 
     if (!manifest)
     {
-        throw new Error ('section "' + section + '" is not in the manifest');
+        throw new Error('section "' + section + '" is not in the manifest');
     }
 
-    if (!(hashIdentifier in manifest))
+    if (!(hash_identifier in manifest))
     {
-        throw new Error('Presentation Node "' + hashIdentifier + '" is not in section "' + section + '" in the manifest');
+        throw new Error('Presentation Node "' + hash_identifier + '" is not in section "' + section + '" in the manifest');
     }
 
-    var display_properties = manifest[hashIdentifier].displayProperties;
+    var manifest_entry = manifest[hash_identifier];
 
-    display_properties.id = hashIdentifier;
+    // util.log('get_manifest_entry(' + hash_identifier + ', ' + section + ')', manifest_entry);
 
-    // util.log('get_display_properties(' + section + ')', display_properties);
+    return manifest_entry;
+}
+
+public.get_display_properties = async function (hash_identifier, section)
+{
+    var manifest_entry = await public.get_manifest_entry(hash_identifier, section);
+
+    var display_properties = manifest_entry.displayProperties;
+
+    display_properties.id = hash_identifier;
 
     return display_properties;
 }

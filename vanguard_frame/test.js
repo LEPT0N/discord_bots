@@ -84,7 +84,9 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['metrics', 'dredgen_gild_count'] });
         // await test_leaderboard({ arguments: ['metrics', 'conqueror_gild_count'] });
         // await test_leaderboard({ arguments: ['metrics', 'flawless_gild_count'] });
+        // await test_leaderboard({ arguments: ['metrics', 'glory'] });
         // await test_leaderboard({ arguments: ['metrics', '1963785799'] }); // Infamy Rank Resets
+        // await test_leaderboard({ arguments: ['metrics', '871184140'] }); // KDA
         // await test_leaderboard({ arguments: ['metrics', 'asdf'] }); // NaN
         // await test_leaderboard({ arguments: ['metrics', '1234'] }); // bad id
 
