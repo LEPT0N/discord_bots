@@ -151,6 +151,7 @@ async function print_all_leaderboards(input)
         { arguments: ['weapon_kills', 'any'] },
 
         { arguments: ['highest_stat', 'favorite_weapon_type'] },
+        { arguments: ['highest_stat', 'favorite_primary_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_special_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_heavy_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
