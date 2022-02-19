@@ -187,7 +187,7 @@ var known_triumphs =
 
     // Season of the Splicer // General // General // Paradromic Power
     // https://www.light.gg/db/legend/triumphs/1046620632/paradromic-power/
-    'power_bonus':
+    'power_bonus_14':
     {
         triumph_for_title: 1046620632,
         triumphs_for_data: [1046620632],
@@ -195,7 +195,7 @@ var known_triumphs =
 
     // Season of the Chosen // General // General // Season Pass
     // https://www.light.gg/db/legend/triumphs/1661195512/season-pass/
-    'season_pass_rank':
+    'season_pass_rank_14':
     {
         triumph_for_title: 1661195512,
         triumphs_for_data: [ 1661195512 ],
@@ -1322,9 +1322,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/1709491586/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/102658401/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(1709491586, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(102658401, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
@@ -1359,6 +1359,8 @@ var known_metrics =
         id: 3329916678,
     },
 
+    // !frame.search_manifest metric Gild
+
     'unbroken_gild_count':
     {
         id: 1250683514,
@@ -1374,6 +1376,11 @@ var known_metrics =
         id: 3266682176,
     },
 
+    'deadeye_gild_count':
+    {
+        id: 3103683778,
+    },
+
     'flawless_gild_count':
     {
         id: 4112712479,
@@ -1382,6 +1389,23 @@ var known_metrics =
     'glory':
     {
         id: 268448617,
+    },
+
+    // Season 15
+
+    'season_15_pass_rank':
+    {
+        id: 2262629303,
+    },
+
+    'season_15_champ_kills':
+    {
+        id: 3523358957,
+    },
+
+    'season_15_enemy_kills':
+    {
+        id: 4017051991,
     },
 }
 

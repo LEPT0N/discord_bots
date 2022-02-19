@@ -125,8 +125,6 @@ async function print_all_leaderboards(input)
 
         { arguments: ['individual_triumph', 'crucible_kills'] },
         { arguments: ['individual_triumph', 'clan_xp'] },
-        { arguments: ['individual_triumph', 'power_bonus'] },
-        { arguments: ['individual_triumph', 'season_pass_rank'] },
         { arguments: ['metrics', 'glory'] },
 
         { arguments: ['triumphs', 'exotic_catalysts'] },
@@ -134,6 +132,7 @@ async function print_all_leaderboards(input)
         { arguments: ['triumphs', 'seals'] },
         { arguments: ['metrics', 'dredgen_gild_count'] },
         { arguments: ['metrics', 'conqueror_gild_count'] },
+        { arguments: ['metrics', 'deadeye_gild_count'] },
         { arguments: ['triumphs', 'seasonal_challenges'] },
 
         { arguments: ['individual_stat', 'killing_spree'] },
@@ -156,6 +155,12 @@ async function print_all_leaderboards(input)
         { arguments: ['highest_stat', 'favorite_heavy_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
+
+        // Season 15
+
+        { arguments: ['metrics', 'season_15_pass_rank'] },
+        { arguments: ['metrics', 'season_15_champ_kills'] },
+        { arguments: ['metrics', 'season_15_enemy_kills'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

@@ -89,6 +89,10 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['metrics', '871184140'] }); // KDA
         // await test_leaderboard({ arguments: ['metrics', 'asdf'] }); // NaN
         // await test_leaderboard({ arguments: ['metrics', '1234'] }); // bad id
+        // await test_leaderboard({ arguments: ['metrics', 'glory'] });
+        // await test_leaderboard({ arguments: ['metrics', 'season_15_pass_rank'] });
+        // await test_leaderboard({ arguments: ['metrics', 'season_15_champ_kills'] });
+        // await test_leaderboard({ arguments: ['metrics', 'season_15_enemy_kills'] });
 
         // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
