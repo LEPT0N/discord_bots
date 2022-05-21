@@ -1307,9 +1307,9 @@ async function generate_seals_triumph_set_worker(get_gilded_seals)
 
 async function generate_exotic_catalysts_triumph_set()
 {
-    // Legend // Triumphs // Exotic Catalysts // Exotic Catalysts // Exotic Catalysts
-    // https://www.light.gg/db/legend/1163735237/triumphs/511607103/exotic-catalysts/2744330515/exotic-catalysts/1984921914/exotic-catalysts/
-    return await generate_triumph_tree_triumph_set(1984921914, 'Total Count of Exotic Catalysts Unlocked');
+    // Legend // Triumphs // Exotic Catalysts // Exotic Catalysts
+    // https://www.light.gg/db/legend/1163735237/triumphs/511607103/exotic-catalysts/2744330515/exotic-catalysts/
+    return await generate_triumph_tree_triumph_set(2744330515, 'Total Count of Exotic Catalysts Unlocked');
 }
 
 async function generate_lore_triumph_set()
@@ -1322,9 +1322,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/102658401/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/767359016/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(102658401, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(767359016, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
@@ -1406,6 +1406,32 @@ var known_metrics =
     'season_15_enemy_kills':
     {
         id: 4017051991,
+    },
+
+    // Season 16
+
+    'season_16_pass_rank':
+    {
+        id: 2262629300,
+    },
+
+    'season_16_psi_ops_enemies_defeated':
+    {
+        id: 3095956376,
+    },
+
+    'season_16_psi_ops_champions_defeated':
+    {
+        id: 444039684 ,
+    },
+    'season_16_guardian_games_medallions':
+    {
+        id: 4017597957,
+    },
+
+    'season_16_guardian_games_top_score':
+    {
+        id: 2539150057,
     },
 }
 

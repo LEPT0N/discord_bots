@@ -159,9 +159,11 @@ async function print_all_leaderboards(input)
 
         // Season 15
 
-        { arguments: ['metrics', 'season_15_pass_rank'] },
-        { arguments: ['metrics', 'season_15_champ_kills'] },
-        { arguments: ['metrics', 'season_15_enemy_kills'] },
+        { arguments: ['metrics', 'season_16_pass_rank'] },
+        { arguments: ['metrics', 'season_16_psi_ops_enemies_defeated'] },
+        { arguments: ['metrics', 'season_16_psi_ops_champions_defeated'] },
+        { arguments: ['metrics', 'season_16_guardian_games_medallions'] },
+        { arguments: ['metrics', 'season_16_guardian_games_top_score'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)
