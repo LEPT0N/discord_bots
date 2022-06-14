@@ -13,7 +13,7 @@ public.run = async function (bot)
 
     try
     {
-        // await save_collectibles({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await save_collectibles({ arguments: ['LEPT0N', 2721, 'xboxLive'] });
 
         // await test_leaderboard({ arguments: ['triumph_score', 'active'] });
         // await test_leaderboard({ arguments: ['triumph_score', 'total'] });
@@ -24,10 +24,10 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['individual_triumph', 'power_bonus'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'season_pass_rank'] });
         // await test_leaderboard({ arguments: ['individual_triumph', 'glory'] });
-        
+
         // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors'] });
         // await test_leaderboard({ arguments: ['per_character_triumph', 'show_your_colors', 'class'] });
-        
+
         // await test_leaderboard({ arguments: ['individual_stat', 'light_level'] });
         // await test_leaderboard({ arguments: ['individual_stat', 'deaths'] });
         // await test_leaderboard({ arguments: ['individual_stat', 'suicides'] });
@@ -35,7 +35,7 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['individual_stat', 'kill_distance'] });
         // await test_leaderboard({ arguments: ['individual_stat', 'kills'] });
         // await test_leaderboard({ arguments: ['individual_stat', 'orbs_generated'] });
-        
+
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_weapon_type', 'pve'] });
@@ -51,7 +51,7 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_heavy_weapon_type'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_heavy_weapon_type', 'pvp'] });
         // await test_leaderboard({ arguments: ['highest_stat', 'favorite_heavy_weapon_type', 'pve'] });
-        
+
         // await test_leaderboard({ arguments: ['collectibles', 'weapons'] });
         // await test_leaderboard({ arguments: ['collectibles', 'mods'] });
         // await test_leaderboard({ arguments: ['collectibles', 'exotics'] });
@@ -68,7 +68,7 @@ public.run = async function (bot)
 
         // await test_leaderboard({ arguments: ['true_facts', 'best_titan'] });
         // await test_leaderboard({ arguments: ['true_facts', 'eyes_of_tomorrow'] });
-        
+
         // await test_leaderboard({ arguments: ['activity_history', 'raids_completed'] });
         // await test_leaderboard({ arguments: ['activity_history', 'raids_failed'] });
         // await test_leaderboard({ arguments: ['activity_history', 'time_raiding'] });
@@ -95,14 +95,15 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['metrics', 'season_15_champ_kills'] });
         // await test_leaderboard({ arguments: ['metrics', 'season_15_enemy_kills'] });
 
-        // await test_raids({ arguments: ['LEPT0N', 'xboxLive'] });
-        // await test_weapon_history({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await test_raids({ arguments: ['LEPT0N', 2721, 'xboxLive'] });
+        // await test_weapon_history({ arguments: ['LEPT0N', 2721, 'xboxLive'] });
+        // await test_weapon_history({ arguments: ['Sandman', 1220, 'steam'] });
 
-        // await test_find_differing_triumphs({ arguments: ['LEPT0N', 'xboxLive'] });
+        // await test_find_differing_triumphs({ arguments: ['LEPT0N', 2721, 'xboxLive'] });
 
-        // await compare_user_collectibles({ user_1: ['LEPT0N', 'xboxLive'], user_2: ['Sandman11', 'steam'], root_node_id: 3509235358 }); // mods
+        // await compare_user_collectibles({ user_1: ['LEPT0N', 2721, 'xboxLive'], user_2: ['Sandman', 1220, 'steam'], root_node_id: 3509235358 }); // mods
 
-        // await test_metrics({ user: ['LEPT0N', 'xboxLive']}); // mods
+        // await test_metrics({ user: ['LEPT0N', 2721, 'xboxLive']}); // mods
 
         // test_find_emoji("hi friend <:asdf:12345> is cool 123");
     }
@@ -350,6 +351,8 @@ async function test_raids(input)
     util.log('output', output);
 }
 
+// TODO: promote this exotic weapon list to a real command
+
 async function test_weapon_history(input)
 {
     var manifest = (await bungie.get_manifest()).DestinyInventoryItemDefinition;
@@ -382,7 +385,17 @@ async function test_weapon_history(input)
         }
     });
 
-    util.log('weapon_data', weapon_data);
+    var weapon_totals = [];
+    Object.entries(weapon_data).forEach(([key, value]) =>
+    {
+        weapon_totals.push({ name: key, kills: value });
+    });
+    weapon_totals.sort(function (a, b)
+    {
+        return b.kills - a.kills;
+    });
+
+    util.log('weapon_data', weapon_totals);
 }
 
 module.exports = public;

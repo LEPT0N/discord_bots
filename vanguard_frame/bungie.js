@@ -7,7 +7,7 @@ var public = {};
 
 public.root_url = 'https://www.bungie.net';
 
-async function get_request(name, url, raw)
+async function http_request(name, url, http_method, body, raw)
 {
     url = public.root_url + url;
 
@@ -15,11 +15,12 @@ async function get_request(name, url, raw)
 
     var response = await fetch(url,
         {
-            method: 'get',
+            method: http_method,
             headers:
             {
                 'X-API-KEY': auth.bungie_key
-            }
+            },
+            body: body
         }).then(response => response.json());
 
     if (raw)
@@ -35,6 +36,16 @@ async function get_request(name, url, raw)
     }
 
     return response.Response;
+}
+
+async function get_request(name, url, raw)
+{
+    return http_request(name, url, 'get', null, raw);
+}
+
+async function post_request(name, url, body, raw)
+{
+    return http_request(name, url, 'post', JSON.stringify(body), raw);
 }
 
 async function download_manifest_directory()
@@ -104,12 +115,18 @@ public.get_manifest = async function ()
 public.search_destiny_player = async function (arguments)
 {
     var displayName = arguments[0];
-    var platform = arguments[1];
-    var requested_index = util.try_get_element(arguments, 2);
+    var displayNameCode = arguments[1];
+    var platform = arguments[2];
+    var requested_index = util.try_get_element(arguments,3);
 
-    var url = '/Platform/Destiny2/SearchDestinyPlayer/All/' + displayName + '/';
+    var url = '/Platform/Destiny2/SearchDestinyPlayerByBungieName/All/';
 
-    var players = (await get_request('search_destiny_player', url));
+    var body = {
+        "displayName": displayName,
+        "displayNameCode": displayNameCode
+    };
+
+    var players = (await post_request('search_destiny_player', url, body));
 
     util.log(players);
 
