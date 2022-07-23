@@ -1151,6 +1151,8 @@ async function triumphs(player_roster, parameter)
                 var triumph_name = triumph_set_item.name;
                 var unlocked = false;
 
+                if (player_triumphs.records[triumph_set_item.id].completedCount)
+                {
                     var completed_count = player_triumphs.records[triumph_set_item.id].completedCount;
 
                     unlocked = (completed_count > 0);
