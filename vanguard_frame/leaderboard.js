@@ -1148,31 +1148,43 @@ async function triumphs(player_roster, parameter)
         {
             if (player_triumphs.records[triumph_set_item.id])
             {
-
+                var triumph_name = triumph_set_item.name;
                 var unlocked = false;
 
-                if (player_triumphs.records[triumph_set_item.id].objectives)
+                    var completed_count = player_triumphs.records[triumph_set_item.id].completedCount;
+
+                    unlocked = (completed_count > 0);
+
+                    triumph_name += " " + completed_count;
+                    count += completed_count;
+				}
+                else if (player_triumphs.records[triumph_set_item.id].objectives)
                 {
                     var objectives = player_triumphs.records[triumph_set_item.id].objectives[0];
 
                     unlocked = objectives.complete;
+
+                    if (unlocked)
+                    {
+                        count++;
+                    }
                  }
                 else
                 {
                     var state = player_triumphs.records[triumph_set_item.id].state;
                     unlocked = state & bungie.triumph_state.RecordRedeemed;
-                }
 
-                if (unlocked)
-                {
-                    count++;
+                    if (unlocked)
+                    {
+                        count++;
+                    }
                 }
 
                 if (triumph_set.show_details)
                 {
                     player_result_details.push(
                         {
-                            name: triumph_set_item.name,
+                            name: triumph_name,
                             visible: unlocked
                         });
                 }
@@ -1322,9 +1334,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/767359016/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/1682180975/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(767359016, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(1682180975, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
