@@ -155,13 +155,11 @@ async function print_all_leaderboards(input)
         { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
 
-        // Season 15
+        // Season 17
 
-        { arguments: ['metrics', 'season_16_pass_rank'] },
-        { arguments: ['metrics', 'season_16_psi_ops_enemies_defeated'] },
-        { arguments: ['metrics', 'season_16_psi_ops_champions_defeated'] },
-        { arguments: ['metrics', 'season_16_guardian_games_medallions'] },
-        { arguments: ['metrics', 'season_16_guardian_games_top_score'] },
+        { arguments: ['metrics', 'season_17_pass_rank'] },
+        { arguments: ['metrics', 'season_17_containment_tier_completions'] },
+        { arguments: ['metrics', 'season_17_nightmares_defeated'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

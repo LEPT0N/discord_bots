@@ -1447,6 +1447,23 @@ var known_metrics =
     {
         id: 2539150057,
     },
+
+    // Season 17
+
+    'season_17_pass_rank':
+    {
+        id: 2262629301,
+    },
+
+    'season_17_containment_tier_completions':
+    {
+        id: 1864866268,
+    },
+
+    'season_17_nightmares_defeated':
+    {
+        id: 412897948,
+    },
 }
 
 // Leaderboard for player score on a player metric (stat tracker)

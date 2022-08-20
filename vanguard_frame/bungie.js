@@ -877,6 +877,10 @@ public.get_objective_progress_value = async function (objective)
     {
         value = objective.progress / 100;
     }
+    else if (objective_value_style == public.unlock_value_ui_style.automatic)
+    {
+        value = objective.progress;
+    }
     else
     {
         throw new Error('Update get_objective_progress to handle DestinyUnlockValueUIStyle == ' + objective_value_style);
