@@ -1464,6 +1464,33 @@ var known_metrics =
     {
         id: 412897948,
     },
+
+    // Season 18
+
+    'season_18_pass_rank':
+    {
+        id: 2262629306,
+    },
+
+    'season_18_enemies_defeated':
+    {
+        id: 266594914 ,
+    },
+
+    'season_18_treasure_chests_opened':
+    {
+        id: 3858757059,
+    },
+
+    'season_18_umbral_energy_collected':
+    {
+        id: 2389736825,
+    },
+
+    'season_18_bosses_defeated':
+    {
+        id: 731645490,
+    },
 }
 
 // Leaderboard for player score on a player metric (stat tracker)

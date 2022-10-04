@@ -171,7 +171,10 @@ async function print_all_leaderboards(input)
         // Season 18
 
         { arguments: ['metrics', 'season_18_pass_rank'] },
-        { arguments: ['metrics', 'todo'] },
+        { arguments: ['metrics', 'season_18_enemies_defeated'] },
+        { arguments: ['metrics', 'season_18_treasure_chests_opened'] },
+        { arguments: ['metrics', 'season_18_umbral_energy_collected'] },
+        { arguments: ['metrics', 'season_18_bosses_defeated'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)
