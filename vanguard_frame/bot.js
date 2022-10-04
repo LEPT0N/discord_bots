@@ -176,9 +176,6 @@ async function print_all_leaderboards(input)
 
     for (var index = 0; index < all_leaderboards.length; index++)
     {
-        send_message(input.channel_id, '\r\n');
-        await util.sleep(2000);
-
         input.arguments = all_leaderboards[index].arguments;
 
         await print_leaderboard(input);
