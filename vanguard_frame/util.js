@@ -53,15 +53,15 @@ public.read_file = function (file_name, suppress_contents_log, raw_read)
 
     public.log('reading from file ' + file_path);
 
-    var contents = fs.readFileSync(file_path);
-
     var file_contents = null;
     if (raw_read)
     {
+        var contents = fs.readFileSync(file_path, 'utf8');
         file_contents = contents;
     }
     else
     {
+        var contents = fs.readFileSync(file_path);
         file_contents = JSON.parse(contents);
     }
 
@@ -123,20 +123,20 @@ public.download_file = async function (url, file_name)
     });
 }
 
-public.upload_file = async function (bot, channel_id, url, file_name)
-{
-    var file_path = await public.download_file(url, file_name);
-
-    public.log('uploading:', file_path);
-
-    bot.uploadFile(
-        {
-            to: channel_id,
-            file: file_path
-        });
-
-    fs.unlinkSync(file_path);
-}
+//public.upload_file = async function (bot, channel_id, url, file_name)
+//{
+//    var file_path = await public.download_file(url, file_name);
+//
+//    public.log('uploading:', file_path);
+//
+//    bot.uploadFile(
+//        {
+//            to: channel_id,
+//            file: file_path
+//        });
+//
+//    fs.unlinkSync(file_path);
+//}
 
 public.parse_arguments = function (input)
 {

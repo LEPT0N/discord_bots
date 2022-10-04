@@ -1,6 +1,9 @@
 
-var discord = require('discord.io');
+var discord = require('discord.js');
+
 var auth = require('./auth.json');
+var config = require('./config.json');
+
 var bungie = require('./bungie.js');
 var util = require('./util.js');
 var roster = require('./roster.js');
@@ -12,21 +15,51 @@ util.log('Arguments:', process.argv);
 var commandline_command = process.argv[2];
 var commandline_parameters = process.argv.slice(3);
 
-var bot = new discord.Client(
+const bot = new discord.Client({ intents: [
+    discord.GatewayIntentBits.Guilds,
+    discord.GatewayIntentBits.GuildMembers,
+    discord.GatewayIntentBits.GuildBans,
+    discord.GatewayIntentBits.GuildEmojisAndStickers,
+    discord.GatewayIntentBits.GuildIntegrations,
+    discord.GatewayIntentBits.GuildWebhooks,
+    discord.GatewayIntentBits.GuildInvites,
+    discord.GatewayIntentBits.GuildVoiceStates,
+    discord.GatewayIntentBits.GuildPresences,
+    discord.GatewayIntentBits.GuildMessages,
+    discord.GatewayIntentBits.GuildMessageReactions,
+    discord.GatewayIntentBits.GuildMessageTyping,
+    discord.GatewayIntentBits.DirectMessages,
+    discord.GatewayIntentBits.DirectMessageReactions,
+    discord.GatewayIntentBits.DirectMessageTyping,
+    discord.GatewayIntentBits.MessageContent,
+    discord.GatewayIntentBits.GuildScheduledEvents,
+] });
+
+bot.login(auth.discord_key);
+
+function send_message(channel_id, message_contents)
+{
+    return bot.channels.fetch(channel_id).then(channel =>
     {
-        token: auth.discord_key,
-        autorun: true
+        return channel.send(message_contents);
     });
+}
+
+function upload_image(channel_id, url)
+{
+    return bot.channels.fetch(channel_id).then(channel =>
+    {
+        return channel.send({ files: [{attachment: url}] });
+    });
+}
 
 async function echo(input)
 {
-    bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: '<' + input.arguments[0] + '>'
-        });
+    var message = '<' + input.arguments[0] + '>';
 
-    util.log('echoed <' + input.arguments[0] + '>');
+    send_message(input.channel_id, message);
+
+    util.log('echoed ' + message);
 }
 
 async function get_emblems(input)
@@ -45,7 +78,7 @@ async function get_emblems(input)
 
         var emblem_file_name = character_ids[index] + '_emblem.jpg';
 
-        util.upload_file(bot, input.channel_id, emblem_url, emblem_file_name);
+        upload_image(input.channel_id, emblem_url);
     }
 }
 
@@ -55,11 +88,7 @@ async function get_triumph_score(input)
 
     var triumphs = await bungie.get_triumphs(player);
 
-    bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: 'Triumph score = ' + triumphs.score
-        });
+    send_message(input.channel_id, 'Triumph score = ' + triumphs.score);
 }
 
 async function add_player_to_roster(input)
@@ -68,11 +97,7 @@ async function add_player_to_roster(input)
 
     roster.add_player(player);
 
-    bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: 'Successfully added "' + player.displayName + '" to roster'
-        });
+    send_message(input.channel_id, 'Successfully added "' + player.displayName + '" to roster');
 }
 
 async function remove_player_from_roster(input)
@@ -81,11 +106,7 @@ async function remove_player_from_roster(input)
 
     roster.remove_player(player);
 
-    bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: 'Successfully removed "' + player.displayName + '" from roster'
-        });
+    send_message(input.channel_id, 'Successfully removed "' + player.displayName + '" from roster');
 }
 
 async function print_roster(input)
@@ -101,20 +122,12 @@ async function print_roster(input)
 
     util.log(roster_output);
 
-    bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: roster_output
-        });
+    send_message(input.channel_id, roster_output);
 }
 
 async function print_all_leaderboards(input)
 {
-    bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: '__**LEADERBOARDS ' + util.get_date() + '**__\r\n\r\n'
-        });
+    send_message(input.channel_id, '__**LEADERBOARDS ' + util.get_date() + '**__\r\n\r\n');
 
     await util.sleep(2000);
 
@@ -164,7 +177,7 @@ async function print_all_leaderboards(input)
 
     for (var index = 0; index < all_leaderboards.length; index++)
     {
-        bot.sendMessage({to: input.channel_id, message: '\r\n'});
+        send_message(input.channel_id, '\r\n');
         await util.sleep(2000);
 
         input.arguments = all_leaderboards[index].arguments;
@@ -194,7 +207,7 @@ async function print_leaderboard(input)
     // Upload the icon
     if (results.url)
     {
-        util.upload_file(bot, input.channel_id, results.url, 'leaderboard_icon.jpg');
+        upload_image(input.channel_id, results.url);
 
         await util.sleep(2000);
     }
@@ -290,11 +303,7 @@ async function print_leaderboard(input)
     if (message.length <= util.max_message_length)
     {
         // Send the result as one message
-        bot.sendMessage(
-            {
-                to: input.channel_id,
-                message: message
-            });
+        send_message(input.channel_id, message);
     }
     else
     {
@@ -313,12 +322,7 @@ async function print_leaderboard(input)
             else
             {
                 // The current entry doesn't fit in the batch, so print the batch and start a new one.
-
-                bot.sendMessage(
-                {
-                    to: input.channel_id,
-                    message: message_batch + entry_border,
-                });
+                send_message(input.channel_id, message_batch + entry_border);
 
                 await util.sleep(2000);
                     
@@ -329,11 +333,7 @@ async function print_leaderboard(input)
         // If there's a remaining batch then print it.
         if (message_batch != null)
         {
-            bot.sendMessage(
-            {
-                to: input.channel_id,
-                message: message_batch + entry_border,
-            });
+            send_message(input.channel_id,  message_batch + entry_border);
 
             await util.sleep(2000);
         }
@@ -382,11 +382,7 @@ async function search_manifest(input)
             result_message += ' (' + result.section + ')';
         }
 
-        bot.sendMessage(
-        {
-            to: input.channel_id,
-            message: result_message,
-        });
+        send_message(input.channel_id, result_message);
         
         await util.sleep(1000);
     }
@@ -400,12 +396,7 @@ async function mirror_reactions(input)
     {
         util.log('emoji found: "' + emojis[index] + '"');
 
-        bot.addReaction(
-        {
-            channelID: input.channel_id,
-            messageID: input.message_id,
-            reaction: emojis[index]
-        });
+        input.message.react(emojis[index]);
 
         await util.sleep(500);
     }
@@ -437,78 +428,29 @@ async function store_message(input)
 
     util.write_file(file_name, message_contents, false, true);
 
-    bot.sendMessage(
-    {
-        to: input.channel_id,
-        message: 'Saved message "' + message_name + '"',
-    });
+    send_message(input.channel_id, 'Saved message "' + message_name + '"');
 }
 
 async function admin_tools(input)
 {
-    bot.sendMessage(
-    {
-        to: input.channel_id,
-        message: 'Inbox deleted.',
-    });
+    send_message(input.channel_id, 'Inbox deleted.');
 }
 
 async function print_message(parameters)
 {
-    var channel_name = parameters[0];
+    var channel_id = parameters[0];
     var message_name = parameters[1];
     
     var file_name = stored_message_prefix + message_name + stored_message_suffix;
 
-    var message = util.read_file(file_name, false, true);
+    var message_contents = util.read_file(file_name, false, true);
 
-    var reacting_to_message = false;
-    var reacted_to_message = false;
+    var sent_message = await send_message(channel_id, message_contents);
 
-    bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
-    {
-        if (user_id == bot.id && !reacting_to_message)
-        {
-            reacting_to_message = true;
-
-            await mirror_reactions({
-                user_name: user_name,
-                user_id: user_id,
-                channel_id: channel_id,
-                message_id: data.d.id,
-                raw_message: raw_message,
-            });
-
-            reacted_to_message = true;
-        }
+    await mirror_reactions({
+        raw_message: message_contents,
+        message: sent_message,
     });
-
-    await util.sleep(500);
-
-    bot.sendMessage(
-        {
-            to: util.get_channel_id(bot, channel_name),
-            message: message
-        });
-
-    for (var waits = 0; waits < 7 && !reacting_to_message; waits++)
-    {
-        util.log('waiting to react to the message...');
-
-        await util.sleep(500);
-    }
-
-    if (!reacting_to_message)
-    {
-        throw new Error('Timeout waiting to react to message.');
-    }
-
-    while (!reacted_to_message)
-    {
-        util.log('waiting to finish reacting to the message...');
-
-        await util.sleep(500);
-    }
 
     util.log('done printing message');
 }
@@ -539,23 +481,15 @@ async function process_commandline()
 
         var error_details = error.name + " : " + error.message;
 
-        bot.sendMessage(
-            {
-                to: util.get_channel_id(bot, 'test'),
-                message: error_details
-            });
+        send_message(config.debug_channel, error_details);
     }
 
     util.log('end commandline command');
 }
 
-bot.on('ready', async function (evt)
+bot.once('ready', async () =>
 {
-    Object.keys(bot.servers).forEach(function (server_id)
-    {
-        util.log('Connected to Server:', bot.servers[server_id].name + ' - (' + server_id + ')');
-    });
-    util.log('Logged in as:', bot.username + ' - (' + bot.id + ')');
+    util.log('Logged in as:', bot.user.username + ' - (' + bot.user.id + ')');
 
     await test.run(bot);
 
@@ -615,11 +549,7 @@ async function process_message(input)
 
         var error_details = error.name + " : " + error.message;
 
-        bot.sendMessage(
-            {
-                to: input.channel_id,
-                message: error_details
-            });
+        send_message(input.channel_id, error_details);
     }
 
     util.log('end command');
@@ -627,11 +557,18 @@ async function process_message(input)
 
 if (commandline_command == null)
 {
-    bot.on('message', async function (user_name, user_id, channel_id, raw_message, data)
+    bot.on('messageCreate', message =>
     {
+        var user_name = message.author.username;
+        var user_id = message.author.id;
+        var channel_id = message.channelId;
+        var raw_message = message.content;
+        var message_id = message.id;
+
         var wake_command = '!frame.'
 
-        if (raw_message.substring(0, wake_command.length) == wake_command)
+        if (raw_message.substring(0, wake_command.length) == wake_command &&
+            !message.author.bot)
         {
             var raw_message = raw_message.substring(wake_command.length);
 
@@ -639,8 +576,9 @@ if (commandline_command == null)
                 user_name: user_name,
                 user_id: user_id,
                 channel_id: channel_id,
-                message_id: data.d.id,
+                message_id: message_id,
                 raw_message: raw_message,
+                message: message,
             });
         }
     });
