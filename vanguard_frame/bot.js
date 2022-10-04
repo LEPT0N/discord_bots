@@ -168,11 +168,10 @@ async function print_all_leaderboards(input)
         { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
 
-        // Season 17
+        // Season 18
 
-        { arguments: ['metrics', 'season_17_pass_rank'] },
-        { arguments: ['metrics', 'season_17_containment_tier_completions'] },
-        { arguments: ['metrics', 'season_17_nightmares_defeated'] },
+        { arguments: ['metrics', 'season_18_pass_rank'] },
+        { arguments: ['metrics', 'todo'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)
