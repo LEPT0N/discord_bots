@@ -206,12 +206,25 @@ var known_triumphs =
 // parameter: any of the keys in known_triumphs above
 async function individual_triumph(player_roster, parameter)
 {
+    var known_triumph;
+
     if (!(parameter in known_triumphs))
     {
-        throw new Error('Triumph "' + parameter + '" is not in my list');
-    }
+        if (isNaN(parameter))
+        {
+            throw new Error('Triumph "' + parameter + '" must either be one of the known values, or an id number.');
+        }
 
-    var known_triumph = known_triumphs[parameter];
+        known_triumph =
+        {
+            triumph_for_title: parameter,
+            triumphs_for_data: [ parameter ],
+        };
+    }
+    else
+    {
+        known_triumph = known_triumphs[parameter];
+    }
 
     var display_properties = await bungie.get_display_properties(
         known_triumph.triumph_for_title,
