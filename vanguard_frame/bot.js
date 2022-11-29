@@ -175,6 +175,10 @@ async function print_all_leaderboards(input)
         { arguments: ['metrics', 'season_18_treasure_chests_opened'] },
         { arguments: ['metrics', 'season_18_umbral_energy_collected'] },
         { arguments: ['metrics', 'season_18_bosses_defeated'] },
+
+        { arguments: ['individual_triumph', 'season_18_candy_earned'] },
+        { arguments: ['individual_triumph', 'season_18_headless_ones'] },
+        { arguments: ['individual_triumph', 'season_18_haunted_sectors'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

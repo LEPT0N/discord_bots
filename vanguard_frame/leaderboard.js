@@ -200,6 +200,26 @@ var known_triumphs =
         triumph_for_title: 1661195512,
         triumphs_for_data: [ 1661195512 ],
     },
+
+    // Season 18
+
+    'season_18_candy_earned':
+    {
+        triumph_for_title: 1276598420,
+        triumphs_for_data: [1276598420],
+    },
+
+    'season_18_headless_ones':
+    {
+        triumph_for_title: 3907371284,
+        triumphs_for_data: [3907371284],
+    },
+
+    'season_18_haunted_sectors':
+    {
+        triumph_for_title: 3951338722,
+        triumphs_for_data: [3951338722],
+    },
 }
 
 // Leaderboard for player score on a specific triumph
