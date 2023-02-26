@@ -178,6 +178,8 @@ async function print_all_leaderboards(input)
         { arguments: ['individual_triumph', 'season_19_cookies_baked'] },
         { arguments: ['individual_triumph', 'season_19_snowball_kills'] },
         { arguments: ['individual_triumph', 'season_19_gifts_given'] },
+
+        { arguments: ['metrics', 'season_19_pet_the_dog'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

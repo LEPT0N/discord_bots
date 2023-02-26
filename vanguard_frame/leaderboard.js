@@ -1566,6 +1566,11 @@ var known_metrics =
     {
         id: 3702217360,
     },
+
+    'season_19_pet_the_dog':
+    {
+        id: 1430225690,
+    },
 }
 
 // Leaderboard for player score on a player metric (stat tracker)
