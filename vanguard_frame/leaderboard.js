@@ -220,6 +220,26 @@ var known_triumphs =
         triumph_for_title: 3951338722,
         triumphs_for_data: [3951338722],
     },
+
+    // Season 19
+
+    'season_19_cookies_baked':
+    {
+        triumph_for_title: 2658408999,
+        triumphs_for_data: [2658408999],
+    },
+
+    'season_19_snowball_kills':
+    {
+        triumph_for_title: 1194967970,
+        triumphs_for_data: [1194967970],
+    },
+
+    'season_19_gifts_given':
+    {
+        triumph_for_title: 3617221705,
+        triumphs_for_data: [3617221705],
+    },
 }
 
 // Leaderboard for player score on a specific triumph
@@ -1523,6 +1543,28 @@ var known_metrics =
     'season_18_bosses_defeated':
     {
         id: 731645490,
+    },
+
+    // Season 19
+
+    'season_19_pass_rank':
+    {
+        id: 2262629307,
+    },
+
+    'season_19_enemies_defeated':
+    {
+        id: 3475018909,
+    },
+
+    'season_19_bunkers_cleared':
+    {
+        id: 1461985859,
+    },
+
+    'season_19_spire_completions':
+    {
+        id: 3702217360,
     },
 }
 
