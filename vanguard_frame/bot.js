@@ -180,6 +180,8 @@ async function print_all_leaderboards(input)
         { arguments: ['individual_triumph', 'season_20_weapon_kills'] },
         { arguments: ['individual_triumph', 'season_20_power'] },
         { arguments: ['individual_triumph', 'season_20_platinum_tiers'] },
+
+        { arguments: ['triumphs', 'season_20_guardian_games_medals'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

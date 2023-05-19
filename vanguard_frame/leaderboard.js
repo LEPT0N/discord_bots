@@ -1160,6 +1160,10 @@ var triumph_sets =
         dynamic_set_function: generate_seasonal_challenges_triumph_set
     },
 
+    'season_20_guardian_games_medals': {
+        dynamic_set_function: generate_season_20_guardian_games_medals_triumph_set
+    },
+
     // https://www.light.gg/db/legend/1024788583/triumphs/1396056784/vanguard/2975760062/raids/
     /* Unfortunately this can no longer be tracked via triumphs.
     'raids_completed': {
@@ -1412,6 +1416,13 @@ async function generate_seasonal_challenges_triumph_set()
     // https://www.light.gg/db/legend/3443694067/seasonal-challenges/1771089205/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
     return await generate_triumph_tree_triumph_set(1771089205, 'Total Count of Seasonal Challenges Unlocked', true);
+}
+
+async function generate_season_20_guardian_games_medals_triumph_set()
+{
+    // Legend // Triumphs // Triumphs // Season of Defiance // Vanguard Medals
+    // https://www.light.gg/db/legend/1163735237/triumphs/1866538467/triumphs/2566909062/season-of-defiance/3147052745/vanguard-medals/
+    return await generate_triumph_tree_triumph_set(3147052745, 'Count of how many unique Guardian Games medals earned (Virtuoso, Jack of All Trades, Insult to Injury, etc)');
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
