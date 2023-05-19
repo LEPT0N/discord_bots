@@ -240,6 +240,26 @@ var known_triumphs =
         triumph_for_title: 3617221705,
         triumphs_for_data: [3617221705],
     },
+
+    // Season 20
+
+    'season_20_weapon_kills':
+    {
+        triumph_for_title: 3721430389,
+        triumphs_for_data: [3721430389],
+    },
+
+    'season_20_power':
+    {
+        triumph_for_title: 3422656786,
+        triumphs_for_data: [3422656786],
+    },
+
+    'season_20_platinum_tiers':
+    {
+        triumph_for_title: 3447671362,
+        triumphs_for_data: [3447671362],
+    },
 }
 
 // Leaderboard for player score on a specific triumph
@@ -1389,9 +1409,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/2014803701/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/1771089205/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(2014803701, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(1771089205, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_triumph_tree_triumph_set(root_id, description, use_per_character_data)
@@ -1570,6 +1590,38 @@ var known_metrics =
     'season_19_pet_the_dog':
     {
         id: 1430225690,
+    },
+
+    // Season 20
+
+    'season_20_pass_rank':
+    {
+        id: 2245851615,
+    },
+
+    'season_20_activity_completions':
+    {
+        id: 279504192,
+    },
+
+    'season_20_favors_gathered':
+    {
+        id: 326202600,
+    },
+
+    'season_20_activity_kills':
+    {
+        id: 4055734702,
+    },
+
+    'season_20_guardian_games_medallions':
+    {
+        id: 3412338256,
+    },
+
+    'season_20_guardian_games_high_score':
+    {
+        id: 4196647092,
     },
 }
 

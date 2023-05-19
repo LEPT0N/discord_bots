@@ -168,18 +168,18 @@ async function print_all_leaderboards(input)
         { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
 
-        // Season 18
+        // Season 20
 
-        { arguments: ['metrics', 'season_19_pass_rank'] },
-        { arguments: ['metrics', 'season_19_enemies_defeated'] },
-        { arguments: ['metrics', 'season_19_bunkers_cleared'] },
-        { arguments: ['metrics', 'season_19_spire_completions'] },
+        { arguments: ['metrics', 'season_20_pass_rank'] },
+        { arguments: ['metrics', 'season_20_activity_completions'] },
+        { arguments: ['metrics', 'season_20_favors_gathered'] },
+        { arguments: ['metrics', 'season_20_activity_kills'] },
+        { arguments: ['metrics', 'season_20_guardian_games_medallions'] },
+        { arguments: ['metrics', 'season_20_guardian_games_high_score'] },
 
-        { arguments: ['individual_triumph', 'season_19_cookies_baked'] },
-        { arguments: ['individual_triumph', 'season_19_snowball_kills'] },
-        { arguments: ['individual_triumph', 'season_19_gifts_given'] },
-
-        { arguments: ['metrics', 'season_19_pet_the_dog'] },
+        { arguments: ['individual_triumph', 'season_20_weapon_kills'] },
+        { arguments: ['individual_triumph', 'season_20_power'] },
+        { arguments: ['individual_triumph', 'season_20_platinum_tiers'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)
