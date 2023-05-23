@@ -168,6 +168,8 @@ async function print_all_leaderboards(input)
         { arguments: ['highest_stat', 'favorite_non_weapon_type'] },
         { arguments: ['highest_stat', 'favorite_weapon_type', 'pvp'] },
 
+        { arguments: ['profile_data', 'guardian_rank'] },
+
         // Season 20
 
         { arguments: ['metrics', 'season_20_pass_rank'] },

@@ -193,6 +193,7 @@ public.beta_get_player_from_hl_cred = async function (arguments)
     util.log(response);
 }
 
+// TODO use get_profile_data to get this data
 public.get_character_ids = async function (player)
 {
     var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
@@ -515,6 +516,45 @@ public.get_collectibles = async function (player)
     util.write_file(collectibles_file_name, cached_collectibles[player.membershipId], true);
 
     return cached_collectibles[player.membershipId].data;
+}
+
+async function download_profile_data(player)
+{
+    var url = '/Platform/Destiny2/' + player.membershipType + '/Profile/' + player.membershipId + '/?components=Profiles';
+
+    var profile_data = (await get_request('download_profiles', url)).profile.data;
+
+    return profile_data;
+}
+
+var cached_profile_data = {};
+
+public.get_profile_data = async function (player)
+{
+    var today = util.get_date();
+
+    var profile_data_file_name = 'player_data_cache/' + player.membershipId + '_profile_data.json';
+
+    if (!(player.membershipId in cached_profile_data))
+    {
+        cached_profile_data[player.membershipId] = util.try_read_file(profile_data_file_name, true);
+    }
+
+    if (cached_profile_data[player.membershipId] && cached_profile_data[player.membershipId].date == today)
+    {
+        return cached_profile_data[player.membershipId].data;
+    }
+
+    var downloaded_profile_data = await download_profile_data(player);
+
+    cached_profile_data[player.membershipId] = {
+        date: today,
+        data: downloaded_profile_data
+    };
+
+    util.write_file(profile_data_file_name, cached_profile_data[player.membershipId], true);
+
+    return cached_profile_data[player.membershipId].data;
 }
 
 public.search_manifest = async function (section, search_query)

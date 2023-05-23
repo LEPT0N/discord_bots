@@ -95,6 +95,8 @@ public.run = async function (bot)
         // await test_leaderboard({ arguments: ['metrics', 'season_15_champ_kills'] });
         // await test_leaderboard({ arguments: ['metrics', 'season_15_enemy_kills'] });
 
+        // await test_leaderboard({ arguments: ['profile_data', 'guardian_rank'] });
+
         // await test_raids({ arguments: ['LEPT0N', 2721, 'xboxLive'] });
         // await test_weapon_history({ arguments: ['LEPT0N', 2721, 'xboxLive'] });
         // await test_weapon_history({ arguments: ['Sandman', 1220, 'steam'] });

@@ -1928,6 +1928,55 @@ async function weapon_kills(player_roster, parameter)
     };
 }
 
+var profile_data_sets =
+{
+    'guardian_rank':
+    {
+        title: 'Guardian Rank',
+        description: null,
+        field_name: 'currentGuardianRank',
+    },
+
+    'highest_guardian_rank':
+    {
+        title: 'Lifetime Highest Guardian Rank',
+        description: null,
+        field_name: 'lifetimeHighestGuardianRank',
+    },
+}
+
+// Leaderboard for player profile data
+// parameter: any of the keys in profile_data_fields above
+async function profile_data(player_roster, parameter)
+{
+    if (!(parameter in profile_data_sets))
+    {
+        throw new Error('Profile data field "' + parameter + '" is not in my list');
+    }
+
+    var profile_data_set = profile_data_sets[parameter];
+
+    var data = await Promise.all(player_roster.players.map(async function (value)
+    {
+        var player_name = value.displayName;
+
+        var profile_data = await bungie.get_profile_data(value);
+
+        return {
+            name: player_name,
+            score: profile_data[profile_data_set.field_name],
+        };
+    }));
+
+    return {
+        title: profile_data_set.title,
+        description: profile_data_set.description,
+        data: data,
+        url: null,
+        format_score: null,
+    };
+}
+
 var leaderboards =
 {
     true_facts: true_facts,
@@ -1941,6 +1990,7 @@ var leaderboards =
     metrics: metrics,
     activity_history: activity_history,
     weapon_kills: weapon_kills,
+    profile_data: profile_data,
 };
 
 public.get = async function (name, parameter_1, parameter_2)
