@@ -170,20 +170,21 @@ async function print_all_leaderboards(input)
 
         { arguments: ['profile_data', 'guardian_rank'] },
 
-        // Season 20
+        // Season 21
 
-        { arguments: ['metrics', 'season_20_pass_rank'] },
-        { arguments: ['metrics', 'season_20_activity_completions'] },
-        { arguments: ['metrics', 'season_20_favors_gathered'] },
-        { arguments: ['metrics', 'season_20_activity_kills'] },
-        { arguments: ['metrics', 'season_20_guardian_games_medallions'] },
-        { arguments: ['metrics', 'season_20_guardian_games_high_score'] },
+        // search_manifest metric %search_string%
+        // !frame.print_leaderboard metrics %number%
+        { arguments: ['metrics', 'season_21_pass_rank'] },
+        { arguments: ['metrics', 'season_21_tier_7_deep_dives'] },
+        { arguments: ['metrics', 'season_21_gotd_completions'] },
+        { arguments: ['metrics', 'season_21_largest_fish'] },
+        { arguments: ['metrics', 'season_21_total_fish'] },
 
-        { arguments: ['individual_triumph', 'season_20_weapon_kills'] },
-        { arguments: ['individual_triumph', 'season_20_power'] },
-        { arguments: ['individual_triumph', 'season_20_platinum_tiers'] },
-
-        { arguments: ['triumphs', 'season_20_guardian_games_medals'] },
+        // search_manifest record %search_string%
+        // !frame.print_leaderboard individual_triumph %number%
+        { arguments: ['individual_triumph', 'season_21_weapon_kills'] },
+        { arguments: ['individual_triumph', 'season_21_power'] },
+        { arguments: ['individual_triumph', 'season_21_exotic_fish'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

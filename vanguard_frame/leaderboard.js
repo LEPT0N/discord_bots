@@ -260,6 +260,28 @@ var known_triumphs =
         triumph_for_title: 3447671362,
         triumphs_for_data: [3447671362],
     },
+
+    // Season 21
+
+    'season_21_weapon_kills':
+    {
+        triumph_for_title: 419976902,
+        triumphs_for_data: [419976902],
+    },
+
+    'season_21_power':
+    {
+        triumph_for_title: 70662163,
+        triumphs_for_data: [70662163],
+    },
+
+    'season_21_exotic_fish':
+    {
+        triumph_for_title: 2662869859,
+        triumphs_for_data: [2662869859],
+    },
+
+    // !frame.search_manifest record %search_string%
 }
 
 // Leaderboard for player score on a specific triumph
@@ -1413,9 +1435,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/1771089205/weekly/
+    // https://www.light.gg/db/legend/1300798358/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(1771089205, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(1300798358, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_season_20_guardian_games_medals_triumph_set()
@@ -1634,6 +1656,35 @@ var known_metrics =
     {
         id: 4196647092,
     },
+
+    // Season 21
+
+    'season_21_pass_rank':
+    {
+        id: 2245851614,
+    },
+
+    'season_21_tier_7_deep_dives':
+    {
+        id: 1547568560,
+    },
+
+    'season_21_gotd_completions':
+    {
+        id: 3846201365,
+    },
+
+    'season_21_largest_fish':
+    {
+        id: 600253797,
+    },
+
+    'season_21_total_fish':
+    {
+        id: 1629825403,
+    },
+
+    // !frame.search_manifest metric %search_string%
 }
 
 // Leaderboard for player score on a player metric (stat tracker)

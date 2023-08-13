@@ -112,6 +112,11 @@ public.get_manifest = async function ()
     return cached_manifest.data;
 }
 
+// Arguments:
+// 1: display name (ex: LEPT0N)
+// 2: player name code (ex: the '2721' in 'LEPT0N#2721')
+// 3: platform (ex: xbl, steam, etc)
+// 4: optional. Index. If multiple are found, return the player at the given index.
 public.search_destiny_player = async function (arguments)
 {
     var displayName = arguments[0];
