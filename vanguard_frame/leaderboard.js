@@ -281,7 +281,22 @@ var known_triumphs =
         triumphs_for_data: [2662869859],
     },
 
+    // Season 22
+
+    'season_22_weapon_kills':
+    {
+        triumph_for_title: 1409334489,
+        triumphs_for_data: [1409334489],
+    },
+
+    'season_22_power':
+    {
+        triumph_for_title: 1274445136,
+        triumphs_for_data: [1274445136],
+    },
+
     // !frame.search_manifest record %search_string%
+    // !frame.print_leaderboard individual_triumph %id%
 }
 
 // Leaderboard for player score on a specific triumph
@@ -1435,9 +1450,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/1300798358/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/2963194547/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(1300798358, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(2963194547, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_season_20_guardian_games_medals_triumph_set()
@@ -1684,7 +1699,18 @@ var known_metrics =
         id: 1629825403,
     },
 
+    // Season 22
+
+    'season_22_pass_rank':
+    {
+        id: 2245851613,
+    },
+
+    'season_22_crotas_end':
+    {
+
     // !frame.search_manifest metric %search_string%
+    // !frame.print_leaderboard metrics %id%
 }
 
 // Leaderboard for player score on a player metric (stat tracker)

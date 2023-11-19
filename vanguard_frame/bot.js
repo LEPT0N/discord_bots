@@ -170,21 +170,17 @@ async function print_all_leaderboards(input)
 
         { arguments: ['profile_data', 'guardian_rank'] },
 
-        // Season 21
+        // Season 22
 
         // search_manifest metric %search_string%
         // !frame.print_leaderboard metrics %number%
-        { arguments: ['metrics', 'season_21_pass_rank'] },
-        { arguments: ['metrics', 'season_21_tier_7_deep_dives'] },
-        { arguments: ['metrics', 'season_21_gotd_completions'] },
-        { arguments: ['metrics', 'season_21_largest_fish'] },
-        { arguments: ['metrics', 'season_21_total_fish'] },
+        { arguments: ['metrics', 'season_22_pass_rank'] },
+        { arguments: ['metrics', 'season_22_crotas_end'] },
 
         // search_manifest record %search_string%
         // !frame.print_leaderboard individual_triumph %number%
-        { arguments: ['individual_triumph', 'season_21_weapon_kills'] },
-        { arguments: ['individual_triumph', 'season_21_power'] },
-        { arguments: ['individual_triumph', 'season_21_exotic_fish'] },
+        { arguments: ['individual_triumph', 'season_22_weapon_kills'] },
+        { arguments: ['individual_triumph', 'season_22_power'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

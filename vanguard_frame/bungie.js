@@ -112,17 +112,35 @@ public.get_manifest = async function ()
     return cached_manifest.data;
 }
 
+
+var platform_types =
+{
+    xbl: 1,
+    psn: 2,
+    steam: 3,
+    blizzard: 4,
+    stadia: 5,
+    egs: 6,
+};
+
 // Arguments:
 // 1: display name (ex: LEPT0N)
 // 2: player name code (ex: the '2721' in 'LEPT0N#2721')
-// 3: platform (ex: xbl, steam, etc)
+// 3: platform from 'platform_types' (ex: xbl, steam, etc)
 // 4: optional. Index. If multiple are found, return the player at the given index.
 public.search_destiny_player = async function (arguments)
 {
     var displayName = arguments[0];
     var displayNameCode = arguments[1];
-    var platform = arguments[2];
+    var platform_input = arguments[2];
     var requested_index = util.try_get_element(arguments,3);
+
+    if (!(platform_input in platform_types))
+    {
+        throw new Error('Platform "' + platform_input + '" must either be one of: [' + Object.keys(platform_types).join(', ') + ']');
+    }
+
+    var platform = platform_types[platform_input];
 
     var url = '/Platform/Destiny2/SearchDestinyPlayerByBungieName/All/';
 
@@ -138,7 +156,7 @@ public.search_destiny_player = async function (arguments)
     var matching_players = [];
     for (var index = 0; index < players.length; index++)
     {
-        if (players[index].iconPath == '/img/theme/bungienet/icons/' + platform + 'Logo.png')
+        if (players[index].membershipType == platform)
         {
             matching_players.push(players[index]);
         }
