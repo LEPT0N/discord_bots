@@ -174,13 +174,18 @@ async function print_all_leaderboards(input)
 
         // search_manifest metric %search_string%
         // !frame.print_leaderboard metrics %number%
-        { arguments: ['metrics', 'season_22_pass_rank'] },
-        { arguments: ['metrics', 'season_22_crotas_end'] },
+        { arguments: ['metrics', 'season_23_pass_rank'] },
+        { arguments: ['metrics', 'season_23_warlords_ruin_completions'] },
+        { arguments: ['metrics', 'season_23_coil_pots_broken'] },
+        { arguments: ['metrics', 'season_23_whisper_thrall'] },
+        { arguments: ['metrics', 'season_23_trevor_deaths'] },
 
         // search_manifest record %search_string%
         // !frame.print_leaderboard individual_triumph %number%
-        { arguments: ['individual_triumph', 'season_22_weapon_kills'] },
-        { arguments: ['individual_triumph', 'season_22_power'] },
+        { arguments: ['individual_triumph', 'season_23_weapon_kills'] },
+        { arguments: ['individual_triumph', 'season_23_power'] },
+        { arguments: ['individual_triumph', 'season_brave_weapon_kills'] },
+        { arguments: ['individual_triumph', 'season_brave_adu_repairs'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

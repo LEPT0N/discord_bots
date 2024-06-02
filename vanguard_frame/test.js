@@ -353,7 +353,7 @@ async function test_raids(input)
     util.log('output', output);
 }
 
-// TODO: promote this exotic weapon list to a real command
+// TODO: promote this exotic weapon list to a real command!
 
 async function test_weapon_history(input)
 {

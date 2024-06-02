@@ -295,6 +295,32 @@ var known_triumphs =
         triumphs_for_data: [1274445136],
     },
 
+    // Season 23
+
+    'season_23_weapon_kills':
+    {
+        triumph_for_title: 55366574,
+        triumphs_for_data: [55366574],
+    },
+
+    'season_23_power':
+    {
+        triumph_for_title: 833065345,
+        triumphs_for_data: [833065345],
+    },
+
+    'season_brave_weapon_kills':
+    {
+        triumph_for_title: 3604410081,
+        triumphs_for_data: [3604410081],
+    },
+
+    'season_brave_adu_repairs':
+    {
+        triumph_for_title: 589502473,
+        triumphs_for_data: [589502473],
+    },
+
     // !frame.search_manifest record %search_string%
     // !frame.print_leaderboard individual_triumph %id%
 }
@@ -1450,9 +1476,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/2963194547/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/3341132412/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(2963194547, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(3341132412, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_season_20_guardian_games_medals_triumph_set()
@@ -1708,6 +1734,35 @@ var known_metrics =
 
     'season_22_crotas_end':
     {
+        id: 2552956848,
+    },
+
+    // Season 23
+
+    'season_23_pass_rank':
+    {
+        id: 2245851612,
+    },
+
+    'season_23_warlords_ruin_completions':
+    {
+        id: 3932004679,
+    },
+
+    'season_23_coil_pots_broken':
+    {
+        id: 4239089094,
+    },
+
+    'season_23_whisper_thrall':
+    {
+        id: 3875151813,
+    },
+
+    'season_23_trevor_deaths':
+    {
+        id: 3548965745,
+    },
 
     // !frame.search_manifest metric %search_string%
     // !frame.print_leaderboard metrics %id%
