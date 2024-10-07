@@ -170,22 +170,19 @@ async function print_all_leaderboards(input)
 
         { arguments: ['profile_data', 'guardian_rank'] },
 
-        // Season 22
+        // Season 24
 
         // search_manifest metric %search_string%
         // !frame.print_leaderboard metrics %number%
-        { arguments: ['metrics', 'season_23_pass_rank'] },
-        { arguments: ['metrics', 'season_23_warlords_ruin_completions'] },
-        { arguments: ['metrics', 'season_23_coil_pots_broken'] },
-        { arguments: ['metrics', 'season_23_whisper_thrall'] },
-        { arguments: ['metrics', 'season_23_trevor_deaths'] },
+        { arguments: ['metrics', 'season_24_pass_rank'] },
+        { arguments: ['metrics', 'season_24_power'] },
+        { arguments: ['metrics', 'season_24_salvations_edge_completions'] },
+        { arguments: ['metrics', 'season_24_red_death_kills'] },
 
         // search_manifest record %search_string%
         // !frame.print_leaderboard individual_triumph %number%
-        { arguments: ['individual_triumph', 'season_23_weapon_kills'] },
-        { arguments: ['individual_triumph', 'season_23_power'] },
-        { arguments: ['individual_triumph', 'season_brave_weapon_kills'] },
-        { arguments: ['individual_triumph', 'season_brave_adu_repairs'] },
+        { arguments: ['individual_triumph', 'season_24_pathfinder_nodes'] },
+        { arguments: ['individual_triumph', 'season_24_dual_destiny_completions'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)
