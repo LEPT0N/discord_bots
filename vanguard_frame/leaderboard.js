@@ -335,6 +335,20 @@ var known_triumphs =
         triumphs_for_data: [3225424862],
     },
 
+    // Season 25
+
+    'season_25_contest_of_elders':
+    {
+        triumph_for_title: 3465625646,
+        triumphs_for_data: [3465625646],
+    },
+
+    'season_25_onslaught_saboteurs':
+    {
+        triumph_for_title: 186572265,
+        triumphs_for_data: [186572265],
+    },
+
     // !frame.search_manifest record %search_string%
     // !frame.print_leaderboard individual_triumph %id%
 }
@@ -1490,9 +1504,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/4127765625/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/4128731898/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(4127765625, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(4128731898, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_season_20_guardian_games_medals_triumph_set()
@@ -1800,9 +1814,47 @@ var known_metrics =
         id: 831493503,
     },
 
+    // Season 25
+
+    'season_25_pass_rank':
+    {
+        id: 2245851610,
+    },
+
+    'season_25_onslaught_salvation_runs':
+    {
+        id: 2298421656,
+    },
+
+    'season_25_tomb_of_elders_runs':
+    {
+        id: 2336204551,
+    },
+
+    'season_25_vespers_host_runs':
+    {
+        id: 2695240656,
+    },
+
+    'season_25_tonics_brewed':
+    {
+        id: 1749076525,
+    },
+
+    'season_25_enemies_defeated':
+    {
+        id: 740118638,
+    },
+
     // !frame.search_manifest metric %search_string%
     // !frame.print_leaderboard metrics %id%
 }
+/*
+to do:
+    triumphs > pale heart > world > pursuits > meticulous pathfinder
+    triumphs > pale heart > world > secrets > fool me once...
+    stat trackers > seasons > red and rehabilitated
+    */
 
 // Leaderboard for player score on a player metric (stat tracker)
 // parameter: any of the keys in known_metrics above

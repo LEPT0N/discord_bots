@@ -174,15 +174,17 @@ async function print_all_leaderboards(input)
 
         // search_manifest metric %search_string%
         // !frame.print_leaderboard metrics %number%
-        { arguments: ['metrics', 'season_24_pass_rank'] },
-        { arguments: ['metrics', 'season_24_power'] },
-        { arguments: ['metrics', 'season_24_salvations_edge_completions'] },
-        { arguments: ['metrics', 'season_24_red_death_kills'] },
+        { arguments: ['metrics', 'season_25_pass_rank'] },
+        { arguments: ['metrics', 'season_25_onslaught_salvation_runs'] },
+        { arguments: ['metrics', 'season_25_tomb_of_elders_runs'] },
+        { arguments: ['metrics', 'season_25_vespers_host_runs'] },
+        { arguments: ['metrics', 'season_25_tonics_brewed'] },
+        { arguments: ['metrics', 'season_25_enemies_defeated'] },
 
         // search_manifest record %search_string%
         // !frame.print_leaderboard individual_triumph %number%
-        { arguments: ['individual_triumph', 'season_24_pathfinder_nodes'] },
-        { arguments: ['individual_triumph', 'season_24_dual_destiny_completions'] },
+        { arguments: ['individual_triumph', 'season_25_contest_of_elders'] },
+        { arguments: ['individual_triumph', 'season_25_onslaught_saboteurs'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)

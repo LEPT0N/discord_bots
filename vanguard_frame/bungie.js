@@ -1,6 +1,11 @@
 
-var fetch = require('node-fetch');
+// var fetch = require('node-fetch');
+// TODO Figure out what this means from https://stackoverflow.com/questions/69041454/error-require-of-es-modules-is-not-supported-when-importing-node-fetch
+// or better yet, switch over to using http-request instead.
+var fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 var auth = require('./auth.json');
+
 var util = require('./util.js');
 
 var public = {};
@@ -944,6 +949,32 @@ public.get_objective_progress_value = async function (objective)
     else if (objective_value_style == public.unlock_value_ui_style.automatic)
     {
         value = objective.progress;
+    }
+    else if (objective_value_style == public.unlock_value_ui_style.time_duration)
+    {
+        util.log('get_objective_progress_value', objective);
+
+        var seconds = objective.progress;
+
+        util.log('1 seconds', seconds);
+
+        var minutes = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+
+        util.log('2 minutes', minutes);
+
+        util.log('3 seconds', seconds);
+
+        var hours = Math.floor(minutes / 60);
+        minutes = minutes % 60;
+
+        util.log('4 hours', hours);
+
+        util.log('5 minutes', minutes);
+
+        value = hours + ":" + minutes + ":" + seconds;
+
+        util.log('6 value', value);
     }
     else
     {
