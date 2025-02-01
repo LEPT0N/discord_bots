@@ -950,32 +950,6 @@ public.get_objective_progress_value = async function (objective)
     {
         value = objective.progress;
     }
-    else if (objective_value_style == public.unlock_value_ui_style.time_duration)
-    {
-        util.log('get_objective_progress_value', objective);
-
-        var seconds = objective.progress;
-
-        util.log('1 seconds', seconds);
-
-        var minutes = Math.floor(seconds / 60);
-        seconds = seconds % 60;
-
-        util.log('2 minutes', minutes);
-
-        util.log('3 seconds', seconds);
-
-        var hours = Math.floor(minutes / 60);
-        minutes = minutes % 60;
-
-        util.log('4 hours', hours);
-
-        util.log('5 minutes', minutes);
-
-        value = hours + ":" + minutes + ":" + seconds;
-
-        util.log('6 value', value);
-    }
     else
     {
         throw new Error('Update get_objective_progress to handle DestinyUnlockValueUIStyle == ' + objective_value_style);
