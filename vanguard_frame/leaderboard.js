@@ -349,6 +349,20 @@ var known_triumphs =
         triumphs_for_data: [186572265],
     },
 
+    // Season 26
+
+    'season_26_enhancement_upgrades_unlocked':
+    {
+        triumph_for_title: 3219466009,
+        triumphs_for_data: [3219466009],
+    },
+
+    'season_26_dreadnaught_collectibles_found':
+    {
+        triumph_for_title: 2025564389,
+        triumphs_for_data: [2025564389],
+    },
+
     // !frame.search_manifest record %search_string%
     // !frame.print_leaderboard individual_triumph %id%
 }
@@ -1504,9 +1518,9 @@ async function generate_lore_triumph_set()
 async function generate_seasonal_challenges_triumph_set()
 {
     // Legend // Seasonal Challenges // Weekly
-    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/4128731898/weekly/
+    // https://www.light.gg/db/legend/3443694067/seasonal-challenges/3109663559/weekly/
     // For some reason this character-agnostic data is only enumerated in the character-specific profile record...
-    return await generate_triumph_tree_triumph_set(4128731898, 'Total Count of Seasonal Challenges Unlocked', true);
+    return await generate_triumph_tree_triumph_set(3109663559, 'Total Count of Seasonal Challenges Unlocked', true);
 }
 
 async function generate_season_20_guardian_games_medals_triumph_set()
@@ -1844,6 +1858,28 @@ var known_metrics =
     'season_25_enemies_defeated':
     {
         id: 740118638,
+    },
+
+    // Season 26
+
+    'season_26_pass_rank':
+    {
+        id: 2245851609,
+    },
+
+    'season_26_boons_collected':
+    {
+        id: 1517766727,
+    },
+
+    'season_26_court_challengers_defeated':
+    {
+        id: 3160852135,
+    },
+
+    'season_26_sundered_doctrine_completions':
+    {
+        id: 2781975991,
     },
 
     // !frame.search_manifest metric %search_string%

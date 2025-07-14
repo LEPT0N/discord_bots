@@ -146,6 +146,17 @@ async function print_all_leaderboards(input)
         { arguments: ['triumphs', 'gilded_seals'] },
         { arguments: ['triumphs', 'seasonal_challenges'] },
 
+        // The highest score achieved in a Nightfall strike this Season.
+        // !frame.print_leaderboard metrics 1622305658
+
+        // The number of Champions defeated in Nightfall strikes this Season.
+        // !frame.print_leaderboard metrics 3907271222
+
+        // The amount of Infamy earned this Season.
+        // !frame.print_leaderboard metrics 250859887
+
+        // TODO add ones for crucible like kd
+
         { arguments: ['individual_stat', 'killing_spree'] },
         { arguments: ['individual_stat', 'kill_distance'] },
         { arguments: ['individual_stat', 'kills'] },
@@ -170,21 +181,19 @@ async function print_all_leaderboards(input)
 
         { arguments: ['profile_data', 'guardian_rank'] },
 
-        // Season 24
+        // Season 26
 
         // search_manifest metric %search_string%
         // !frame.print_leaderboard metrics %number%
-        { arguments: ['metrics', 'season_25_pass_rank'] },
-        { arguments: ['metrics', 'season_25_onslaught_salvation_runs'] },
-        { arguments: ['metrics', 'season_25_tomb_of_elders_runs'] },
-        { arguments: ['metrics', 'season_25_vespers_host_runs'] },
-        { arguments: ['metrics', 'season_25_tonics_brewed'] },
-        { arguments: ['metrics', 'season_25_enemies_defeated'] },
+        { arguments: ['metrics', 'season_26_pass_rank'] },
+        { arguments: ['metrics', 'season_26_boons_collected'] },
+        { arguments: ['metrics', 'season_26_court_challengers_defeated'] },
+        { arguments: ['metrics', 'season_26_sundered_doctrine_completions'] },
 
         // search_manifest record %search_string%
         // !frame.print_leaderboard individual_triumph %number%
-        { arguments: ['individual_triumph', 'season_25_contest_of_elders'] },
-        { arguments: ['individual_triumph', 'season_25_onslaught_saboteurs'] },
+        { arguments: ['individual_triumph', 'season_26_enhancement_upgrades_unlocked'] },
+        { arguments: ['individual_triumph', 'season_26_dreadnaught_collectibles_found'] },
     ];
 
     for (var index = 0; index < all_leaderboards.length; index++)
